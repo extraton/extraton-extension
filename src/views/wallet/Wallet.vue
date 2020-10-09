@@ -1,0 +1,59 @@
+<template>
+  <div class="wallet">
+    <balance/>
+    <main-address/>
+    <div class="wallet__actions">
+      <get-tokens/>
+      <div class="wallet__actions__spacer"></div>
+      <send-tokens/>
+    </div>
+  </div>
+</template>
+
+<script>
+
+import {mapActions, mapGetters} from "vuex";
+import Balance from "@/components/Balance";
+import MainAddress from "@/components/MainAddress";
+import GetTokens from "@/components/GetTokens";
+import SendTokens from "@/components/SendTokens";
+
+export default {
+  components: {MainAddress, Balance, GetTokens, SendTokens},
+  data() {
+    return {};
+  },
+  mounted() {
+    if (!this.isLoggedIn) {
+      this.goToStart();
+    } else {
+      this.turnOnAutoUpdate();
+    }
+  },
+  computed: {
+    ...mapGetters('wallet', [
+      'isLoggedIn',
+    ]),
+  },
+  methods: {
+    ...mapActions('wallet', [
+      'goToStart',
+      'turnOnAutoUpdate',
+    ]),
+  }
+}
+</script>
+
+<style lang="scss">
+.wallet {
+  &__actions {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+
+    &__spacer {
+      width: 15px;
+    }
+  }
+}
+</style>
