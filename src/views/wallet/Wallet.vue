@@ -1,9 +1,11 @@
 <template>
   <div class="wallet">
+    <action-dialog/>
     <balance/>
     <main-address/>
     <div class="wallet__actions">
-      <get-tokens/>
+      <get-tokens v-if="isDevNetwork"/>
+      <buy-tokens v-else/>
       <div class="wallet__actions__spacer"></div>
       <send-tokens/>
     </div>
@@ -13,13 +15,15 @@
 <script>
 
 import {mapActions, mapGetters} from "vuex";
+import ActionDialog from "@/components/ActionDialog";
 import Balance from "@/components/Balance";
 import MainAddress from "@/components/MainAddress";
 import GetTokens from "@/components/GetTokens";
 import SendTokens from "@/components/SendTokens";
+import BuyTokens from "@/components/BuyTokens";
 
 export default {
-  components: {MainAddress, Balance, GetTokens, SendTokens},
+  components: {ActionDialog, MainAddress, Balance, GetTokens, BuyTokens, SendTokens},
   data() {
     return {};
   },
@@ -27,18 +31,19 @@ export default {
     if (!this.isLoggedIn) {
       this.goToStart();
     } else {
-      this.turnOnAutoUpdate();
+      this.startBalanceUpdating();
     }
   },
   computed: {
     ...mapGetters('wallet', [
+      'isDevNetwork',
       'isLoggedIn',
     ]),
   },
   methods: {
     ...mapActions('wallet', [
       'goToStart',
-      'turnOnAutoUpdate',
+      'startBalanceUpdating',
     ]),
   }
 }

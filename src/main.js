@@ -1,10 +1,10 @@
-import Vue from 'vue'
+import Vue from 'vue';
 import VueClipboards from "vue-clipboards";
-import App from './App.vue'
+import App from './App.vue';
 import {router} from './plugins/router'
 import vuetify from './plugins/vuetify';
 import snack from './plugins/snack';
-import store from './store'
+import store from './store';
 
 Vue.config.productionTip = false
 Vue.use(VueClipboards);

@@ -21,7 +21,7 @@
 
       <v-tooltip bottom>
         <template v-slot:activator="{ on, attrs }">
-          <v-btn v-bind="attrs" v-on="on" :disabled="!isActive" :href="explorerLink" target="_blank" icon small>
+          <v-btn v-bind="attrs" v-on="on" :disabled="!isAddressAvailableInExplorer" :href="explorerLink" target="_blank" icon small>
             <v-icon color="primary" small>mdi-open-in-new</v-icon>
           </v-btn>
         </template>
@@ -39,12 +39,12 @@ import {mapGetters, mapState} from "vuex";
 export default {
   computed: {
     ...mapState('wallet', [
-      'isActive',
       'address',
     ]),
     ...mapGetters('wallet', [
       'addressView',
       'explorerLink',
+      'isAddressAvailableInExplorer',
     ]),
   },
 }

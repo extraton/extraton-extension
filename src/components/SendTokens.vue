@@ -1,8 +1,8 @@
 <template>
-  <div class="getTokens text-center">
+  <div class="sendTokens text-center">
     <v-tooltip bottom>
       <template v-slot:activator="{ on, attrs }">
-        <v-btn v-bind="attrs" v-on="on" disabled x-large icon>
+        <v-btn v-bind="attrs" v-on="on" @click="initTransfer({networkId})" x-large icon>
           <v-icon color="primary" large>mdi-send</v-icon>
         </v-btn>
       </template>
@@ -12,11 +12,23 @@
 </template>
 
 <script>
+import {mapActions, mapState} from "vuex";
+
 export default {
+  computed: {
+    ...mapState('wallet', {
+      networkId: 'network',
+    }),
+  },
+  methods: {
+    ...mapActions('wallet', [
+      'initTransfer'
+    ]),
+  }
 }
 </script>
 
 <style lang="scss">
-.getTokens {
+.sendTokens {
 }
 </style>

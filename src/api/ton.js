@@ -45,7 +45,34 @@ export default {
   },
   async requestAccountData(server, address) {
     const client = await ton.getClient(server);
-    const data = await client.queries.accounts.query({id: {eq: address}}, 'balance(format: DEC)');
+    const data = await client.queries.accounts.query({id: {eq: address}}, 'balance(format: DEC), code_hash');
     return data.length > 0 ? data[0] : null;
+  },
+  // async createRunMessage(server, address, abi, functionName, input, keyPair) {
+  //   const client = await ton.getClient(server);
+  //   return await client.contracts.createRunMessage({address, abi, functionName, input, keyPair});
+  // },
+  // async sendMessage(server, runMessage) {
+  //   const client = await ton.getClient(server);
+  //   return await client.contracts.sendMessage(runMessage.message);
+  // },
+  // async waitForRunTransaction(server, runMessage, messageProcessingState) {
+  //   const client = await ton.getClient(server);
+  //   try {
+  //     const result = await client.contracts.waitForRunTransaction(runMessage, messageProcessingState);
+  //     console.log(`Tokens were sent. Transaction id is ${result.transaction.id}`);
+      // console.log(`Run fees are  ${JSON.stringify(result.fees, null, 2)}`);
+    // } catch (err){
+      // console.log(err);
+    // }
+  // },
+  // async runGet(server, address, functionName, input) {
+  //   const client = await ton.getClient(server);
+  //   const result = await client.contracts.runGet({address, functionName, input});
+  //   console.log(result);
+  // },
+  async run(server, address, functionName, abi, input, keyPair = null) {
+    const client = await ton.getClient(server);
+    await client.contracts.run({address, functionName, abi, input, keyPair});
   }
 }

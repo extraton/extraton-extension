@@ -14,30 +14,25 @@ const findError = () => {
 };
 
 export default {
-  set(key, value) {
+  async set(key, value) {
     if (isStorageAvailable) {
       const {local} = extensionizer.storage;
       let obj = {};
       obj[key] = value;
-      local.set(obj);
+      await local.set(obj);
     }
   },
   async get(key) {
-    return new Promise((resolve, reject) => {
-      if (!isStorageAvailable) {
-        resolve(null);
-      }
-      const {local} = extensionizer.storage;
-      local.get(null, (result) => {
-        const err = findError();
-        if (null === err) {
-          const value = undefined !== result[key] ? result[key] : null;
-          resolve(value);
-        } else {
-          reject(err);
-        }
-      })
-    })
+    if (!isStorageAvailable) {
+      return null;
+    }
+    const {local} = extensionizer.storage;
+    const data = await local.get(null);
+    const err = findError();
+    if (null !== err) {
+      throw new Error(err);
+    }
+    return undefined !== data[key] ? data[key] : null;
   },
   remove(key) {
     if (isStorageAvailable) {

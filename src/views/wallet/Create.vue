@@ -22,50 +22,38 @@ import {mapMutations, mapActions, mapState} from 'vuex';
 
 export default {
   components: {ViewTitle},
-  data: () => ({
-    isGoingToWallet: false,
-  }),
   mounted() {
-    this.generateSeed().catch(function () {
-      this.globalError('Failure during seed generation.');
-    }.bind(this));
+    this.generateSeed();
+    // this.generateSeed().catch(function () {
+    //   this.globalError('Failure during seed generation.');
+    // }.bind(this));
   },
   computed: {
-    ...mapState('keys', [
+    ...mapState('walletCreate', [
+      'isGoingToWallet',
       'seed',
-      'keys',
     ]),
   },
   beforeDestroy() {
-    this.clearKeysStore();
+    this.clear();
   },
   methods: {
-    ...mapActions('keys', [
+    ...mapActions('walletCreate', [
       'generateSeed',
-      'convertSeedToKeys',
+      'goToWallet',
     ]),
-    ...mapMutations('keys', {
-      clearKeysStore: 'clear',
-    }),
-    ...mapMutations('wallet', {
-      setKeysToWallet: 'setKeys',
-    }),
-    ...mapActions('wallet', [
-      'enterWallet',
+    ...mapMutations('walletCreate', [
+      'clear',
     ]),
-    ...mapMutations('globalError', {
-      globalError: 'setText',
-    }),
-    async goToWallet() {
-      this.isGoingToWallet = true;
-      this.convertSeedToKeys().then(async function () {
-        this.setKeysToWallet(this.keys);
-        await this.enterWallet();
-      }.bind(this)).catch(function () {
-        this.isGoingToWallet = false;
-        this.globalError('Failure during seed to keys conversion.');
-      }.bind(this));
-    },
+    // ...mapActions('wallet', [
+    //   'enterWallet',
+    // ]),
+    // ...mapMutations('globalError', {
+    //   globalError: 'setText',
+    // }),
+    // async goToWallet() {
+    //
+    // },
   }
 }
 </script>

@@ -1,5 +1,5 @@
-import StorageApi from '@/api/storage';
 import store from '@/store'
+import popupLib from '@/lib/popup';
 
 export default {
   namespaced: true,
@@ -10,15 +10,13 @@ export default {
     setInited: (state) => state.isInited = true,
   },
   actions: {
-    init: ({commit}) => {
-      StorageApi.get('wallet').then(async (sleepState) => {
-        console.log(sleepState);
-        if (null !== sleepState) {
-          await store.dispatch('wallet/wakeup', sleepState);
-          await store.dispatch('wallet/enterWallet');
-        }
+    init: async ({commit}) => {
+      if (await popupLib.callPopup(false)) {
+        window.close();
+      } else {
+        await store.dispatch('wallet/wakeup');
         commit('setInited');
-      });
+      }
     },
   },
 }

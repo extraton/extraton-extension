@@ -9,7 +9,7 @@
                 filled auto-grow
     />
     <div class="text-center">
-      <v-btn @click="restore" :loading="isRestoring" color="primary">restore</v-btn>
+      <v-btn @click="restore(seed)" :loading="isRestoring" color="primary">restore</v-btn>
     </div>
   </div>
 </template>
@@ -22,41 +22,34 @@ export default {
   components: {ViewTitle},
   data: () => ({
     seed: '',
-    error: null,
-    isRestoring: false,
   }),
   computed: {
-    ...mapState('keys', [
-      'keys',
+    ...mapState('walletRestore', [
+      'error',
+      'isRestoring',
     ]),
   },
   beforeDestroy() {
-    this.clearKeysStore();
+    this.clear();
   },
   methods: {
-    ...mapMutations('keys', {
+    ...mapMutations('walletRestore', {
       clearKeysStore: 'clear',
     }),
-    ...mapActions('keys', [
-      'restoreKeys',
+    ...mapActions('walletRestore', [
+      'restore',
     ]),
-    ...mapMutations('wallet', {
-      setKeysToWallet: 'setKeys',
-    }),
-    ...mapActions('wallet', [
-      'enterWallet',
-    ]),
-    async restore() {
-      this.isRestoring = true;
-      this.error = null;
-      this.restoreKeys(this.seed.trim()).then(async function () {
-        this.setKeysToWallet(this.keys);
-        await this.enterWallet();
-      }.bind(this)).catch(function (err) {
-        this.error = err.toString();
-        this.isRestoring = false;
-      }.bind(this));
-    },
+    // async restore() {
+    //   this.isRestoring = true;
+    //   this.error = null;
+    //   this.restoreKeys(this.seed.trim()).then(async function () {
+    //     this.setKeysToWallet(this.keys);
+    //     await this.enterWallet();
+    //   }.bind(this)).catch(function (err) {
+    //     this.error = err.toString();
+    //     this.isRestoring = false;
+    //   }.bind(this));
+    // },
   },
 }
 </script>

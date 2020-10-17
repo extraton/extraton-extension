@@ -1,28 +1,54 @@
 {
   "manifest_version": 2,
-  "version": "0.1",
-  "name": "Extraton extension",
+  "name": "__MSG_extName__",
   "homepage_url": "http://localhost:8080/",
-  "description": "Extension description",
-  "content_security_policy": "script-src 'self' 'wasm-eval'; object-src 'self'",
+  "description": "A Vue Browser Extension",
+  "default_locale": "en",
   "permissions": [
+    "storage",
     "activeTab",
+    "tabs",
     "<all_urls>",
-    "*://*/*",
-    "storage"
+    "*://*/*"
   ],
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "icons": {
-  },
-  "browser_action": {
-    "default_popup": "index.html",
-    "default_title": "Extraton extension",
-    "default_icon": {
-    }
+    "16": "icons/16.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
   },
   "background": {
     "scripts": [
       "js/background.js"
     ],
     "persistent": false
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "file://*/*",
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "js/content-script.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
+  "browser_action": {
+    "default_popup": "index.html",
+    "default_title": "Extraton extension",
+    "default_icon": {
+    }
+  },
+  "web_accessible_resources": [
+    "js/injection.js"
+  ],
+  "externally_connectable": {
+    "ids": [
+      "*"
+    ]
   }
 }
