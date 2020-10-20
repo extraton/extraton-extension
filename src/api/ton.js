@@ -48,31 +48,38 @@ export default {
     const data = await client.queries.accounts.query({id: {eq: address}}, 'balance(format: DEC), code_hash');
     return data.length > 0 ? data[0] : null;
   },
-  // async createRunMessage(server, address, abi, functionName, input, keyPair) {
+  // async createRunMessage(server, address, abi, functionName, input, keys) {
   //   const client = await ton.getClient(server);
-  //   return await client.contracts.createRunMessage({address, abi, functionName, input, keyPair});
+  //   return await client.contracts.createRunMessage({address, abi, functionName, input, keys});
   // },
-  // async sendMessage(server, runMessage) {
+  // async waitForRunTransaction(server, message, messageProcessingState) {
   //   const client = await ton.getClient(server);
-  //   return await client.contracts.sendMessage(runMessage.message);
+  //   const result = await client.contracts.waitForRunTransaction(message, messageProcessingState);
+  //   return result.transaction.id;
   // },
-  // async waitForRunTransaction(server, runMessage, messageProcessingState) {
-  //   const client = await ton.getClient(server);
-  //   try {
-  //     const result = await client.contracts.waitForRunTransaction(runMessage, messageProcessingState);
-  //     console.log(`Tokens were sent. Transaction id is ${result.transaction.id}`);
-      // console.log(`Run fees are  ${JSON.stringify(result.fees, null, 2)}`);
-    // } catch (err){
-      // console.log(err);
-    // }
-  // },
-  // async runGet(server, address, functionName, input) {
-  //   const client = await ton.getClient(server);
-  //   const result = await client.contracts.runGet({address, functionName, input});
-  //   console.log(result);
-  // },
-  async run(server, address, functionName, abi, input, keyPair = null) {
+  async runGet(server, address, functionName) {
     const client = await ton.getClient(server);
-    await client.contracts.run({address, functionName, abi, input, keyPair});
+    return await client.contracts.runGet({address, functionName});
+  },
+  async createDeployMessage(server, keyPair) {
+    const client = await ton.getClient(server);
+    return await client.contracts.createDeployMessage({
+      package: setcodeMultisig,
+      constructorParams: {owners: [`0x${keyPair.public}`], reqConfirms: 1},
+      keyPair,
+    })
+  },
+  async sendMessage(server, message) {
+    const client = await ton.getClient(server);
+    return await client.contracts.sendMessage(message.message);
+  },
+  async waitForDeployTransaction(server, message, processingState) {
+    const client = await ton.getClient(server);
+    const result = await client.contracts.waitForDeployTransaction(message, processingState);
+    return result.transaction.id;
+  },
+  async run(server, address, functionName, abi, input = {}, keyPair = null) {
+    const client = await ton.getClient(server);
+    return await client.contracts.run({address, functionName, abi, input, keyPair});
   }
 }

@@ -2,7 +2,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 const RemovePlugin = require('remove-files-webpack-plugin');
 
 module.exports = {
-  transpileDependencies: ['vuetify'],
+  transpileDependencies: ['vuetify', 'dexie'],
   configureWebpack: {
     plugins: [
       new CopyPlugin({
@@ -58,6 +58,12 @@ module.exports = {
           }
         }
       }
+    },
+    i18n: {
+      locale: 'en',
+      fallbackLocale: 'en',
+      localeDir: 'locales',
+      enableInSFC: false
     }
   }
 }

@@ -1,6 +1,7 @@
 import StorageApi from "@/api/storage";
 import {
   getNetworkTask,
+  runGetTask,
   requestTokensFromFaucetTask,
   getWakeUpDataTask,
   generateSeedTask,
@@ -9,8 +10,11 @@ import {
   requestAddressDataTask,
   logoutTask,
   initUiTransferTask,
+  cancelInteractiveTaskTask,
+  applyInteractiveTaskTask,
+  saveFormInteractiveTaskTask,
 } from "@/lib/task/items";
-import handleException from '@/lib/task/exception/handleException';
+import taskNotExists from '@/lib/task/exception/taskNotExists';
 
 const taskList = {
   internal: {
@@ -22,10 +26,13 @@ const taskList = {
     requestAddressDataTask,
     logoutTask,
     initUiTransferTask,
+    cancelInteractiveTaskTask,
+    applyInteractiveTaskTask,
+    saveFormInteractiveTaskTask,
   },
   external: {
     interactive: {},
-    background: {getNetworkTask,},
+    background: {getNetworkTask, runGetTask},
   },
 };
 const _ = {
@@ -49,18 +56,7 @@ const _ = {
     };
   },
   handleBackgroundTask: async function (list, task) {
-    return new Promise((resolve) => {
-      _.getTaskHandler(list, task.method)
-        .handle(task.data)
-        .then((data) => resolve({code: 0, data}))
-        .catch((error) => {
-          console.error(error);
-          const code = error instanceof handleException
-            ? error.getCode()
-            : 1;
-          resolve({code, error})
-        });
-    });
+    return await _.getTaskHandler(list, task.method).handle(task.data);
   }
 };
 
@@ -69,14 +65,14 @@ export default {
     const isInteractiveTask = _.isTaskInList(taskList.external.interactive, request.method);
     const isBackgroundTask = _.isTaskInList(taskList.external.background, request.method);
     if (!isInteractiveTask && !isBackgroundTask) {
-      throw `Task method '${request.method}' not exists`;
+      throw new taskNotExists(request.method);
     }
     return _.compileTaskByRequest(request, isInteractiveTask);
   },
   compileInternalTaskByRequest: function (request) {
     const isTaskExists = _.isTaskInList(taskList.internal, request.method);
     if (!isTaskExists) {
-      throw `Task method '${request.method}' not exists`;
+      throw new taskNotExists(request.method);
     }
     return _.compileTaskByRequest(request);
   },

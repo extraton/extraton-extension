@@ -1,25 +1,25 @@
 import Dexie from "dexie";
 
-const DB_NAME = 'db16';
+const DB_NAME = 'db27';
 
 const _ = {
   setSchema: function (db) {
     db.version(1).stores({
       param: '&key, value',
       network: '&id, server, explorer, info, isDev, faucet.address, faucet.isGettingTokens, account.balance, account.codeHash',
-      interactiveTask: '++id, networkId, type',
+      interactiveTask: '++id, networkId, typeId, statusId, error, form',
     });
   },
   fillInitial: async function (db) {
     await db.transaction('rw', db.param, db.network, async function () {
       await db.param.bulkAdd([
         {key: 'address', value: null},
-        {key: 'network', value: 0},
+        {key: 'network', value: 1},
         {key: 'keys', value: null},
       ]);
       await db.network.bulkAdd([
         {
-          id: 0,
+          id: 1,
           server: 'main.ton.dev',
           explorer: 'ton.live',
           info: 'The main network',
@@ -27,7 +27,7 @@ const _ = {
           account: {balance: null, codeHash: null},
         },
         {
-          id: 1,
+          id: 2,
           server: 'net.ton.dev',
           explorer: 'net.ton.live',
           info: 'Test network',

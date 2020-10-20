@@ -11,7 +11,8 @@
     <template v-slot:item="{item}">
       <v-list-item dense>
         <v-list-item-icon>
-          <v-icon :color="item.isDev ? '#ce0015' : '#0488cb'">mdi-diamond-stone</v-icon>
+          <coin-icon :ruby="item.isDev"/>
+          <!--          <v-icon :color="item.isDev ? '#ce0015' : '#0488cb'">mdi-diamond-stone</v-icon>-->
         </v-list-item-icon>
         <v-list-item-content>
           <v-list-item-title>{{ item.text }}</v-list-item-title>
@@ -25,16 +26,19 @@
 
 <script>
 import {mapActions, mapState} from "vuex";
+import CoinIcon from "@/components/CoinIcon";
 
 export default {
+  components: {CoinIcon},
   data: () => ({
     select: null,
     items: [],
   }),
   created() {
+    console.log(this.networks);
     for (let i in this.networks) {
       let network = this.networks[i];
-      this.items.push({text: network.server, info: network.info, value: i - 0, isDev: network.isDev});
+      this.items.push({text: network.server, info: network.info, value: network.id, isDev: network.isDev});
     }
     this.select = this.network;
   },

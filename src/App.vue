@@ -3,6 +3,7 @@
     <template v-if="isInited">
       <snack/>
       <v-app-bar class="" color="primary" app dense dark>
+<!--        <coin-icon left/>-->
         <v-icon left>mdi-diamond-stone</v-icon>
         <v-toolbar-title v-if="!isLoggedIn">extraTON</v-toolbar-title>
         <v-spacer></v-spacer>
@@ -34,9 +35,10 @@ import RightCornerMenu from "@/components/RightCornerMenu";
 import NetworkSelect from "@/components/NetworkSelect";
 import Snack from "@/components/Snack";
 import {mapGetters, mapActions, mapState} from "vuex";
+// import CoinIcon from "@/components/CoinIcon";
 
 export default {
-  components: {GlobalError, BackButton, RightCornerMenu, NetworkSelect, Snack},
+  components: {GlobalError, BackButton, RightCornerMenu, NetworkSelect, Snack/*, CoinIcon*/},
   created() {
     this.init();
   },

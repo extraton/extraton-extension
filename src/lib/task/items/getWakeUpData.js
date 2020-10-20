@@ -5,13 +5,13 @@ export default {
   name: 'getWakeUpData',
   handle: async function () {
     const db = await database.getClient();
-    await db.param.each(param => data[param.key] = param.value);
-    const data = {
+    let networks = {};
+    await db.network.orderBy('id').each(network => networks[network.id] = network);
+    return {
       address: (await db.param.get('address')).value,
       network: (await db.param.get('network')).value,
-      networks: await db.network.orderBy('id').toArray(),
-      tasks: await interactiveTaskRepository.getTasks(),
+      tasks: await interactiveTaskRepository.getActiveTasks(),
+      networks,
     };
-    return data;
   }
 }

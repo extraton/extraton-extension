@@ -1,6 +1,8 @@
 <template>
   <div class="balance">
-    <v-icon :color="isDevNetwork ? '#ce0015' : '#0488cb'">mdi-diamond-stone</v-icon>
+
+    <coin-icon :ruby="isDevNetwork" left/>
+<!--    <v-icon :color="isDevNetwork ? '#ce0015' : '#0488cb'">mdi-diamond-stone</v-icon>-->
     <span v-if="null !== balanceView" class="text-h4">{{ balanceView }}</span>
     <v-skeleton-loader v-else type="heading" width="86"/>
   </div>
@@ -8,8 +10,10 @@
 
 <script>
 import {mapGetters} from "vuex";
+import CoinIcon from "@/components/CoinIcon";
 
 export default {
+  components: {CoinIcon},
   computed: {
     ...mapGetters('wallet', [
       'balanceView',

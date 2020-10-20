@@ -1,0 +1,18 @@
+{
+  "actionDialog": {
+    "type": {
+      "1": {
+        "name": "Wallet Activation",
+        "button": {
+          "apply": "Deploy"
+        }
+      },
+      "2": {
+        "name": "Transfer",
+        "button": {
+          "apply": "Transfer"
+        }
+      }
+    }
+  }
+}

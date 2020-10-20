@@ -2,6 +2,7 @@ import StorageApi from '@/api/storage';
 import popupLib from '@/lib/popup';
 import taskLib from '@/lib/task';
 import walletLib from '@/lib/wallet';
+import handleException from "@/lib/task/exception/handleException";
 
 const extensionId = chrome.runtime.id;
 const timeout = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -19,19 +20,15 @@ const waitTaskResolving = async (task) => {
   await timeout(500);
   return await waitTaskResolving(task);
 };
-
-chrome.runtime.onMessage.addListener(
-  async function (request, sender, sendResponse) {
+const handleMessage = async (request, sender) => {
+  let result = {};
+  try {
     if (extensionId !== sender.id) {
       throw 'extensionId <> senderId';
     }
-    if (undefined === request.method) {
-      return;
-    }
-    let result = {};
     //@TODO make sure can check it like this
     const isInternalRequest = sender.origin === `chrome-extension://${extensionId}`;
-    let task = null;
+    let task;
     if (isInternalRequest) {
       task = taskLib.compileInternalTaskByRequest(request);
     } else {
@@ -49,13 +46,26 @@ chrome.runtime.onMessage.addListener(
         await popupLib.callPopup();
         await walletLib.waitLoggedIn();
       }
-      result = {
-        ...result,
-        ...(isInternalRequest
-          ? await taskLib.handleInternalTask(task)
-          : await taskLib.handleExternalBackgroundTask(task))
-      };
+      result.code = 0;
+      result.data = isInternalRequest
+        ? await taskLib.handleInternalTask(task)
+        : await taskLib.handleExternalBackgroundTask(task);
     }
-    sendResponse(result);
+  } catch (e) {
+    result.code = e instanceof handleException
+      ? e.getCode()
+      : 1;
+    result.error = e.toString();
+  }
+  return result;
+}
+chrome.runtime.onMessage.addListener(
+  function (request, sender, sendResponse) {
+    //@TODO
+    if (undefined === request.method) {
+      return;
+    }
+    handleMessage(request, sender).then((result) => sendResponse(result));
+    return true;
   }
 );

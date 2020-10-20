@@ -11,9 +11,7 @@ s.onload = function () {
 const injectionStream = new PostMessageStream({name: 'content-script', target: 'injection'});
 injectionStream.on('data', (data) => {
   //@todo disconnect
-  // console.log({'dataFromInjection-in-contentScript': data});
   chrome.runtime.sendMessage(data, function(response) {
-    // console.log({'dataFromEventScript-in-contentScript': response});
     injectionStream.write(response);
   });
 });

@@ -28,6 +28,11 @@ const _ = {
       }
     }
   },
+  isBalancePositive(state) {
+    const balance = state.networks[state.network].account.balance;
+    return null !== balance ? BigInt(balance) > BigInt(0) : false;
+  },
+  hasContract: (state) => state.networks[state.network].account.codeHash !== null,
 };
 
 export default {
@@ -167,13 +172,9 @@ export default {
     isFaucetAvailable: (state) => {
       const faucet = state.networks[state.network].faucet;
       const isZeroBalance = state.networks[state.network].account.balance === 0;
-      const hasContract = state.networks[state.network].account.codeHash !== null;
-      return undefined !== faucet && faucet.isAvailable === true && isZeroBalance && !hasContract;
+      return undefined !== faucet && faucet.isAvailable === true && isZeroBalance && !_.hasContract(state);
     },
-    isAddressAvailableInExplorer: (state) => {
-      const balance = state.networks[state.network].account.balance;
-      //@TODO also check contract
-      return null !== balance ? BigInt(balance) > BigInt(0) : false;
-    },
+    isAddressAvailableInExplorer: (state) => _.hasContract(state) || _.isBalancePositive(state),
+    isTransferAvailable: (state) => _.isBalancePositive(state),
   }
 }

@@ -9,7 +9,7 @@ export default {
   },
   handle: async function ({seed}) {
     const db = await database.getClient();
-    const server = (await db.network.get(0)).server;
+    const server = (await db.network.get(1)).server;
     let keys = null;
     try {
       keys = await TonApi.convertSeedToKeys(server, seed);

@@ -11,6 +11,6 @@ export default {
       await interactiveTaskRepository.createTask(interactiveTaskType.deployWalletContract, networkId);
     }
     await interactiveTaskRepository.createTask(interactiveTaskType.uiTransfer, networkId);
-    return await interactiveTaskRepository.getTasks();
+    return await interactiveTaskRepository.getActiveTasks();
   }
 }

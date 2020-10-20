@@ -20,18 +20,14 @@ const waitResponse = async (requestId) => {
   await timeout(500);
   return await waitResponse(requestId);
 }
-const request = async (method) => {
+const request = async (method, params) => {
   const requestId = Math.random().toString(36).substring(7);
-  const data = {requestId, method};
+  const data = {requestId, method, data: params};
   stream.write(data);
-  return await waitResponse(requestId);
+  return waitResponse(requestId);
 };
 stream.on('data', (data) => responses.push(data));
 
 window.freeton = {
-  getNetwork() {
-    request('getNetwork')
-      .then((response) => console.log(response))
-      .catch((error) => console.error(error));
-  }
+  request: (method, params) => request(method, params),
 };
