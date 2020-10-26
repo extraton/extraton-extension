@@ -5,7 +5,8 @@ const gruntAbi = require('@/contracts/Grunt.abi.json');
 
 export default {
   name: 'requestTokensFromFaucet',
-  handle: async function ({network}) {
+  handle: async function (task) {
+    const {network} = task.data;
     const db = await database.getClient();
     const net = await db.network.get(network);
     net.faucet.isGettingTokens = true;

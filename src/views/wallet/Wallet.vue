@@ -32,6 +32,7 @@ export default {
       this.goToStart();
     } else {
       this.startBalanceUpdating();
+      this.startTaskUpdating();
     }
   },
   computed: {
@@ -44,6 +45,9 @@ export default {
     ...mapActions('wallet', [
       'goToStart',
       'startBalanceUpdating',
+    ]),
+    ...mapActions('action', [
+      'startTaskUpdating',
     ]),
   }
 }

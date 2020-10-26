@@ -10,7 +10,7 @@ export default {
     let network = await db.network.get(networkId);
     const data = await TonApi.requestAccountData(network.server, address);
 
-    console.log(data);
+    // console.log(data);
 
     network.account.balance = null !== data ? data.balance : 0;
     network.account.codeHash = null !== data ? data.code_hash : null;

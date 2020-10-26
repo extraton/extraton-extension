@@ -1,5 +1,16 @@
 import database from '@/db';
 
+const _ = {
+  indexEntitiesByField(entities, field) {
+    let result = {};
+    // console.log(entities);
+    for (const element of entities) {
+      result[element[field]] = element;
+    }
+    return result;
+  }
+};
+
 const interactiveTaskStatus = {
   new: 1,
   cancellation: 2,
@@ -8,30 +19,46 @@ const interactiveTaskStatus = {
   performed: 5,
 };
 
+const interactiveTaskActiveStatusIds = [
+  interactiveTaskStatus.new,
+  interactiveTaskStatus.cancellation,
+  interactiveTaskStatus.process,
+];
+
 const interactiveTaskType = {
   deployWalletContract: 1,
   uiTransfer: 2,
+  preDeployTransfer: 3,
+  deployContract: 4,
 };
 
 const interactiveTaskRepository = {
-  async createTask(typeId, networkId) {
+  async createTask(typeId, networkId, requestId = null, params = {}) {
     const db = await database.getClient();
-    let task = {typeId, networkId, statusId: interactiveTaskStatus.new, error: null, form: {}};
+    let task = {typeId, networkId, requestId, params, statusId: interactiveTaskStatus.new, error: null, form: {}};
     task.id = await db.interactiveTask.add(task);
     return task;
   },
   async getActiveTasks() {
     const db = await database.getClient();
-    const activeStatusIds = [
-      interactiveTaskStatus.new,
-      interactiveTaskStatus.cancellation,
-      interactiveTaskStatus.process,
-    ];
-    return db.interactiveTask.where('statusId').anyOf(activeStatusIds).sortBy('id');
+    const tasks = await db.interactiveTask.where('statusId').anyOf(interactiveTaskActiveStatusIds).sortBy('id');
+    return _.indexEntitiesByField(tasks, 'id');
+  },
+  async getAll() {
+    const db = await database.getClient();
+    const tasks = await db.interactiveTask.orderBy('id').toArray();
+    return _.indexEntitiesByField(tasks, 'id');
   },
   async getTask(taskId) {
     const db = await database.getClient();
     return await db.interactiveTask.get(taskId);
+  },
+  async isOneOfTaskByRequestIdCanceled(requestId) {
+    const db = await database.getClient();
+    const tasksNum = await db.interactiveTask
+      .where({requestId, statusId:interactiveTaskStatus.canceled})
+      .count();
+    return tasksNum > 0;
   },
   async updateTasks(tasks) {
     const db = await database.getClient();
@@ -46,5 +73,6 @@ const interactiveTaskRepository = {
 export {
   interactiveTaskType,
   interactiveTaskStatus,
+  interactiveTaskActiveStatusIds,
   interactiveTaskRepository,
 };

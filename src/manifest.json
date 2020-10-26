@@ -1,18 +1,14 @@
 {
   "manifest_version": 2,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "name": "extraTON",
   "homepage_url": "https://extraton.io",
   "description": "FreeTON dapps to user communicator and wallet.",
   "default_locale": "en",
   "permissions": [
-    "storage",
-    "activeTab",
-    "tabs",
-    "<all_urls>",
-    "*://*/*"
+    "storage"
   ],
-  "content_security_policy": "script-src 'self' 'wasm-eval'; object-src 'self'",
+  "content_security_policy": "script-src 'self' 'wasm-eval' 'unsafe-eval'; object-src 'self'",
   "icons": {
     "16": "icons/16.png",
     "24": "icons/24.png",
@@ -48,10 +44,5 @@
   },
   "web_accessible_resources": [
     "js/injection.js"
-  ],
-  "externally_connectable": {
-    "ids": [
-      "*"
-    ]
-  }
+  ]
 }

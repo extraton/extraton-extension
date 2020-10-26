@@ -1,25 +1,26 @@
 import {
-  interactiveTaskType,
+  // interactiveTaskType,
   interactiveTaskStatus,
   interactiveTaskRepository,
 } from '@/db/repository/interactiveTaskRepository';
 
 export default {
   name: 'cancelInteractiveTask',
-  async handle({taskId}) {
-    const task = await interactiveTaskRepository.getTask(taskId);
-    if (task.statusId === interactiveTaskStatus.new) {
-      let tasks = [];
-      if (task.typeId === interactiveTaskType.deployWalletContract) {
-        tasks = await interactiveTaskRepository.getActiveTasks();
-      } else {
-        tasks = [task];
+  async handle(task) {
+    const {interactiveTaskId} = task.data;
+    const interactiveTask = await interactiveTaskRepository.getTask(interactiveTaskId);
+    if (interactiveTask.statusId === interactiveTaskStatus.new) {
+      let interactiveTasks = [];
+      // if (interactiveTask.typeId === interactiveTaskType.deployWalletContract) {
+        interactiveTasks = await interactiveTaskRepository.getActiveTasks();
+      // } else {
+      //   interactiveTasks = [interactiveTask];
+      // }
+      for (let i in interactiveTasks) {
+        interactiveTasks[i].statusId = interactiveTaskStatus.canceled;
       }
-      for (let i in tasks) {
-        tasks[i].statusId = interactiveTaskStatus.canceled;
-      }
-      await interactiveTaskRepository.updateTasks(tasks);
+      await interactiveTaskRepository.updateTasks(interactiveTasks);
     }
-    return await interactiveTaskRepository.getActiveTasks();
+    return await interactiveTaskRepository.getAll();
   }
 }

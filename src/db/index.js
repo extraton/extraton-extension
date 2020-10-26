@@ -1,13 +1,13 @@
 import Dexie from "dexie";
 
-const DB_NAME = 'db27';
+const DB_NAME = 'db35';
 
 const _ = {
   setSchema: function (db) {
     db.version(1).stores({
       param: '&key, value',
       network: '&id, server, explorer, info, isDev, faucet.address, faucet.isGettingTokens, account.balance, account.codeHash',
-      interactiveTask: '++id, networkId, typeId, statusId, error, form',
+      interactiveTask: '++id, networkId, requestId, params, typeId, statusId, result, error, form',
     });
   },
   fillInitial: async function (db) {
@@ -33,7 +33,8 @@ const _ = {
           info: 'Test network',
           isDev: true,
           faucet: {
-            address: '0:3cf3fe44e76de070048e42a73cebd36d16b6ef82374d49717cb79751a9f28faa',
+            address: '0:553b3ea098c3bae9a60d9b689beb183c3cf9a5e6bc5f20acf34d5edfa49a31c1',//our own
+            // address: '0:3cf3fe44e76de070048e42a73cebd36d16b6ef82374d49717cb79751a9f28faa',//tonlabs
             isGettingTokens: false,
             isAvailable: true,
           },

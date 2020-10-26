@@ -7,8 +7,8 @@ const _ = {
       chrome.windows.create({
         url: 'index.html',
         type: 'popup',
-        width: 300,
-        height: 500,
+        width: 310,
+        height: 536,
         left: position.x,
         top: position.y,
       }, (popup) => {

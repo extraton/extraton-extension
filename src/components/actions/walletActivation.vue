@@ -6,15 +6,15 @@
       </div>
       <div class="text-body-1">Before perform any transactions you need to deploy wallet contract to your address.</div>
     </div>
-    <estimated-fee value="0.073"/>
+    <amount info="Estimated fee" value="0.073"/>
   </div>
 </template>
 
 <script>
-import estimatedFee from "@/components/actions/estimatedFee";
+import amount from "@/components/amount";
 
 export default {
-  components: {estimatedFee},
+  components: {amount},
   props: {disabled: Boolean},
 }
 </script>

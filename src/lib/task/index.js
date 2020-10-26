@@ -1,7 +1,8 @@
-import StorageApi from "@/api/storage";
 import {
   getNetworkTask,
   runGetTask,
+  waitDeployTask,
+  deployTask,
   requestTokensFromFaucetTask,
   getWakeUpDataTask,
   generateSeedTask,
@@ -13,8 +14,11 @@ import {
   cancelInteractiveTaskTask,
   applyInteractiveTaskTask,
   saveFormInteractiveTaskTask,
+  requestInteractiveTasksTask,
 } from "@/lib/task/items";
 import taskNotExists from '@/lib/task/exception/taskNotExists';
+import {interactiveTaskRepository, interactiveTaskStatus} from "@/db/repository/interactiveTaskRepository";
+import {handleException, handleExceptionCodes} from '@/lib/task/exception/handleException';
 
 const taskList = {
   internal: {
@@ -29,10 +33,11 @@ const taskList = {
     cancelInteractiveTaskTask,
     applyInteractiveTaskTask,
     saveFormInteractiveTaskTask,
+    requestInteractiveTasksTask,
   },
   external: {
-    interactive: {},
-    background: {getNetworkTask, runGetTask},
+    interactive: {deployTask},
+    background: {getNetworkTask, runGetTask, waitDeployTask},
   },
 };
 const _ = {
@@ -55,9 +60,10 @@ const _ = {
       isInteractive,
     };
   },
-  handleBackgroundTask: async function (list, task) {
-    return await _.getTaskHandler(list, task.method).handle(task.data);
-  }
+  handleTask: async function (list, task) {
+    return await _.getTaskHandler(list, task.method).handle(task);
+  },
+  timeout: (ms) => new Promise(resolve => setTimeout(resolve, ms)),
 };
 
 export default {
@@ -76,20 +82,24 @@ export default {
     }
     return _.compileTaskByRequest(request);
   },
-  addTaskToQueue: async function (task) {
-    //@TODO locking??
-    //@TODO check requestId duplicate?
-    let tasks = await StorageApi.get('tasks');
-    if (null === tasks) {
-      tasks = {queue: [], handled: []};
+  waitInteractiveTaskResolving: async function (task, interactiveTaskId) {
+    if (await interactiveTaskRepository.isOneOfTaskByRequestIdCanceled(task.requestId)) {
+      throw new handleException(handleExceptionCodes.canceledByUser.code)
     }
-    tasks.queue.push(task);
-    await StorageApi.set('tasks', tasks);
+    const interactiveTask = await interactiveTaskRepository.getTask(interactiveTaskId);
+    if (interactiveTask.statusId === interactiveTaskStatus.performed) {
+      return interactiveTask.result;
+    }
+    await _.timeout(500);
+    return await this.waitInteractiveTaskResolving(task, interactiveTaskId);
   },
   handleInternalTask: async function (task) {
-    return _.handleBackgroundTask(taskList.internal, task);
+    return _.handleTask(taskList.internal, task);
   },
   handleExternalBackgroundTask: async function (task) {
-    return _.handleBackgroundTask(taskList.external.background, task);
+    return _.handleTask(taskList.external.background, task);
+  },
+  handleExternalInteractiveTask: async function (task) {
+    return _.handleTask(taskList.external.interactive, task);
   }
 };

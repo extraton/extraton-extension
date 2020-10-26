@@ -10,7 +10,7 @@ export default {
     return {
       address: (await db.param.get('address')).value,
       network: (await db.param.get('network')).value,
-      tasks: await interactiveTaskRepository.getActiveTasks(),
+      tasks: await interactiveTaskRepository.getAll(),
       networks,
     };
   }

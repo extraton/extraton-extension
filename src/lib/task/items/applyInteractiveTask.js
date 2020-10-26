@@ -4,41 +4,61 @@ import {
   interactiveTaskStatus,
   interactiveTaskRepository,
 } from '@/db/repository/interactiveTaskRepository';
+import TonApi from "@/api/ton";
+import database from '@/db';
 
 export default {
   name: 'applyInteractiveTask',
-  async handle({taskId, form}) {
-    let task = await interactiveTaskRepository.getTask(taskId);
-    if (task.statusId === interactiveTaskStatus.new) {
+  async handle(task) {
+    const {interactiveTaskId, form} = task.data;
+    let interactiveTask = await interactiveTaskRepository.getTask(interactiveTaskId);
+    if (interactiveTask.statusId === interactiveTaskStatus.new) {
+      interactiveTask.statusId = interactiveTaskStatus.process;
+      interactiveTask.error = null;
+      await interactiveTaskRepository.updateTasks([interactiveTask]);
 
-      task.statusId = interactiveTaskStatus.process;
-      task.error = null;
-      await interactiveTaskRepository.updateTasks([task]);
-
+      let result = {};
       try {
         //@TODO refactoring
-        switch (task.typeId) {
+        switch (interactiveTask.typeId) {
           case interactiveTaskType.deployWalletContract: {
-            await walletLib.deploy(task.networkId);
+            await walletLib.deploy(interactiveTask.networkId);
             break;
           }
           case interactiveTaskType.uiTransfer: {
-            await walletLib.transfer(task.networkId, form.address, form.amount);
+            const nanoAmount = walletLib.convertToNano(form.amount).toString();
+            await walletLib.transfer(interactiveTask.networkId, form.address, nanoAmount);
+            break;
+          }
+          case interactiveTaskType.preDeployTransfer: {
+            const db = await database.getClient();
+            const networkId = (await db.param.get('network')).value;
+            const server = (await db.network.get(networkId)).server;
+            const keys = (await db.param.get('keys')).value;
+            const initParams = interactiveTask.params.options.initParams !== undefined ? interactiveTask.params.options.initParams : {};
+            const address = await TonApi.predictAddress(server, keys.public, interactiveTask.params.abi, interactiveTask.params.imageBase64, initParams);
+            await walletLib.transfer(interactiveTask.networkId, address, interactiveTask.params.options.initAmount);
+            break;
+          }
+          case interactiveTaskType.deployContract: {
+            const initParams = interactiveTask.params.options.initParams !== undefined ? interactiveTask.params.options.initParams : {};
+            result = await walletLib.deployContract(interactiveTask.networkId, interactiveTask.params.abi, interactiveTask.params.imageBase64, initParams, interactiveTask.params.constructorParams);
             break;
           }
           default: {
             throw 'Unknown interactive type.';
           }
         }
-        task.statusId = interactiveTaskStatus.performed;
+        interactiveTask.statusId = interactiveTaskStatus.performed;
+        interactiveTask.result = result;
       } catch (e) {
         console.error(e);
-        task.statusId = interactiveTaskStatus.new;
-        task.error = 'Error';
+        interactiveTask.statusId = interactiveTaskStatus.new;
+        interactiveTask.error = 'Error';
         // throw e;
       }
-      await interactiveTaskRepository.updateTasks([task]);
+      await interactiveTaskRepository.updateTasks([interactiveTask]);
     }
-    return await interactiveTaskRepository.getActiveTasks();
+    return await interactiveTaskRepository.getAll();
   }
 }

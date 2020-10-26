@@ -1,7 +1,5 @@
 import {TONClient} from 'ton-client-web-js';
 
-const setcodeMultisig = require('@/contracts/SetcodeMultisigWallet.json');
-
 const ton = {
   client: null,
   seedPhraseWorldCount: 12,
@@ -9,7 +7,7 @@ const ton = {
   hdPath: "m/44'/396'/0'/0/0",
   async getClient(server) {
     if (null === this.client || server !== this.client.config.data.servers[0]) {
-      console.log(`Getting TON client for '${server}'`);
+      // console.log(`Getting TON client for '${server}'`);
       this.client = await TONClient.create({
         servers: [server] //@TODO multiple servers??
       });
@@ -34,11 +32,12 @@ export default {
       path: ton.hdPath
     });
   },
-  async predictAddress(server, pub) {
+  async predictAddress(server, pub, abi, imageBase64, initParams = {}) {
     const client = await ton.getClient(server);
     return (await client.contracts.getDeployData({
-      abi: setcodeMultisig.abi,
-      imageBase64: setcodeMultisig.imageBase64,
+      abi,
+      imageBase64,
+      initParams,
       publicKeyHex: pub,
       workchainId: 0,
     })).address;
@@ -61,13 +60,27 @@ export default {
     const client = await ton.getClient(server);
     return await client.contracts.runGet({address, functionName});
   },
-  async createDeployMessage(server, keyPair) {
+  async calcDeployFees(server, keyPair, contract, initParams, constructorParams) {
     const client = await ton.getClient(server);
-    return await client.contracts.createDeployMessage({
-      package: setcodeMultisig,
-      constructorParams: {owners: [`0x${keyPair.public}`], reqConfirms: 1},
+    return await client.contracts.calcDeployFees({
+      package: contract,
+      constructorParams,
+      initParams,
       keyPair,
-    })
+      emulateBalance: true, //@TODO
+      newaccount: true, //@TODO
+    });
+  },
+  async createDeployMessage(server, keyPair, contract, initParams, constructorParams) {
+    const client = await ton.getClient(server);
+    const data = {
+      package: contract,
+      constructorParams,
+      initParams,
+      keyPair,
+    };
+    // console.log(data);
+    return await client.contracts.createDeployMessage(data);
   },
   async sendMessage(server, message) {
     const client = await ton.getClient(server);
@@ -81,5 +94,5 @@ export default {
   async run(server, address, functionName, abi, input = {}, keyPair = null) {
     const client = await ton.getClient(server);
     return await client.contracts.run({address, functionName, abi, input, keyPair});
-  }
+  },
 }

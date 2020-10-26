@@ -35,7 +35,7 @@ export default {
     items: [],
   }),
   created() {
-    console.log(this.networks);
+    // console.log(this.networks);
     for (let i in this.networks) {
       let network = this.networks[i];
       this.items.push({text: network.server, info: network.info, value: network.id, isDev: network.isDev});

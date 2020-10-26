@@ -6,8 +6,8 @@
           <v-card-title class="actionDialog__card__title">
             {{ $t(`actionDialog.type.${task.typeId}.name`) }}
           </v-card-title>
-          <v-card-subtitle v-if="tasksAmount > 1" class="actionDialog__card__subtitle text-overline">
-            Action 1 of {{ tasksAmount }}
+          <v-card-subtitle v-if="activeTasksAmount > 1" class="actionDialog__card__subtitle text-overline">
+            Action 1 of {{ activeTasksAmount }}
           </v-card-subtitle>
           <v-card-text class="actionDialog__card__body">
             <div v-if="task.error" class="error--text">{{ task.error }}</div>
@@ -19,6 +19,15 @@
                                 @formChange="formChange"
                                 :form="task.form"
                                 :disabled="!isApplyButtonEnabled"/>
+            <deploy-contract v-if="task.typeId === interactiveTaskType.deployContract"
+                                @formChange="formChange"
+                                :form="task.form"
+                                :disabled="!isApplyButtonEnabled"/>
+            <pre-deploy-transfer v-if="task.typeId === interactiveTaskType.preDeployTransfer"
+                                @formChange="formChange"
+                                :form="task.form"
+                                :disabled="!isApplyButtonEnabled"
+                                :amount="task.params.options.initAmount"/>
           </v-card-text>
         </div>
         <div>
@@ -45,11 +54,13 @@
 <script>
 import walletActivationAction from "@/components/actions/walletActivation";
 import uiTransferAction from "@/components/actions/uiTransfer";
+import deployContract from "@/components/actions/deployContract";
 import {mapGetters, mapActions} from "vuex";
 import {interactiveTaskType} from '@/db/repository/interactiveTaskRepository';
+import PreDeployTransfer from "@/components/actions/preDeployTransfer";
 
 export default {
-  components: {walletActivationAction, uiTransferAction},
+  components: {PreDeployTransfer, walletActivationAction, uiTransferAction, deployContract},
   data: () => ({
     interactiveTaskType,
     valid: true,
@@ -58,13 +69,16 @@ export default {
     ...mapGetters('action', {
       isDialogShowing: 'isDialogShowing',
       task: 'currentTask',
-      tasksAmount: 'tasksAmount',
+      activeTasksAmount: 'activeTasksAmount',
       isCancelButtonEnabled: 'isCancelButtonEnabled',
       isCancelButtonLoading: 'isCancelButtonLoading',
       isApplyButtonEnabled: 'isApplyButtonEnabled',
       isApplyButtonLoading: 'isApplyButtonLoading',
     }),
   },
+  // mounted() {
+  //   console.log({task: this.task});
+  // },
   methods: {
     ...mapActions('action', [
       'cancel',
@@ -74,7 +88,7 @@ export default {
     async submit() {
       await this.$refs.form.validate();
       if (this.valid) {
-        this.apply({taskId: this.task.id});
+        await this.apply({interactiveTaskId: this.task.id});
       }
     }
   }
@@ -88,6 +102,7 @@ export default {
   height: 360px;
   margin: 0 auto !important;
   width: 290px !important;
+  overflow: hidden!important;
 
   &__card {
     &__title {

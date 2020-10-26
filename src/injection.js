@@ -11,7 +11,7 @@ const waitResponse = async (requestId) => {
       const response = responses[i];
       responses.splice(i, 1);
       if (0 !== response.code) {
-        throw new Error(response.error);
+        throw {code: response.code, text: response.error};
       } else {
         return response.data;
       }

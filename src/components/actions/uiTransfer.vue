@@ -1,5 +1,5 @@
 <template>
-  <div class="transferAction">
+  <div class="uiTransferAction">
     <div>
       <!--      <div class="text-body-1">Transfer tokens to other address.</div>-->
       <!--      <div class="text-center walletActivationAction__icon">-->
@@ -9,15 +9,15 @@
       <v-text-field v-model="amount" @input="sync" :rules="[rules.required, rules.greaterOrEqualZero]"
                     :disabled="disabled" type="number" label="Amount"/>
     </div>
-    <estimated-fee value="0.011"/>
+    <amount info="Estimated fee" value="0.011"/>
   </div>
 </template>
 
 <script>
-import estimatedFee from "@/components/actions/estimatedFee";
+import amount from "@/components/amount";
 
 export default {
-  components: {estimatedFee},
+  components: {amount},
   props: {disabled: Boolean, form: Object},
   data: () => ({
     address: '',
@@ -40,7 +40,7 @@ export default {
 </script>
 
 <style lang="scss">
-.transferAction {
+.uiTransferAction {
   //display: flex;
   //flex-direction: column;
   //justify-content: space-between;

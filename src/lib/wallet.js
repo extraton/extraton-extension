@@ -28,9 +28,19 @@ export default {
     const db = await database.getClient();
     const server = (await db.network.get(networkId)).server;
     const keys = (await db.param.get('keys')).value;
-    const message = await TonApi.createDeployMessage(server, keys);
+    const constructorParams = {owners: [`0x${keys.public}`], reqConfirms: 1};
+    const message = await TonApi.createDeployMessage(server, keys, setcodeMultisig, {}, constructorParams);
     const processingState = await TonApi.sendMessage(server, message);
     return await TonApi.waitForDeployTransaction(server, message, processingState);
+  },
+  async deployContract(networkId, abi, imageBase64, initParams, constructorParams) {
+    const db = await database.getClient();
+    const server = (await db.network.get(networkId)).server;
+    const keys = (await db.param.get('keys')).value;
+    const contract = {abi, imageBase64};
+    const message = await TonApi.createDeployMessage(server, keys, contract, initParams, constructorParams);
+    const processingState = await TonApi.sendMessage(server, message);
+    return {processingState, message};
   },
   convertToNano(value) {
     const splitted = value.split('.');
@@ -38,14 +48,27 @@ export default {
     const decPart = BigInt(splitted.length > 1 ? `${splitted[1]}${'0'.repeat(9 - splitted[1].length)}` : '0');
     return intPart + decPart;
   },
-  async transfer(networkId, destinationAddress, amount) {
+  convertFromNano(amountNano, decimalNum) {
+    const minDecimalNum = 3;
+    const amountBigInt = BigInt(amountNano);
+    const integer = amountBigInt / BigInt('1000000000');
+    const reminderStr = (amountBigInt % BigInt('1000000000')).toString();
+    const decimalPrependZerosNum = 9 - reminderStr.length;
+    const reminderRtrimedZeros = reminderStr.replace(/0+$/g, '');
+    const decimalStr = `${'0'.repeat(decimalPrependZerosNum)}${reminderRtrimedZeros}`;
+    const decimalCut = decimalStr.substr(0, decimalNum);
+    const decimalResult = minDecimalNum - decimalCut.length > 0
+      ? `${decimalCut}${'0'.repeat(minDecimalNum - decimalCut.length)}`
+      : decimalCut;
+    const integerFormatted = integer.toLocaleString();
+    return `${integerFormatted}.${decimalResult}`;
+  },
+  async transfer(networkId, destinationAddress, nanoAmount) {
     const db = await database.getClient();
     const server = (await db.network.get(networkId)).server;
     const walletAddress = (await db.param.get('address')).value;
     const keys = (await db.param.get('keys')).value;
     const abi = setcodeMultisig.abi;
-    const nanoAmount = this.convertToNano(amount).toString();
-    console.log({nanoAmount, amount});
     const input = {dest: destinationAddress, value: nanoAmount, bounce: false, allBalance: false, payload: ''};
     const result = await TonApi.run(server, walletAddress, 'submitTransaction', abi, input, keys);
     return result.transaction.id;

@@ -1,12 +1,12 @@
 <template>
   <div class="estimatedFee text-subtitle-1">
-    Estimated fee: <span class="font-weight-bold">≈ {{value}}</span>
+    {{ info }}: <span class="font-weight-bold">≈ {{value}}</span>
   </div>
 </template>
 
 <script>
 export default {
-  props: ['value'],
+  props: ['info', 'value'],
 }
 </script>
 

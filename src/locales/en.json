@@ -12,6 +12,18 @@
         "button": {
           "apply": "Transfer"
         }
+      },
+      "3": {
+        "name": "Pre-deploy transfer",
+        "button": {
+          "apply": "Transfer"
+        }
+      },
+      "4": {
+        "name": "Deploy Contract",
+        "button": {
+          "apply": "Deploy"
+        }
       }
     }
   }

@@ -1,6 +1,7 @@
 import BackgroundApi from '@/api/background';
 import {router, routes} from "@/plugins/router";
 import store from "@/store";
+import walletLib from "@/lib/wallet";
 import {
   requestTokensFromFaucetTask,
   getWakeUpDataTask,
@@ -20,11 +21,12 @@ const _ = {
         }
       } catch (err) {
         console.error(err);
-      }
-      if (state.isAutoUpdatingOn && epoch === state.autoUpdateEpoch) {
-        setTimeout(async function () {
-          await this.updateBalanceEndless(epoch, commit, state);
-        }.bind(this), 4000);
+      } finally {
+        if (state.isAutoUpdatingOn && epoch === state.autoUpdateEpoch) {
+          setTimeout(async function () {
+            await this.updateBalanceEndless(epoch, commit, state);
+          }.bind(this), 4000);
+        }
       }
     }
   },
@@ -92,6 +94,7 @@ export default {
     logout: async ({commit}) => {
       await BackgroundApi.request(logoutTask);
       commit('clear');
+      store.commit('action/clear');
       await router.push({name: routes.start});
     },
     startBalanceUpdating({state, commit}) {
@@ -154,13 +157,7 @@ export default {
       if (null === balanceRaw) {
         return null;
       }
-      const balanceBigInt = BigInt(balanceRaw);
-      const integer = balanceBigInt / BigInt('1000000000');
-      const reminderStr = (balanceBigInt % BigInt('1000000000')).toString();
-      const decimalStr = `${'0'.repeat(9 - reminderStr.length)}${reminderStr}`;
-      const decimalCut = decimalStr.substr(0, 3);
-      const integerFormatted = integer.toLocaleString();
-      return `${integerFormatted}.${decimalCut}`;
+      return walletLib.convertFromNano(balanceRaw, 3);
     },
     server: (state) => state.networks[state.network].server,
     isDevNetwork: (state) => state.networks[state.network].isDev,

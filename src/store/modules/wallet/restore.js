@@ -1,6 +1,7 @@
 import BackgroundApi from "@/api/background";
 import {setWalletBySeedTask} from "@/lib/task/items";
 import store from "@/store";
+import {handleExceptionCodes} from '@/lib/task/exception/handleException';
 
 export default {
   namespaced: true,
@@ -28,7 +29,7 @@ export default {
         })
         .catch((err) => {
           commit('unsetRestoring');
-          const message = err.code === setWalletBySeedTask.errorCodes.invalidSeed
+          const message = err.code === handleExceptionCodes.invalidSeed.code
             ? 'Invalid seed phrase.'
             : 'Failure during wallet entering.';
           commit('setError', message);
