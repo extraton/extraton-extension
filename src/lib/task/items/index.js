@@ -1,4 +1,5 @@
 import getNetworkTask from "@/lib/task/items/getNetwork";
+import getVersionTask from "@/lib/task/items/getVersion";
 import runGetTask from "@/lib/task/items/runGet";
 import waitDeployTask from "@/lib/task/items/waitDeploy";
 import deployTask from "@/lib/task/items/deploy";
@@ -17,6 +18,7 @@ import requestInteractiveTasksTask from "@/lib/task/items/requestInteractiveTask
 
 export {
   getNetworkTask,
+  getVersionTask,
   runGetTask,
   waitDeployTask,
   deployTask,

@@ -1,5 +1,6 @@
 import {
   getNetworkTask,
+  getVersionTask,
   runGetTask,
   waitDeployTask,
   deployTask,
@@ -37,7 +38,7 @@ const taskList = {
   },
   external: {
     interactive: {deployTask},
-    background: {getNetworkTask, runGetTask, waitDeployTask},
+    background: {getNetworkTask, getVersionTask, runGetTask, waitDeployTask},
   },
 };
 const _ = {
