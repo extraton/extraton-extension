@@ -2,14 +2,14 @@ import BackgroundApi from "@/api/background";
 import {setWalletBySeedTask} from "@/lib/task/items";
 import store from "@/store";
 import {handleExceptionCodes} from '@/lib/task/exception/handleException';
-import contractLib from '@/lib/contract';
+import walletContractLib from '@/lib/walletContract';
 
 export default {
   namespaced: true,
   state: {
     isRestoring: false,
     error: null,
-    contracts: contractLib.compileSelectData(),
+    contracts: walletContractLib.compileSelectData(),
   },
   mutations: {
     setError: (state, error) => state.error = error,

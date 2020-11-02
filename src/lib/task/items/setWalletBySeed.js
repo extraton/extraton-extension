@@ -1,7 +1,7 @@
 import TonApi from '@/api/ton';
 import database from '@/db';
 import {handleException, handleExceptionCodes} from '@/lib/task/exception/handleException';
-import contractLib from '@/lib/contract';
+import walletContractLib from '@/lib/walletContract';
 
 export default {
   name: 'setWalletBySeed',
@@ -22,7 +22,7 @@ export default {
         throw err;
       }
     }
-    const contract = contractLib.getContractById(contractId);
+    const contract = walletContractLib.getContractById(contractId);
     const address = await TonApi.predictAddress(server, keys.public, contract.abi, contract.imageBase64);
 
     await db.param.update('keys', {value: keys});

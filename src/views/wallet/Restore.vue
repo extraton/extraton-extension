@@ -35,12 +35,13 @@
 <script>
 import ViewTitle from "@/components/ViewTitle";
 import {mapActions, mapMutations, mapState} from "vuex";
+import walletContractLib from '@/lib/walletContract';
 
 export default {
   components: {ViewTitle},
   data: () => ({
     seed: '',
-    contractId: 1,
+    contractId: walletContractLib.ids.safeMultisig,
   }),
   computed: {
     ...mapState('walletRestore', [
