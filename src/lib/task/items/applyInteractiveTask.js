@@ -45,6 +45,17 @@ export default {
             result = await walletLib.deployContract(interactiveTask.networkId, interactiveTask.params.abi, interactiveTask.params.imageBase64, initParams, interactiveTask.params.constructorParams);
             break;
           }
+          case interactiveTaskType.runTransaction: {
+            const db = await database.getClient();
+            const networkId = (await db.param.get('network')).value;
+            const server = (await db.network.get(networkId)).server;
+            const keys = (await db.param.get('keys')).value;
+            const message = await TonApi.createRunMessage(server, interactiveTask.params.address, interactiveTask.params.abi, interactiveTask.params.method, interactiveTask.params.params, keys);
+            const processingState = await TonApi.sendMessage(server, message);
+            const txid = await TonApi.waitForRunTransaction(server, message, processingState);
+            result = {txid};
+            break;
+          }
           default: {
             throw 'Unknown interactive type.';
           }
@@ -55,9 +66,10 @@ export default {
         console.error(e);
         interactiveTask.statusId = interactiveTaskStatus.new;
         interactiveTask.error = 'Error';
-        // throw e;
+        throw e;
+      } finally {
+        await interactiveTaskRepository.updateTasks([interactiveTask]);
       }
-      await interactiveTaskRepository.updateTasks([interactiveTask]);
     }
     return await interactiveTaskRepository.getAll();
   }

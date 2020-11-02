@@ -9,12 +9,12 @@
             dense
   >
     <template v-slot:item="{item}">
-      <v-list-item dense>
-        <v-list-item-icon>
+      <v-list-item style="padding:0 7px" dense>
+        <v-list-item-icon style="margin-right:20px;margin-bottom:unset">
           <coin-icon :ruby="item.isDev"/>
           <!--          <v-icon :color="item.isDev ? '#ce0015' : '#0488cb'">mdi-diamond-stone</v-icon>-->
         </v-list-item-icon>
-        <v-list-item-content>
+        <v-list-item-content style="max-width:140px">
           <v-list-item-title>{{ item.text }}</v-list-item-title>
           <v-list-item-subtitle>{{ item.info }}</v-list-item-subtitle>
         </v-list-item-content>

@@ -1,6 +1,9 @@
 const handleExceptionCodes = {
   invalidSeed: {code: 10, text: 'Invalid seed.'},
   canceledByUser: {code: 1000, text: 'Canceled by user.'},
+  prohibitedToRunWalletContract: {code: 1100, text: 'Running methods of user wallet contract is prohibited.'},
+  tonClientError: {code: 1200, text: 'TON Client error'},
+  syncTime: {code: 1201, text: 'Device time is not synced.'},
 }
 
 const getCode = (code) => {
@@ -12,17 +15,17 @@ const getCode = (code) => {
   throw `Code #${code} not found.`;
 }
 
-const handleException = function (code, data = {}) {
+const handleException = function (code, message = null) {
   this.code = code;
-  this.data = data;
+  this.message = message;
   this.getCode = function () {
     return this.code;
   };
-  this.getData = function () {
-    return this.data;
-  };
   this.toString = function () {
-    return getCode(code).text;
+    const text = getCode(code).text;
+    return null === this.message
+      ? text
+      : `${text}: ${this.message}`;
   };
 };
 

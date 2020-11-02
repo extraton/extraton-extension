@@ -2,12 +2,14 @@ import BackgroundApi from "@/api/background";
 import {setWalletBySeedTask} from "@/lib/task/items";
 import store from "@/store";
 import {handleExceptionCodes} from '@/lib/task/exception/handleException';
+import contractLib from '@/lib/contract';
 
 export default {
   namespaced: true,
   state: {
     isRestoring: false,
     error: null,
+    contracts: contractLib.compileSelectData(),
   },
   mutations: {
     setError: (state, error) => state.error = error,
@@ -20,19 +22,20 @@ export default {
     },
   },
   actions: {
-    restore: async ({commit}, seed) => {
+    restore: async ({commit}, {seed, contractId}) => {
       commit('clearError');
       commit('setRestoring');
-      BackgroundApi.request(setWalletBySeedTask, {seed})
+      BackgroundApi.request(setWalletBySeedTask, {seed, contractId})
         .then(async () => {
           await store.dispatch('wallet/wakeup');
+          commit('unsetRestoring');
         })
         .catch((err) => {
-          commit('unsetRestoring');
           const message = err.code === handleExceptionCodes.invalidSeed.code
             ? 'Invalid seed phrase.'
             : 'Failure during wallet entering.';
           commit('setError', message);
+          commit('unsetRestoring');
         });
     },
   },

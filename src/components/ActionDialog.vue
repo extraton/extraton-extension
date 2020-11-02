@@ -28,6 +28,11 @@
                                 :form="task.form"
                                 :disabled="!isApplyButtonEnabled"
                                 :amount="task.params.options.initAmount"/>
+            <run v-if="task.typeId === interactiveTaskType.runTransaction"
+                                @formChange="formChange"
+                                :form="task.form"
+                                :disabled="!isApplyButtonEnabled"
+                                :fees="task.data.fees"/>
           </v-card-text>
         </div>
         <div>
@@ -58,9 +63,10 @@ import deployContract from "@/components/actions/deployContract";
 import {mapGetters, mapActions} from "vuex";
 import {interactiveTaskType} from '@/db/repository/interactiveTaskRepository';
 import PreDeployTransfer from "@/components/actions/preDeployTransfer";
+import run from "@/components/actions/run";
 
 export default {
-  components: {PreDeployTransfer, walletActivationAction, uiTransferAction, deployContract},
+  components: {PreDeployTransfer, walletActivationAction, uiTransferAction, deployContract, run},
   data: () => ({
     interactiveTaskType,
     valid: true,

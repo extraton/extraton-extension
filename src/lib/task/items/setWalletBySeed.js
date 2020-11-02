@@ -1,7 +1,7 @@
 import TonApi from '@/api/ton';
 import database from '@/db';
 import {handleException, handleExceptionCodes} from '@/lib/task/exception/handleException';
-const setcodeMultisig = require('@/contracts/SetcodeMultisigWallet.json');
+import contractLib from '@/lib/contract';
 
 export default {
   name: 'setWalletBySeed',
@@ -9,7 +9,7 @@ export default {
     invalidSeed: 10,
   },
   handle: async function (task) {
-    const {seed} = task.data;
+    const {seed, contractId} = task.data;
     const db = await database.getClient();
     const server = (await db.network.get(1)).server;
     let keys = null;
@@ -22,9 +22,11 @@ export default {
         throw err;
       }
     }
-    const address = await TonApi.predictAddress(server, keys.public, setcodeMultisig.abi, setcodeMultisig.imageBase64);
+    const contract = contractLib.getContractById(contractId);
+    const address = await TonApi.predictAddress(server, keys.public, contract.abi, contract.imageBase64);
 
     await db.param.update('keys', {value: keys});
     await db.param.update('address', {value: address});
+    await db.param.update('contractId', {value: contractId});
   }
 }

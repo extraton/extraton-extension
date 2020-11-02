@@ -3,6 +3,7 @@ import getVersionTask from "@/lib/task/items/getVersion";
 import runGetTask from "@/lib/task/items/runGet";
 import waitDeployTask from "@/lib/task/items/waitDeploy";
 import deployTask from "@/lib/task/items/deploy";
+import runTask from "@/lib/task/items/run";
 import requestTokensFromFaucetTask from "@/lib/task/items/requestTokensFromFaucet";
 import getWakeUpDataTask from "@/lib/task/items/getWakeUpData";
 import generateSeedTask from "@/lib/task/items/generateSeed";
@@ -22,6 +23,7 @@ export {
   runGetTask,
   waitDeployTask,
   deployTask,
+  runTask,
   requestTokensFromFaucetTask,
   getWakeUpDataTask,
   generateSeedTask,

@@ -1,6 +1,7 @@
 import BackgroundApi from "@/api/background";
 import {generateSeedTask, setWalletBySeedTask} from "@/lib/task/items";
 import store from "@/store";
+import contractLib from '@/lib/contract';
 
 export default {
   namespaced: true,
@@ -27,7 +28,7 @@ export default {
     goToWallet: async ({commit, state}) => {
       commit('setIsGoingToWallet');
       store.commit('globalError/clearText');
-      BackgroundApi.request(setWalletBySeedTask, {seed: state.seed})
+      BackgroundApi.request(setWalletBySeedTask, {seed: state.seed, contractId: contractLib.ids.safeMultisig})
         .then(async () => {
           await store.dispatch('wallet/wakeup');
         })

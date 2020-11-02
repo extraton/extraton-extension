@@ -44,6 +44,7 @@ const handleMessage = async (request, sender) => {
       : 1;
     result.error = e.toString();
   }
+  console.log({result});
   return result;
 }
 chrome.runtime.onMessage.addListener(

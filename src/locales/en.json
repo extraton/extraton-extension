@@ -24,6 +24,12 @@
         "button": {
           "apply": "Deploy"
         }
+      },
+      "5": {
+        "name": "Run Transaction",
+        "button": {
+          "apply": "Run"
+        }
       }
     }
   }

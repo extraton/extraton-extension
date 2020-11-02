@@ -8,8 +8,26 @@
                 class="walletRestore__seed"
                 filled auto-grow
     />
+    <v-select v-model="contractId"
+              :items="contracts"
+              label="Contract"
+              class="walletRestore__contract"
+              hide-details
+              filled
+              dense
+    >
+      <template v-slot:item="{item}">
+        <v-list-item :value="item.value" dense>
+          <v-list-item-content>
+            <v-list-item-title>{{ item.text }}</v-list-item-title>
+            <v-list-item-subtitle>{{ item.info }}</v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+        <v-divider class="mt-2"></v-divider>
+      </template>
+    </v-select>
     <div class="text-center">
-      <v-btn @click="restore(seed)" :loading="isRestoring" color="primary">restore</v-btn>
+      <v-btn @click="restore({seed, contractId})" :loading="isRestoring" color="primary">restore</v-btn>
     </div>
   </div>
 </template>
@@ -22,11 +40,13 @@ export default {
   components: {ViewTitle},
   data: () => ({
     seed: '',
+    contractId: 1,
   }),
   computed: {
     ...mapState('walletRestore', [
       'error',
       'isRestoring',
+      'contracts'
     ]),
   },
   beforeDestroy() {
@@ -39,17 +59,6 @@ export default {
     ...mapActions('walletRestore', [
       'restore',
     ]),
-    // async restore() {
-    //   this.isRestoring = true;
-    //   this.error = null;
-    //   this.restoreKeys(this.seed.trim()).then(async function () {
-    //     this.setKeysToWallet(this.keys);
-    //     await this.enterWallet();
-    //   }.bind(this)).catch(function (err) {
-    //     this.error = err.toString();
-    //     this.isRestoring = false;
-    //   }.bind(this));
-    // },
   },
 }
 </script>
@@ -58,9 +67,14 @@ export default {
 .walletRestore {
   &__seed {
     margin: 25px 0 10px !important;
+
     textarea {
       font-size: 20px;
     }
+  }
+
+  &__contract {
+    margin-bottom: 37px!important;
   }
 }
 </style>

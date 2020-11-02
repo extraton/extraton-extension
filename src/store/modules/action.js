@@ -45,7 +45,7 @@ const _ = {
   updateTaskEndless: async function (commit, state) {
     try {
       const tasks = await BackgroundApi.request(requestInteractiveTasksTask);
-      console.log(tasks);
+      // console.log(tasks);
       commit('setTasks', tasks);
     } catch (err) {
       console.error(err);

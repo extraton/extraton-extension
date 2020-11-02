@@ -1,7 +1,6 @@
 import database from '@/db';
 import TonApi from '@/api/ton';
-
-const setcodeMultisig = require('@/contracts/SetcodeMultisigWallet.json');
+import contractLib from '@/lib/contract';
 
 const _ = {
   timeout: (ms) => new Promise(resolve => setTimeout(resolve, ms)),
@@ -28,8 +27,10 @@ export default {
     const db = await database.getClient();
     const server = (await db.network.get(networkId)).server;
     const keys = (await db.param.get('keys')).value;
+    const contractId = (await db.param.get('contractId')).value;
+    const walletContract = contractLib.getContractById(contractId);
     const constructorParams = {owners: [`0x${keys.public}`], reqConfirms: 1};
-    const message = await TonApi.createDeployMessage(server, keys, setcodeMultisig, {}, constructorParams);
+    const message = await TonApi.createDeployMessage(server, keys, walletContract, {}, constructorParams);
     const processingState = await TonApi.sendMessage(server, message);
     return await TonApi.waitForDeployTransaction(server, message, processingState);
   },
@@ -68,7 +69,9 @@ export default {
     const server = (await db.network.get(networkId)).server;
     const walletAddress = (await db.param.get('address')).value;
     const keys = (await db.param.get('keys')).value;
-    const abi = setcodeMultisig.abi;
+    const contractId = (await db.param.get('contractId')).value;
+    const walletContract = contractLib.getContractById(contractId);
+    const abi = walletContract.abi;
     const input = {dest: destinationAddress, value: nanoAmount, bounce: false, allBalance: false, payload: ''};
     const result = await TonApi.run(server, walletAddress, 'submitTransaction', abi, input, keys);
     return result.transaction.id;

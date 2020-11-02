@@ -1,13 +1,13 @@
 import Dexie from "dexie";
 
-const DB_NAME = 'db35';
+const DB_NAME = 'db39';
 
 const _ = {
   setSchema: function (db) {
     db.version(1).stores({
       param: '&key, value',
       network: '&id, server, explorer, info, isDev, faucet.address, faucet.isGettingTokens, account.balance, account.codeHash',
-      interactiveTask: '++id, networkId, requestId, params, typeId, statusId, result, error, form',
+      interactiveTask: '++id, networkId, requestId, data, params, typeId, statusId, result, error, form',
     });
   },
   fillInitial: async function (db) {
@@ -16,6 +16,7 @@ const _ = {
         {key: 'address', value: null},
         {key: 'network', value: 1},
         {key: 'keys', value: null},
+        {key: 'contractId', value: 1},
       ]);
       await db.network.bulkAdd([
         {

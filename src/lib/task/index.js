@@ -4,6 +4,7 @@ import {
   runGetTask,
   waitDeployTask,
   deployTask,
+  runTask,
   requestTokensFromFaucetTask,
   getWakeUpDataTask,
   generateSeedTask,
@@ -20,6 +21,7 @@ import {
 import taskNotExists from '@/lib/task/exception/taskNotExists';
 import {interactiveTaskRepository, interactiveTaskStatus} from "@/db/repository/interactiveTaskRepository";
 import {handleException, handleExceptionCodes} from '@/lib/task/exception/handleException';
+import {tonException, tonExceptionCodes} from '@/api/exception/tonException';
 
 const taskList = {
   internal: {
@@ -37,7 +39,7 @@ const taskList = {
     requestInteractiveTasksTask,
   },
   external: {
-    interactive: {deployTask},
+    interactive: {deployTask, runTask},
     background: {getNetworkTask, getVersionTask, runGetTask, waitDeployTask},
   },
 };
@@ -62,7 +64,19 @@ const _ = {
     };
   },
   handleTask: async function (list, task) {
-    return await _.getTaskHandler(list, task.method).handle(task);
+    try {
+      return await _.getTaskHandler(list, task.method).handle(task);
+    } catch (e) { //@TODO move it out here
+      if (e instanceof tonException) {
+        switch (e.code) {
+          case tonExceptionCodes.syncTime:
+            throw new handleException(handleExceptionCodes.syncTime.code);
+          default:
+            throw new handleException(handleExceptionCodes.tonClientError.code, e.message);
+        }
+      }
+      throw e;
+    }
   },
   timeout: (ms) => new Promise(resolve => setTimeout(resolve, ms)),
 };

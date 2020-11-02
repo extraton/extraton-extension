@@ -30,12 +30,22 @@ const interactiveTaskType = {
   uiTransfer: 2,
   preDeployTransfer: 3,
   deployContract: 4,
+  runTransaction: 5,
 };
 
 const interactiveTaskRepository = {
-  async createTask(typeId, networkId, requestId = null, params = {}) {
+  async createTask(typeId, networkId, requestId = null, params = {}, data = {}) {
     const db = await database.getClient();
-    let task = {typeId, networkId, requestId, params, statusId: interactiveTaskStatus.new, error: null, form: {}};
+    let task = {
+      typeId,
+      networkId,
+      requestId,
+      data,
+      params,
+      statusId: interactiveTaskStatus.new,
+      error: null,
+      form: {}
+    };
     task.id = await db.interactiveTask.add(task);
     return task;
   },
@@ -56,7 +66,7 @@ const interactiveTaskRepository = {
   async isOneOfTaskByRequestIdCanceled(requestId) {
     const db = await database.getClient();
     const tasksNum = await db.interactiveTask
-      .where({requestId, statusId:interactiveTaskStatus.canceled})
+      .where({requestId, statusId: interactiveTaskStatus.canceled})
       .count();
     return tasksNum > 0;
   },

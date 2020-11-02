@@ -81,17 +81,4 @@ html {
     }
   }
 }
-
-.v-list-item {
-  padding: 0 7px !important;
-
-  .v-list-item__content {
-    max-width: 140px !important;
-  }
-
-  .v-list-item__icon {
-    margin-right: 20px !important;
-    margin-bottom: unset !important;
-  }
-}
 </style>
