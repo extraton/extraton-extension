@@ -9,7 +9,7 @@
       <v-text-field v-model="amount" @input="sync" :rules="[rules.required, rules.greaterOrEqualZero]"
                     :disabled="disabled" type="number" label="Amount"/>
     </div>
-    <amount info="Estimated fee" value="0.011"/>
+    <amount info="Estimated fee" value="0.011" approx/>
   </div>
 </template>
 

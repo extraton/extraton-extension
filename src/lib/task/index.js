@@ -3,8 +3,10 @@ import {
   getVersionTask,
   runGetTask,
   waitDeployTask,
+  getAddressTask,
   deployTask,
   runTask,
+  transferTask,
   requestTokensFromFaucetTask,
   getWakeUpDataTask,
   generateSeedTask,
@@ -39,8 +41,8 @@ const taskList = {
     requestInteractiveTasksTask,
   },
   external: {
-    interactive: {deployTask, runTask},
-    background: {getNetworkTask, getVersionTask, runGetTask, waitDeployTask},
+    interactive: {deployTask, runTask, transferTask},
+    background: {getNetworkTask, getVersionTask, runGetTask, waitDeployTask, getAddressTask},
   },
 };
 const _ = {

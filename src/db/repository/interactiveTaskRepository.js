@@ -31,6 +31,7 @@ const interactiveTaskType = {
   preDeployTransfer: 3,
   deployContract: 4,
   runTransaction: 5,
+  transfer: 6,
 };
 
 const interactiveTaskRepository = {
@@ -46,6 +47,7 @@ const interactiveTaskRepository = {
       error: null,
       form: {}
     };
+    console.log(task);
     task.id = await db.interactiveTask.add(task);
     return task;
   },

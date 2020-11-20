@@ -6,7 +6,7 @@
       </div>
       <div class="text-body-1">Run transaction.</div>
     </div>
-    <amount info="Estimated fee" :value="fees"/>
+    <amount info="Estimated fee" :value="fees" approx/>
   </div>
 </template>
 

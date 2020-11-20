@@ -30,6 +30,12 @@
         "button": {
           "apply": "Run"
         }
+      },
+      "6": {
+        "name": "Transfer",
+        "button": {
+          "apply": "Transfer"
+        }
       }
     }
   }

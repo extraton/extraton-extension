@@ -56,6 +56,16 @@ export default {
             result = {txid};
             break;
           }
+          case interactiveTaskType.transfer: {
+            result = await walletLib.transfer(
+              interactiveTask.networkId,
+              interactiveTask.params.address,
+              interactiveTask.params.amount,
+              interactiveTask.params.bounce,
+              interactiveTask.params.payload || ''
+            );
+            break;
+          }
           default: {
             throw 'Unknown interactive type.';
           }

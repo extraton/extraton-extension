@@ -33,6 +33,12 @@
                                 :form="task.form"
                                 :disabled="!isApplyButtonEnabled"
                                 :fees="task.data.fees"/>
+            <transfer v-if="task.typeId === interactiveTaskType.transfer"
+                                @formChange="formChange"
+                                :form="task.form"
+                                :disabled="!isApplyButtonEnabled"
+                                :amount="task.params.amount"
+                                :address="task.params.address"/>
           </v-card-text>
         </div>
         <div>
@@ -64,9 +70,10 @@ import {mapGetters, mapActions} from "vuex";
 import {interactiveTaskType} from '@/db/repository/interactiveTaskRepository';
 import PreDeployTransfer from "@/components/actions/preDeployTransfer";
 import run from "@/components/actions/run";
+import Transfer from "@/components/actions/transfer";
 
 export default {
-  components: {PreDeployTransfer, walletActivationAction, uiTransferAction, deployContract, run},
+  components: {Transfer, PreDeployTransfer, walletActivationAction, uiTransferAction, deployContract, run},
   data: () => ({
     interactiveTaskType,
     valid: true,

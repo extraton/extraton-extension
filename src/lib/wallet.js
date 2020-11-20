@@ -64,7 +64,7 @@ export default {
     const integerFormatted = integer.toLocaleString();
     return `${integerFormatted}.${decimalResult}`;
   },
-  async transfer(networkId, destinationAddress, nanoAmount) {
+  async transfer(networkId, destinationAddress, nanoAmount, bounce = false, payload = '') {
     const db = await database.getClient();
     const server = (await db.network.get(networkId)).server;
     const walletAddress = (await db.param.get('address')).value;
@@ -72,8 +72,14 @@ export default {
     const contractId = (await db.param.get('contractId')).value;
     const walletContract = walletContractLib.getContractById(contractId);
     const abi = walletContract.abi;
-    const input = {dest: destinationAddress, value: nanoAmount, bounce: false, allBalance: false, payload: ''};
+    const input = {dest: destinationAddress, value: nanoAmount, bounce, allBalance: false, payload};
     const result = await TonApi.run(server, walletAddress, 'submitTransaction', abi, input, keys);
     return result.transaction.id;
+  },
+  addressToView(address) {
+    return `${address.substr(0, 8)}...${address.substr(-6)}`;
+  },
+  compileExplorerLink(explorer, address) {
+    return `https://${explorer}/accounts?section=details&id=${address}`;
   }
 };

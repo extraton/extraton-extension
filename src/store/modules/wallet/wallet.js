@@ -149,9 +149,6 @@ export default {
   },
   getters: {
     isLoggedIn: (state) => state.address !== null,
-    addressView: (state) => null !== state.address
-      ? `${state.address.substr(0, 8)}...${state.address.substr(-6)}`
-      : null,
     balanceView: (state) => {
       const balanceRaw = state.networks[state.network].account.balance;
       if (null === balanceRaw) {
@@ -161,7 +158,7 @@ export default {
     },
     server: (state) => state.networks[state.network].server,
     isDevNetwork: (state) => state.networks[state.network].isDev,
-    explorerLink: (state) => `https://${state.networks[state.network].explorer}/accounts?section=details&id=${state.address}`,
+    explorer: (state) => state.networks[state.network].explorer,
     isGettingTokensFromFaucet: (state) => {
       const faucet = state.networks[state.network].faucet;
       return undefined !== faucet ? faucet.isGettingTokens : false;

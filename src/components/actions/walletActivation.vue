@@ -6,7 +6,7 @@
       </div>
       <div class="text-body-1">Before perform any transactions you need to deploy wallet contract to your address.</div>
     </div>
-    <amount info="Estimated fee" value="0.073"/>
+    <amount info="Estimated fee" value="0.073" approx/>
   </div>
 </template>
 

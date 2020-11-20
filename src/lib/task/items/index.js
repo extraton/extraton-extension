@@ -2,8 +2,10 @@ import getNetworkTask from "@/lib/task/items/getNetwork";
 import getVersionTask from "@/lib/task/items/getVersion";
 import runGetTask from "@/lib/task/items/runGet";
 import waitDeployTask from "@/lib/task/items/waitDeploy";
+import getAddressTask from "@/lib/task/items/getAddress";
 import deployTask from "@/lib/task/items/deploy";
 import runTask from "@/lib/task/items/run";
+import transferTask from "@/lib/task/items/transfer";
 import requestTokensFromFaucetTask from "@/lib/task/items/requestTokensFromFaucet";
 import getWakeUpDataTask from "@/lib/task/items/getWakeUpData";
 import generateSeedTask from "@/lib/task/items/generateSeed";
@@ -22,8 +24,10 @@ export {
   getVersionTask,
   runGetTask,
   waitDeployTask,
+  getAddressTask,
   deployTask,
   runTask,
+  transferTask,
   requestTokensFromFaucetTask,
   getWakeUpDataTask,
   generateSeedTask,
