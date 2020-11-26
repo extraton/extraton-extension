@@ -2,6 +2,7 @@ import getNetworkTask from "@/lib/task/items/getNetwork";
 import getVersionTask from "@/lib/task/items/getVersion";
 import runGetTask from "@/lib/task/items/runGet";
 import waitDeployTask from "@/lib/task/items/waitDeploy";
+import waitRunTask from "@/lib/task/items/waitRun";
 import getAddressTask from "@/lib/task/items/getAddress";
 import deployTask from "@/lib/task/items/deploy";
 import runTask from "@/lib/task/items/run";
@@ -24,6 +25,7 @@ export {
   getVersionTask,
   runGetTask,
   waitDeployTask,
+  waitRunTask,
   getAddressTask,
   deployTask,
   runTask,

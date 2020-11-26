@@ -3,6 +3,7 @@ import {
   getVersionTask,
   runGetTask,
   waitDeployTask,
+  waitRunTask,
   getAddressTask,
   deployTask,
   runTask,
@@ -42,7 +43,7 @@ const taskList = {
   },
   external: {
     interactive: {deployTask, runTask, transferTask},
-    background: {getNetworkTask, getVersionTask, runGetTask, waitDeployTask, getAddressTask},
+    background: {getNetworkTask, getVersionTask, runGetTask, waitDeployTask, waitRunTask, getAddressTask},
   },
 };
 const _ = {

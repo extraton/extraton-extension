@@ -57,13 +57,18 @@ export default {
             break;
           }
           case interactiveTaskType.transfer: {
-            result = await walletLib.transfer(
+            const db = await database.getClient();
+            const networkId = (await db.param.get('network')).value;
+            const server = (await db.network.get(networkId)).server;
+            const message = await walletLib.createTransferMessage(
               interactiveTask.networkId,
               interactiveTask.params.address,
               interactiveTask.params.amount,
               interactiveTask.params.bounce,
               interactiveTask.params.payload || ''
             );
+            const processingState = await TonApi.sendMessage(server, message);
+            result = {processingState, message};
             break;
           }
           default: {

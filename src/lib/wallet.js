@@ -64,6 +64,17 @@ export default {
     const integerFormatted = integer.toLocaleString();
     return `${integerFormatted}.${decimalResult}`;
   },
+  async createTransferMessage(networkId, destinationAddress, nanoAmount, bounce = false, payload = '') {
+    const db = await database.getClient();
+    const server = (await db.network.get(networkId)).server;
+    const walletAddress = (await db.param.get('address')).value;
+    const keys = (await db.param.get('keys')).value;
+    const contractId = (await db.param.get('contractId')).value;
+    const walletContract = walletContractLib.getContractById(contractId);
+    const abi = walletContract.abi;
+    const input = {dest: destinationAddress, value: nanoAmount, bounce, allBalance: false, payload};
+    return await TonApi.createRunMessage(server, walletAddress, abi, 'submitTransaction', input, keys);
+  },
   async transfer(networkId, destinationAddress, nanoAmount, bounce = false, payload = '') {
     const db = await database.getClient();
     const server = (await db.network.get(networkId)).server;
