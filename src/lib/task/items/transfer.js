@@ -14,7 +14,15 @@ export default {
       throw new handleException(handleExceptionCodes.networkChanged.code);
     }
 
-    if (!await walletLib.isContractDeployed(networkId)) {
+    const loggedWalletAddress = await walletLib.getWalletAddress();
+
+    if (undefined === task.data.walletAddress) {
+      task.data.walletAddress = loggedWalletAddress;
+    }
+
+    task.data.isItLoggedWalletAddress = walletLib.isAddressesMatch(loggedWalletAddress, task.data.walletAddress);
+
+    if (task.data.isItLoggedWalletAddress && !await walletLib.isContractDeployed(networkId)) {
       await interactiveTaskRepository.createTask(interactiveTaskType.deployWalletContract, networkId, task.requestId);
     }
 

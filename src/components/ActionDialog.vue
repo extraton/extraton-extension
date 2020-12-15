@@ -38,7 +38,15 @@
                                 :form="task.form"
                                 :disabled="!isApplyButtonEnabled"
                                 :amount="task.params.amount"
-                                :address="task.params.address"/>
+                                :address="task.params.address"
+                                :wallet-address="task.params.walletAddress"
+                                :is-current-address="task.params.isItLoggedWalletAddress"/>
+            <confirm-transaction v-if="task.typeId === interactiveTaskType.confirmTransaction"
+                                 @formChange="formChange"
+                                 :form="task.form"
+                                 :disabled="!isApplyButtonEnabled"
+                                 :txid="task.params.txid"
+                                 :wallet-address="task.params.walletAddress"/>
           </v-card-text>
         </div>
         <div>
@@ -71,9 +79,10 @@ import {interactiveTaskType} from '@/db/repository/interactiveTaskRepository';
 import PreDeployTransfer from "@/components/actions/preDeployTransfer";
 import run from "@/components/actions/run";
 import Transfer from "@/components/actions/transfer";
+import ConfirmTransaction from "@/components/actions/confirmTransaction";
 
 export default {
-  components: {Transfer, PreDeployTransfer, walletActivationAction, uiTransferAction, deployContract, run},
+  components: {Transfer, ConfirmTransaction, PreDeployTransfer, walletActivationAction, uiTransferAction, deployContract, run},
   data: () => ({
     interactiveTaskType,
     valid: true,

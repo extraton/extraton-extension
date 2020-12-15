@@ -36,6 +36,12 @@
         "button": {
           "apply": "Transfer"
         }
+      },
+      "7": {
+        "name": "Confirm Transaction",
+        "button": {
+          "apply": "Confirm"
+        }
       }
     }
   }

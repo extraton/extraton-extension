@@ -32,6 +32,7 @@ const interactiveTaskType = {
   deployContract: 4,
   runTransaction: 5,
   transfer: 6,
+  confirmTransaction: 7,
 };
 
 const interactiveTaskRepository = {

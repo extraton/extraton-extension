@@ -64,10 +64,9 @@ export default {
     const integerFormatted = integer.toLocaleString();
     return `${integerFormatted}.${decimalResult}`;
   },
-  async createTransferMessage(networkId, destinationAddress, nanoAmount, bounce = false, payload = '') {
+  async createTransferMessage(networkId, walletAddress, destinationAddress, nanoAmount, bounce = false, payload = '') {
     const db = await database.getClient();
     const server = (await db.network.get(networkId)).server;
-    const walletAddress = (await db.param.get('address')).value;
     const keys = (await db.param.get('keys')).value;
     const contractId = (await db.param.get('contractId')).value;
     const walletContract = walletContractLib.getContractById(contractId);
@@ -80,17 +79,42 @@ export default {
     const server = (await db.network.get(networkId)).server;
     const walletAddress = (await db.param.get('address')).value;
     const keys = (await db.param.get('keys')).value;
-    const contractId = (await db.param.get('contractId')).value;
+    const contractId = (await db.param.get('contractId')).value;//@TODO can be wrong contract
     const walletContract = walletContractLib.getContractById(contractId);
     const abi = walletContract.abi;
     const input = {dest: destinationAddress, value: nanoAmount, bounce, allBalance: false, payload};
     const result = await TonApi.run(server, walletAddress, 'submitTransaction', abi, input, keys);
     return result.transaction.id;
   },
+  async createConfirmTransactionMessage(networkId, walletAddress, transactionId) {
+    const db = await database.getClient();
+    const server = (await db.network.get(networkId)).server;
+    const keys = (await db.param.get('keys')).value;
+    const walletContract = walletContractLib.getContractById(walletContractLib.ids.safeMultisig);
+    const abi = walletContract.abi;
+    const input = {transactionId};
+    return await TonApi.createRunMessage(server, walletAddress, abi, 'confirmTransaction', input, keys);
+  },
+  /*async getTransactionInfo(networkId, address, transactionId) {
+    const db = await database.getClient();
+    const server = (await db.network.get(networkId)).server;
+    const walletContract = walletContractLib.getContractById(walletContractLib.ids.safeMultisig);
+    const input = {transactionId};
+    const result = await TonApi.run(server, address, 'getTransaction', walletContract.abi, input);
+    console.log(result);
+    return result;
+  },*/
+  async getWalletAddress() {
+    const db = await database.getClient();
+    return (await db.param.get('address')).value;
+  },
   addressToView(address) {
     return `${address.substr(0, 8)}...${address.substr(-6)}`;
   },
+  isAddressesMatch(address1, address2) {
+    return address1.toLowerCase() === address2.toLowerCase();
+  },
   compileExplorerLink(explorer, address) {
-    return `https://${explorer}/accounts?section=details&id=${address}`;
+    return `https://${explorer}/accounts/accountDetails?id=${address}`;
   }
 };
