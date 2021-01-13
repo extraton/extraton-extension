@@ -1,4 +1,5 @@
 import walletLib from '@/lib/wallet';
+import {walletRepository} from "@/db/repository/walletRepository";
 import {
   interactiveTaskType,
   interactiveTaskStatus,
@@ -20,48 +21,41 @@ export default {
       let result = {};
       try {
         //@TODO refactoring
+        const db = await database.getClient();
+        const wallet = await walletRepository.getCurrent();
+        const server = (await db.network.get(interactiveTask.networkId)).server;
         switch (interactiveTask.typeId) {
           case interactiveTaskType.deployWalletContract: {
-            await walletLib.deploy(interactiveTask.networkId);
+            await walletLib.deploy(server, wallet);
             break;
           }
           case interactiveTaskType.uiTransfer: {
             const nanoAmount = walletLib.convertToNano(form.amount).toString();
-            await walletLib.transfer(interactiveTask.networkId, form.address, nanoAmount);
+            await walletLib.transfer(server, wallet, form.address, nanoAmount);
             break;
           }
           case interactiveTaskType.preDeployTransfer: {
-            const db = await database.getClient();
-            const networkId = (await db.param.get('network')).value;
-            const server = (await db.network.get(networkId)).server;
-            const keys = (await db.param.get('keys')).value;
             const initParams = interactiveTask.params.options.initParams !== undefined ? interactiveTask.params.options.initParams : {};
-            const address = await TonApi.predictAddress(server, keys.public, interactiveTask.params.abi, interactiveTask.params.imageBase64, initParams);
-            await walletLib.transfer(interactiveTask.networkId, address, interactiveTask.params.options.initAmount);
+            const address = await TonApi.predictAddress(server, wallet.keys.public, interactiveTask.params.abi, interactiveTask.params.imageBase64, initParams);
+            await walletLib.transfer(server, wallet, address, interactiveTask.params.options.initAmount);
             break;
           }
           case interactiveTaskType.deployContract: {
             const initParams = interactiveTask.params.options.initParams !== undefined ? interactiveTask.params.options.initParams : {};
-            result = await walletLib.deployContract(interactiveTask.networkId, interactiveTask.params.abi, interactiveTask.params.imageBase64, initParams, interactiveTask.params.constructorParams);
+            result = await walletLib.deployContract(server, wallet, interactiveTask.params.abi, interactiveTask.params.imageBase64, initParams, interactiveTask.params.constructorParams);
             break;
           }
           case interactiveTaskType.runTransaction: {
-            const db = await database.getClient();
-            const networkId = (await db.param.get('network')).value;
-            const server = (await db.network.get(networkId)).server;
-            const keys = (await db.param.get('keys')).value;
-            const message = await TonApi.createRunMessage(server, interactiveTask.params.address, interactiveTask.params.abi, interactiveTask.params.method, interactiveTask.params.params, keys);
+            const message = await TonApi.createRunMessage(server, interactiveTask.params.address, interactiveTask.params.abi, interactiveTask.params.method, interactiveTask.params.params, wallet.keys);
             const processingState = await TonApi.sendMessage(server, message);
             const txid = await TonApi.waitForRunTransaction(server, message, processingState);
             result = {txid};
             break;
           }
           case interactiveTaskType.transfer: {
-            const db = await database.getClient();
-            const networkId = (await db.param.get('network')).value;
-            const server = (await db.network.get(networkId)).server;
             const message = await walletLib.createTransferMessage(
-              interactiveTask.networkId,
+              server,
+              wallet,
               interactiveTask.params.walletAddress,
               interactiveTask.params.address,
               interactiveTask.params.amount,
@@ -73,11 +67,9 @@ export default {
             break;
           }
           case interactiveTaskType.confirmTransaction: {
-            const db = await database.getClient();
-            const networkId = (await db.param.get('network')).value;
-            const server = (await db.network.get(networkId)).server;
             const message = await walletLib.createConfirmTransactionMessage(
-              interactiveTask.networkId,
+              server,
+              wallet,
               interactiveTask.params.walletAddress,
               interactiveTask.params.txid,
             );

@@ -1,6 +1,7 @@
 <template>
   <div class="wallet">
     <action-dialog/>
+    <edit-wallet-dialog/>
     <balance/>
     <main-address/>
     <div class="wallet__actions">
@@ -21,9 +22,10 @@ import MainAddress from "@/components/MainAddress";
 import GetTokens from "@/components/GetTokens";
 import SendTokens from "@/components/SendTokens";
 import BuyTokens from "@/components/BuyTokens";
+import EditWalletDialog from "@/components/EditWalletDialog";
 
 export default {
-  components: {ActionDialog, MainAddress, Balance, GetTokens, BuyTokens, SendTokens},
+  components: {EditWalletDialog, ActionDialog, MainAddress, Balance, GetTokens, BuyTokens, SendTokens},
   data() {
     return {};
   },

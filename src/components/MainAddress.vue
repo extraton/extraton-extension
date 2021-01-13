@@ -1,22 +1,21 @@
 <template>
   <div class="mainAddress text-center">
-    <div class="mainAddress__title text-subtitle-2">Address:</div>
+    <div class="mainAddress__title text-subtitle-2">{{ accountName }}:</div>
     <addr v-if="address" :address="address" :available-in-explorer="isAddressAvailableInExplorer"/>
     <v-skeleton-loader v-else type="text" width="180"/>
   </div>
 </template>
 
 <script>
-import {mapGetters, mapState} from "vuex";
+import {mapGetters} from "vuex";
 import Addr from "@/components/addr";
 
 export default {
   components: {Addr},
   computed: {
-    ...mapState('wallet', [
-      'address',
-    ]),
     ...mapGetters('wallet', [
+      'address',
+      'accountName',
       'isAddressAvailableInExplorer',
     ]),
   },

@@ -1,22 +1,21 @@
 import Dexie from "dexie";
 
-const DB_NAME = 'db39';
+const DB_NAME = 'db40';
 
 const _ = {
   setSchema: function (db) {
     db.version(1).stores({
       param: '&key, value',
-      network: '&id, server, explorer, info, isDev, faucet.address, faucet.isGettingTokens, account.balance, account.codeHash',
+      wallet: '++id, name, contractId, address, keys, networks',
+      network: '&id, server, explorer, info, isDev, faucet.address, faucet.isGettingTokens',
       interactiveTask: '++id, networkId, requestId, data, params, typeId, statusId, result, error, form',
     });
   },
   fillInitial: async function (db) {
     await db.transaction('rw', db.param, db.network, async function () {
       await db.param.bulkAdd([
-        {key: 'address', value: null},
+        {key: 'wallet', value: null},
         {key: 'network', value: 1},
-        {key: 'keys', value: null},
-        {key: 'contractId', value: 1},
       ]);
       await db.network.bulkAdd([
         {
@@ -34,8 +33,7 @@ const _ = {
           info: 'Test network',
           isDev: true,
           faucet: {
-            address: '0:553b3ea098c3bae9a60d9b689beb183c3cf9a5e6bc5f20acf34d5edfa49a31c1',//our own
-            // address: '0:3cf3fe44e76de070048e42a73cebd36d16b6ef82374d49717cb79751a9f28faa',//tonlabs
+            address: '0:553b3ea098c3bae9a60d9b689beb183c3cf9a5e6bc5f20acf34d5edfa49a31c1',
             isGettingTokens: false,
             isAvailable: true,
           },

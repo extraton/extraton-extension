@@ -10,7 +10,6 @@ export default {
     const db = await database.getClient();
     const networkId = (await db.param.get('network')).value;
     // const server = (await db.network.get(networkId)).server;
-    // const keys = (await db.param.get('keys')).value;
 
     if (!await walletLib.isContractDeployed(networkId)) {
       await interactiveTaskRepository.createTask(interactiveTaskType.deployWalletContract, networkId, task.requestId);

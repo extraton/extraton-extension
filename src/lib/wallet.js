@@ -1,6 +1,6 @@
-import database from '@/db';
 import TonApi from '@/api/ton';
 import walletContractLib from '@/lib/walletContract';
+import {walletRepository} from "@/db/repository/walletRepository";
 
 const _ = {
   timeout: (ms) => new Promise(resolve => setTimeout(resolve, ms)),
@@ -8,8 +8,8 @@ const _ = {
 
 export default {
   async isLoggedIn() {
-    const db = await database.getClient();
-    return (await db.param.get('address')).value !== null;
+    const wallets = await walletRepository.getAllWithoutKeys();
+    return Object.keys(wallets).length > 0;
   },
   //@TODO infinity
   async waitLoggedIn() {
@@ -20,26 +20,19 @@ export default {
     return await this.waitLoggedIn();
   },
   async isContractDeployed(networkId) {
-    const db = await database.getClient();
-    return (await db.network.get(networkId)).account.codeHash !== null;
+    const wallet = await walletRepository.getCurrent();
+    return wallet.networks[networkId].codeHash !== null;
   },
-  async deploy(networkId) {
-    const db = await database.getClient();
-    const server = (await db.network.get(networkId)).server;
-    const keys = (await db.param.get('keys')).value;
-    const contractId = (await db.param.get('contractId')).value;
-    const walletContract = walletContractLib.getContractById(contractId);
-    const constructorParams = {owners: [`0x${keys.public}`], reqConfirms: 1};
-    const message = await TonApi.createDeployMessage(server, keys, walletContract, {}, constructorParams);
+  async deploy(server, wallet) {
+    const walletContract = walletContractLib.getContractById(wallet.contractId);
+    const constructorParams = {owners: [`0x${wallet.keys.public}`], reqConfirms: 1};
+    const message = await TonApi.createDeployMessage(server, wallet.keys, walletContract, {}, constructorParams);
     const processingState = await TonApi.sendMessage(server, message);
     return await TonApi.waitForDeployTransaction(server, message, processingState);
   },
-  async deployContract(networkId, abi, imageBase64, initParams, constructorParams) {
-    const db = await database.getClient();
-    const server = (await db.network.get(networkId)).server;
-    const keys = (await db.param.get('keys')).value;
+  async deployContract(server, wallet, abi, imageBase64, initParams, constructorParams) {
     const contract = {abi, imageBase64};
-    const message = await TonApi.createDeployMessage(server, keys, contract, initParams, constructorParams);
+    const message = await TonApi.createDeployMessage(server, wallet.keys, contract, initParams, constructorParams);
     const processingState = await TonApi.sendMessage(server, message);
     return {processingState, message};
   },
@@ -64,36 +57,24 @@ export default {
     const integerFormatted = integer.toLocaleString();
     return `${integerFormatted}.${decimalResult}`;
   },
-  async createTransferMessage(networkId, walletAddress, destinationAddress, nanoAmount, bounce = false, payload = '') {
-    const db = await database.getClient();
-    const server = (await db.network.get(networkId)).server;
-    const keys = (await db.param.get('keys')).value;
-    const contractId = (await db.param.get('contractId')).value;
-    const walletContract = walletContractLib.getContractById(contractId);
+  async createTransferMessage(server, wallet, walletAddress, destinationAddress, nanoAmount, bounce = false, payload = '') {
+    const walletContract = walletContractLib.getContractById(wallet.contractId);
     const abi = walletContract.abi;
     const input = {dest: destinationAddress, value: nanoAmount, bounce, allBalance: false, payload};
-    return await TonApi.createRunMessage(server, walletAddress, abi, 'submitTransaction', input, keys);
+    return await TonApi.createRunMessage(server, walletAddress, abi, 'submitTransaction', input, wallet.keys);
   },
-  async transfer(networkId, destinationAddress, nanoAmount, bounce = false, payload = '') {
-    const db = await database.getClient();
-    const server = (await db.network.get(networkId)).server;
-    const walletAddress = (await db.param.get('address')).value;
-    const keys = (await db.param.get('keys')).value;
-    const contractId = (await db.param.get('contractId')).value;//@TODO can be wrong contract
-    const walletContract = walletContractLib.getContractById(contractId);
+  async transfer(server, wallet, destinationAddress, nanoAmount, bounce = false, payload = '') {
+    const walletContract = walletContractLib.getContractById(wallet.contractId);
     const abi = walletContract.abi;
     const input = {dest: destinationAddress, value: nanoAmount, bounce, allBalance: false, payload};
-    const result = await TonApi.run(server, walletAddress, 'submitTransaction', abi, input, keys);
+    const result = await TonApi.run(server, wallet.address, 'submitTransaction', abi, input, wallet.keys);
     return result.transaction.id;
   },
-  async createConfirmTransactionMessage(networkId, walletAddress, transactionId) {
-    const db = await database.getClient();
-    const server = (await db.network.get(networkId)).server;
-    const keys = (await db.param.get('keys')).value;
+  async createConfirmTransactionMessage(server, wallet, walletAddress, transactionId) {
     const walletContract = walletContractLib.getContractById(walletContractLib.ids.safeMultisig);
     const abi = walletContract.abi;
     const input = {transactionId};
-    return await TonApi.createRunMessage(server, walletAddress, abi, 'confirmTransaction', input, keys);
+    return await TonApi.createRunMessage(server, walletAddress, abi, 'confirmTransaction', input, wallet.keys);
   },
   /*async getTransactionInfo(networkId, address, transactionId) {
     const db = await database.getClient();
@@ -105,8 +86,8 @@ export default {
     return result;
   },*/
   async getWalletAddress() {
-    const db = await database.getClient();
-    return (await db.param.get('address')).value;
+    const wallet = await walletRepository.getCurrent();
+    return wallet.address;
   },
   addressToView(address) {
     return `${address.substr(0, 8)}...${address.substr(-6)}`;

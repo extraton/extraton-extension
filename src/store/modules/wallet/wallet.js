@@ -6,6 +6,7 @@ import {
   requestTokensFromFaucetTask,
   getWakeUpDataTask,
   changeNetworkTask,
+  changeWalletTask,
   requestAddressDataTask,
   logoutTask,
   initUiTransferTask,
@@ -16,6 +17,7 @@ const _ = {
     if (state.isAutoUpdatingOn && epoch === state.autoUpdateEpoch) {
       try {
         const data = await BackgroundApi.request(requestAddressDataTask);
+        // console.log(data);
         if (state.isAutoUpdatingOn && epoch === state.autoUpdateEpoch) {
           commit('setNetworkAccountData', data);
         }
@@ -31,63 +33,51 @@ const _ = {
     }
   },
   isBalancePositive(state) {
-    const balance = state.networks[state.network].account.balance;
+    const balance = state.wallets[state.walletId].networks[state.network].balance;
     return null !== balance ? BigInt(balance) > BigInt(0) : false;
   },
-  hasContract: (state) => state.networks[state.network].account.codeHash !== null,
+  hasContract: (state) => state.wallets[state.walletId].networks[state.network].codeHash !== null,
 };
 
 export default {
   namespaced: true,
   state: {
-    address: null,
+    wallets: null,
+    walletId: null,
     network: null,
     networks: null,
     isAutoUpdatingOn: false,
     autoUpdateEpoch: 0,
   },
   mutations: {
-    setNetworkAccountData: (state, {networkId, account}) => state.networks[networkId].account = account,
+    setNetworkAccountData: (state, {walletId, networkId, data}) => state.wallets[walletId].networks[networkId] = data,
     setNetwork: (state, network) => state.network = network,
     setAutoUpdateOn: (state) => state.isAutoUpdatingOn = true,
     nextAutoUpdateEpoch: (state) => state.autoUpdateEpoch += 1,
     setGettingTokensFromFaucet: (state, network) => state.networks[network].faucet.isGettingTokens = true,
     unsetGettingTokensFromFaucet: (state, network) => state.networks[network].faucet.isGettingTokens = false,
     disableFaucet: (state) => state.networks[state.network].faucet.isAvailable = false,
+    setWallet: (state, walletId) => state.walletId = walletId,
     clear: (state) => {
-      state.address = null;
+      state.wallets = null;
+      state.walletId = null;
       state.network = null;
       state.networks = null;
       state.isAutoUpdatingOn = false;
     },
     applySleepState: (state, sleepState) => {
-      state.address = sleepState.address;
+      state.wallets = sleepState.wallets;
+      state.walletId = sleepState.walletId;
       state.network = sleepState.network;
       state.networks = sleepState.networks;
+    },
+    setWalletsAfterRemoving: (state, {wallets, walletId}) => {
+      state.walletId = walletId;
+      state.wallets = wallets;
     }
   },
   actions: {
     enterWallet: async () => {
-      // let tasks = await StorageApi.get('tasks');
-      // console.log({tasks});
-      // if (null !== tasks) {
-      //   for (let i = tasks.queue.length - 1; i >=0; i--) {
-      //     let result = {requestId: tasks.queue[i].requestId};
-      //     switch (tasks.queue[i].method) {
-      //       case 'getNetwork':
-      //         result.code = 0;
-      //         result.data = {id: state.network};
-      //         break;
-      //       default:
-      //         result.code = 1;
-      //         result.error = 'Unknown task.';
-      //     }
-      //     tasks.queue[i].result = result;
-      //     tasks.handled.push(tasks.queue[i]);
-      //     tasks.queue.splice(i, 1);
-      //   }
-      //   await StorageApi.set('tasks', tasks);
-      // }
       return router.push({name: routes.wallet})
     },
     goToStart: () => router.push({name: routes.start}),
@@ -113,9 +103,21 @@ export default {
           store.commit('globalError/setText', 'Failure during network changing.');
         });
     },
+    changeWallet: async ({commit, state}, walletKey) => {
+      const walletId = state.wallets[Object.keys(state.wallets)[walletKey]].id;
+      BackgroundApi.request(changeWalletTask, {walletId})
+        .then(() => {
+          commit('setWallet', walletId);
+        })
+        .catch((err) => {
+          console.error(err);
+          store.commit('globalError/setText', 'Failure during wallet changing.');
+        });
+    },
     wakeup: async ({commit}) => {
       return BackgroundApi.request(getWakeUpDataTask)
         .then((sleepState) => {
+          // console.log(sleepState);
           commit('applySleepState', sleepState);
           store.commit('action/setTasks', sleepState.tasks);
           if (store.getters['wallet/isLoggedIn']) {
@@ -148,13 +150,19 @@ export default {
     },
   },
   getters: {
-    isLoggedIn: (state) => state.address !== null,
+    isLoggedIn: (state) => null !== state.wallets && Object.keys(state.wallets).length > 0,
     balanceView: (state) => {
-      const balanceRaw = state.networks[state.network].account.balance;
+      const balanceRaw = state.wallets[state.walletId].networks[state.network].balance;
       if (null === balanceRaw) {
         return null;
       }
       return walletLib.convertFromNano(balanceRaw, 3);
+    },
+    address: (state) => {
+      return state.wallets[state.walletId].address;
+    },
+    accountName: (state) => {
+      return state.wallets[state.walletId].name;
     },
     server: (state) => state.networks[state.network].server,
     isDevNetwork: (state) => state.networks[state.network].isDev,
@@ -165,7 +173,7 @@ export default {
     },
     isFaucetAvailable: (state) => {
       const faucet = state.networks[state.network].faucet;
-      const isZeroBalance = state.networks[state.network].account.balance === 0;
+      const isZeroBalance = state.wallets[state.walletId].networks[state.network].balance === 0;
       return undefined !== faucet && faucet.isAvailable === true && isZeroBalance && !_.hasContract(state);
     },
     isAddressAvailableInExplorer: (state) => _.hasContract(state) || _.isBalancePositive(state),

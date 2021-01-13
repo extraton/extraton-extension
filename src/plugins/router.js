@@ -13,7 +13,9 @@ const routes = {
   start: 'start',
   wallet: 'wallet',
   walletCreate: 'walletCreate',
+  walletAdd: 'walletAdd',
   walletRestore: 'walletRestore',
+  walletAddRestore: 'walletAddRestore',
 };
 
 const list = [
@@ -38,10 +40,22 @@ const list = [
         meta: {back: routes.start}
       },
       {
+        path: 'add',
+        name: routes.walletAdd,
+        component: WalletCreate,
+        meta: {back: routes.wallet}
+      },
+      {
         path: 'restore',
         name: routes.walletRestore,
         component: WalletRestore,
         meta: {back: routes.start}
+      },
+      {
+        path: 'add-restore',
+        name: routes.walletAddRestore,
+        component: WalletRestore,
+        meta: {back: routes.wallet}
       },
     ]
   },

@@ -1,9 +1,9 @@
-import database from "@/db";
+import {walletRepository} from "@/db/repository/walletRepository";
 
 export default {
   name: 'getAddress',
   handle: async function () {
-    const db = await database.getClient();
-    return (await db.param.get('address')).value;
+    const wallet = await walletRepository.getCurrent();
+    return wallet.address;
   }
 }

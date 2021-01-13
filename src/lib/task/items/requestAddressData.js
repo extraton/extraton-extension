@@ -1,21 +1,23 @@
 import database from '@/db';
 import TonApi from '@/api/ton';
+import {walletRepository} from "@/db/repository/walletRepository";
 
 export default {
   name: 'requestAddressData',
   handle: async function () {
     const db = await database.getClient();
     const networkId = (await db.param.get('network')).value;
-    const address = (await db.param.get('address')).value;
     let network = await db.network.get(networkId);
-    const data = await TonApi.requestAccountData(network.server, address);
+    const wallet = await walletRepository.getCurrent();
+    const data = await TonApi.requestAccountData(network.server, wallet.address);
 
     // console.log(data);
 
-    network.account.balance = null !== data ? data.balance : 0;
-    network.account.codeHash = null !== data ? data.code_hash : null;
-    await db.network.update(network, {account: network.account});
+    const balance = null !== data ? data.balance : 0;
+    const codeHash = null !== data ? data.code_hash : null;
 
-    return {networkId, account: network.account,};
+    await walletRepository.updateNetworkData(wallet, networkId, balance, codeHash);
+
+    return {walletId: wallet.id, networkId, data: wallet.networks[networkId],};
   }
 }

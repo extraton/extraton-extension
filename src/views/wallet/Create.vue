@@ -24,9 +24,6 @@ export default {
   components: {ViewTitle},
   mounted() {
     this.generateSeed();
-    // this.generateSeed().catch(function () {
-    //   this.globalError('Failure during seed generation.');
-    // }.bind(this));
   },
   computed: {
     ...mapState('walletCreate', [
@@ -45,15 +42,6 @@ export default {
     ...mapMutations('walletCreate', [
       'clear',
     ]),
-    // ...mapActions('wallet', [
-    //   'enterWallet',
-    // ]),
-    // ...mapMutations('globalError', {
-    //   globalError: 'setText',
-    // }),
-    // async goToWallet() {
-    //
-    // },
   }
 }
 </script>

@@ -13,6 +13,9 @@ import requestTokensFromFaucetTask from "@/lib/task/items/requestTokensFromFauce
 import getWakeUpDataTask from "@/lib/task/items/getWakeUpData";
 import generateSeedTask from "@/lib/task/items/generateSeed";
 import setWalletBySeedTask from "@/lib/task/items/setWalletBySeed";
+import removeWalletTask from "@/lib/task/items/removeWallet";
+import changeWalletTask from "@/lib/task/items/changeWallet";
+import editWalletTask from "@/lib/task/items/editWallet";
 import changeNetworkTask from "@/lib/task/items/changeNetwork";
 import requestAddressDataTask from "@/lib/task/items/requestAddressData";
 import logoutTask from "@/lib/task/items/logout";
@@ -38,6 +41,9 @@ export {
   getWakeUpDataTask,
   generateSeedTask,
   setWalletBySeedTask,
+  removeWalletTask,
+  changeWalletTask,
+  editWalletTask,
   changeNetworkTask,
   requestAddressDataTask,
   logoutTask,
