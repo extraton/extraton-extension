@@ -10,6 +10,7 @@ import {
   requestAddressDataTask,
   logoutTask,
   initUiTransferTask,
+  thatsMyAddressTask,
 } from "@/lib/task/items";
 
 const _ = {
@@ -48,9 +49,9 @@ export default {
     networks: null,
     isAutoUpdatingOn: false,
     autoUpdateEpoch: 0,
+    isAddressDataGotOnce: false
   },
   mutations: {
-    setNetworkAccountData: (state, {walletId, networkId, data}) => state.wallets[walletId].networks[networkId] = data,
     setNetwork: (state, network) => state.network = network,
     setAutoUpdateOn: (state) => state.isAutoUpdatingOn = true,
     nextAutoUpdateEpoch: (state) => state.autoUpdateEpoch += 1,
@@ -58,12 +59,14 @@ export default {
     unsetGettingTokensFromFaucet: (state, network) => state.networks[network].faucet.isGettingTokens = false,
     disableFaucet: (state) => state.networks[state.network].faucet.isAvailable = false,
     setWallet: (state, walletId) => state.walletId = walletId,
+    thatsMyAddress: (state) => state.wallets[state.walletId].isWalletMine = true,
     clear: (state) => {
       state.wallets = null;
       state.walletId = null;
       state.network = null;
       state.networks = null;
       state.isAutoUpdatingOn = false;
+      state.isAddressDataGotOnce = false;
     },
     applySleepState: (state, sleepState) => {
       state.wallets = sleepState.wallets;
@@ -74,7 +77,11 @@ export default {
     setWalletsAfterRemoving: (state, {wallets, walletId}) => {
       state.walletId = walletId;
       state.wallets = wallets;
-    }
+    },
+    setNetworkAccountData: (state, {walletId, networkId, data}) => {
+      state.wallets[walletId].networks[networkId] = data;
+      state.isAddressDataGotOnce = true;
+    },
   },
   actions: {
     enterWallet: async () => {
@@ -148,6 +155,10 @@ export default {
           snack.danger({text: 'Error'});
         });
     },
+    thatsMyAddress: async ({commit}) => {
+      commit('thatsMyAddress');
+      await BackgroundApi.request(thatsMyAddressTask);
+    },
   },
   getters: {
     isLoggedIn: (state) => null !== state.wallets && Object.keys(state.wallets).length > 0,
@@ -178,5 +189,12 @@ export default {
     },
     isAddressAvailableInExplorer: (state) => _.hasContract(state) || _.isBalancePositive(state),
     isTransferAvailable: (state) => _.isBalancePositive(state),
+    isItYourAddressShowing: (state) => {
+      const wallet = state.wallets[state.walletId];
+      const isOwnerUnknown = null === wallet.isWalletMine;
+      const isCodeHashNull = wallet.networks[state.network].codeHash === null;
+      const isZeroBalance = wallet.networks[state.network].balance === 0;
+      return state.isAddressDataGotOnce && wallet.isRestored && isOwnerUnknown && isCodeHashNull && isZeroBalance;
+    },
   }
 }

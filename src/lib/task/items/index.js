@@ -18,6 +18,7 @@ import changeWalletTask from "@/lib/task/items/changeWallet";
 import editWalletTask from "@/lib/task/items/editWallet";
 import changeNetworkTask from "@/lib/task/items/changeNetwork";
 import requestAddressDataTask from "@/lib/task/items/requestAddressData";
+import thatsMyAddressTask from "@/lib/task/items/thatsMyAddress";
 import logoutTask from "@/lib/task/items/logout";
 import initUiTransferTask from "@/lib/task/items/initUiTransfer";
 import cancelInteractiveTaskTask from "@/lib/task/items/cancelInteractiveTask";
@@ -46,6 +47,7 @@ export {
   editWalletTask,
   changeNetworkTask,
   requestAddressDataTask,
+  thatsMyAddressTask,
   logoutTask,
   initUiTransferTask,
   cancelInteractiveTaskTask,

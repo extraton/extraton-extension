@@ -10,7 +10,7 @@ export default {
     invalidSeed: 10,
   },
   handle: async function (task) {
-    const {seed, contractId} = task.data;
+    const {seed, contractId, isRestoring} = task.data;
     const db = await database.getClient();
     const server = (await db.network.get(1)).server;
     let keys = null;
@@ -26,7 +26,7 @@ export default {
     const contract = walletContractLib.getContractById(contractId);
     const address = await TonApi.predictAddress(server, keys.public, contract.abi, contract.imageBase64);
 
-    const wallet = await walletRepository.create(contractId, address, keys);
+    const wallet = await walletRepository.create(contractId, address, keys, isRestoring);
     wallet.name = wallet.id === 1 ? 'Main Wallet' : `Wallet ${wallet.id}`;
     await walletRepository.updateName(wallet);
 

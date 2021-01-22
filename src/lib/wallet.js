@@ -1,6 +1,9 @@
 import TonApi from '@/api/ton';
 import walletContractLib from '@/lib/walletContract';
 import {walletRepository} from "@/db/repository/walletRepository";
+import utils from "@/lib/utils";
+const TransferAbi = require('@/contracts/Transfer.abi.json');
+
 
 const _ = {
   timeout: (ms) => new Promise(resolve => setTimeout(resolve, ms)),
@@ -75,6 +78,10 @@ export default {
     const abi = walletContract.abi;
     const input = {transactionId};
     return await TonApi.createRunMessage(server, walletAddress, abi, 'confirmTransaction', input, wallet.keys);
+  },
+  async createTransferPayload(server, text) {
+    const comment = utils.hexEncode(text);
+    return await TonApi.createRunBody(server, TransferAbi, 'transfer', {comment});
   },
   /*async getTransactionInfo(networkId, address, transactionId) {
     const db = await database.getClient();

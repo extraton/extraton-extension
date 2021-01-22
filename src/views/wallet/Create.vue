@@ -8,8 +8,11 @@
       <code v-if="seed">{{ seed }}</code>
       <v-skeleton-loader v-else type="list-item-two-line"/>
     </div>
+    <v-form v-model="valid" ref="form" lazy-validation>
+      <agreement/>
+    </v-form>
     <div class="text-center">
-      <v-btn @click="goToWallet" :disabled="!seed" :loading="isGoingToWallet" color="primary">
+      <v-btn @click="validateAndCreate" :disabled="!seed" :loading="isGoingToWallet" color="primary">
         i securely saved it
       </v-btn>
     </div>
@@ -18,10 +21,14 @@
 
 <script>
 import ViewTitle from "@/components/ViewTitle";
+import Agreement from "@/components/Agreement";
 import {mapMutations, mapActions, mapState} from 'vuex';
 
 export default {
-  components: {ViewTitle},
+  components: {ViewTitle, Agreement},
+  data: () => ({
+    valid: true,
+  }),
   mounted() {
     this.generateSeed();
   },
@@ -42,6 +49,12 @@ export default {
     ...mapMutations('walletCreate', [
       'clear',
     ]),
+    async validateAndCreate() {
+      await this.$refs.form.validate();
+      if (this.valid) {
+        await this.goToWallet();
+      }
+    }
   }
 }
 </script>
@@ -50,6 +63,13 @@ export default {
 .walletCreate {
   &__code {
     margin: 20px 0 30px;
+
+    code {
+      background-color: #fbe5e1 !important;
+      color: #c0341d !important;
+      font-weight: 900;
+      font-size: 75%;
+    }
   }
 }
 </style>

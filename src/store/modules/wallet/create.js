@@ -28,7 +28,7 @@ export default {
     goToWallet: async ({commit, state}) => {
       commit('setIsGoingToWallet');
       store.commit('globalError/clearText');
-      BackgroundApi.request(setWalletBySeedTask, {seed: state.seed, contractId: walletContractLib.ids.safeMultisig})
+      BackgroundApi.request(setWalletBySeedTask, {seed: state.seed, contractId: walletContractLib.ids.safeMultisig, isRestoring: false})
         .then(async () => {
           await store.dispatch('wallet/wakeup');
         })

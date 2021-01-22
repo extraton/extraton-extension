@@ -1,12 +1,12 @@
 import Dexie from "dexie";
 
-const DB_NAME = 'db40';
+const DB_NAME = 'db41';
 
 const _ = {
   setSchema: function (db) {
     db.version(1).stores({
       param: '&key, value',
-      wallet: '++id, name, contractId, address, keys, networks',
+      wallet: '++id, name, contractId, address, keys, networks, isRestored, isWalletMine',
       network: '&id, server, explorer, info, isDev, faucet.address, faucet.isGettingTokens',
       interactiveTask: '++id, networkId, requestId, data, params, typeId, statusId, result, error, form',
     });

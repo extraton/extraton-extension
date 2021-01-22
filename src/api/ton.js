@@ -70,6 +70,19 @@ export default {
       throw _.getException(e);
     }
   },
+  async createRunBody(server, abi, functionName, params) {
+    try {
+      const client = await ton.getClient(server);
+      return (await client.contracts.createRunBody({
+        abi,
+        function: functionName,
+        params,
+        internal: true
+      })).bodyBase64;
+    } catch (e) {
+      throw _.getException(e);
+    }
+  },
   async requestAccountData(server, address) {
     try {
       const client = await ton.getClient(server);

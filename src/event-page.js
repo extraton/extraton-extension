@@ -2,6 +2,9 @@ import popupLib from '@/lib/popup';
 import taskLib from '@/lib/task';
 import walletLib from '@/lib/wallet';
 import {handleException} from "@/lib/task/exception/handleException";
+import {interactiveTaskRepository} from "@/db/repository/interactiveTaskRepository";
+
+interactiveTaskRepository.makeProcessTasksUnknown();
 
 const extensionId = chrome.runtime.id;
 const handleMessage = async (request, sender) => {

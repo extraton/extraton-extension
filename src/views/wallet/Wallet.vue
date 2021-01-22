@@ -3,7 +3,10 @@
     <action-dialog/>
     <edit-wallet-dialog/>
     <balance/>
-    <main-address/>
+    <div>
+      <main-address/>
+      <is-it-your-address @yes="thatsMyAddress" v-if="isItYourAddressShowing"/>
+    </div>
     <div class="wallet__actions">
       <get-tokens v-if="isDevNetwork"/>
       <buy-tokens v-else/>
@@ -19,13 +22,14 @@ import {mapActions, mapGetters} from "vuex";
 import ActionDialog from "@/components/ActionDialog";
 import Balance from "@/components/Balance";
 import MainAddress from "@/components/MainAddress";
+import IsItYourAddress from "@/components/IsItYourAddress";
 import GetTokens from "@/components/GetTokens";
 import SendTokens from "@/components/SendTokens";
 import BuyTokens from "@/components/BuyTokens";
 import EditWalletDialog from "@/components/EditWalletDialog";
 
 export default {
-  components: {EditWalletDialog, ActionDialog, MainAddress, Balance, GetTokens, BuyTokens, SendTokens},
+  components: {EditWalletDialog, ActionDialog, MainAddress, IsItYourAddress, Balance, GetTokens, BuyTokens, SendTokens},
   data() {
     return {};
   },
@@ -41,12 +45,14 @@ export default {
     ...mapGetters('wallet', [
       'isDevNetwork',
       'isLoggedIn',
+      'isItYourAddressShowing',
     ]),
   },
   methods: {
     ...mapActions('wallet', [
       'goToStart',
       'startBalanceUpdating',
+      'thatsMyAddress',
     ]),
     ...mapActions('action', [
       'startTaskUpdating',

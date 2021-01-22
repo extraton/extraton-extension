@@ -17,6 +17,7 @@ const interactiveTaskStatus = {
   canceled: 3,
   process: 4,
   performed: 5,
+  unknown: 6,
 };
 
 const interactiveTaskActiveStatusIds = [
@@ -79,6 +80,11 @@ const interactiveTaskRepository = {
         await db.interactiveTask.put(tasks[i]);
       }
     });
+  },
+  async makeProcessTasksUnknown() {
+    const db = await database.getClient();
+    await db.interactiveTask.where("statusId").equals(interactiveTaskStatus.process)
+      .modify({statusId: interactiveTaskStatus.unknown});
   }
 };
 

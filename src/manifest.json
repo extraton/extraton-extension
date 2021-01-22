@@ -1,6 +1,6 @@
 {
   "manifest_version": 2,
-  "version": "0.6.0",
+  "version": "0.7.0",
   "name": "extraTON",
   "homepage_url": "https://extraton.io",
   "description": "FreeTON dapps to user communicator and wallet.",

@@ -7,6 +7,16 @@ import {
 } from '@/db/repository/interactiveTaskRepository';
 import TonApi from "@/api/ton";
 import database from '@/db';
+import insufficientFundsException from "@/lib/task/exception/insufficientFundsException";
+
+const _ = {
+  checkSufficientFunds(wallet, networkId, amount) {
+    const balance = BigInt(wallet.networks[networkId].balance);
+    if (balance < amount) {
+      throw new insufficientFundsException();
+    }
+  }
+}
 
 export default {
   name: 'applyInteractiveTask',
@@ -26,21 +36,45 @@ export default {
         const server = (await db.network.get(interactiveTask.networkId)).server;
         switch (interactiveTask.typeId) {
           case interactiveTaskType.deployWalletContract: {
+            //TODO FEES
+            const amountWithFee = BigInt('73000000');
+            _.checkSufficientFunds(wallet, interactiveTask.networkId, amountWithFee);
             await walletLib.deploy(server, wallet);
             break;
           }
           case interactiveTaskType.uiTransfer: {
-            const nanoAmount = walletLib.convertToNano(form.amount).toString();
-            await walletLib.transfer(server, wallet, form.address, nanoAmount);
+            const nanoAmount = walletLib.convertToNano(form.amount);
+            //TODO FEES
+            const amountWithFee = BigInt('11000000') + nanoAmount;
+            _.checkSufficientFunds(wallet, interactiveTask.networkId, amountWithFee);
+            const payload = form.comment !== ''
+              ? await walletLib.createTransferPayload(server, form.comment)
+              : '';
+            const message = await walletLib.createTransferMessage(
+              server,
+              wallet,
+              wallet.address,
+              form.address,
+              nanoAmount.toString(),
+              false,
+              payload
+            );
+            const processingState = await TonApi.sendMessage(server, message);
+            await TonApi.waitForRunTransaction(server, message, processingState);
             break;
           }
           case interactiveTaskType.preDeployTransfer: {
+            //TODO FEES
+            const amountWithFee = BigInt('11000000') + BigInt(interactiveTask.params.options.initAmount);
+            _.checkSufficientFunds(wallet, interactiveTask.networkId, amountWithFee);
             const initParams = interactiveTask.params.options.initParams !== undefined ? interactiveTask.params.options.initParams : {};
             const address = await TonApi.predictAddress(server, wallet.keys.public, interactiveTask.params.abi, interactiveTask.params.imageBase64, initParams);
             await walletLib.transfer(server, wallet, address, interactiveTask.params.options.initAmount);
             break;
           }
           case interactiveTaskType.deployContract: {
+            const amountWithFee = BigInt('73000000');
+            _.checkSufficientFunds(wallet, interactiveTask.networkId, amountWithFee);
             const initParams = interactiveTask.params.options.initParams !== undefined ? interactiveTask.params.options.initParams : {};
             result = await walletLib.deployContract(server, wallet, interactiveTask.params.abi, interactiveTask.params.imageBase64, initParams, interactiveTask.params.constructorParams);
             break;
@@ -53,6 +87,8 @@ export default {
             break;
           }
           case interactiveTaskType.transfer: {
+            const amountWithFee = BigInt('11000000') + BigInt(interactiveTask.params.amount);
+            _.checkSufficientFunds(wallet, interactiveTask.networkId, amountWithFee);
             const message = await walletLib.createTransferMessage(
               server,
               wallet,
@@ -86,7 +122,11 @@ export default {
       } catch (e) {
         console.error(e);
         interactiveTask.statusId = interactiveTaskStatus.new;
-        interactiveTask.error = 'Error';
+        if (e instanceof insufficientFundsException) {
+          interactiveTask.error = e.error;
+        } else {
+          interactiveTask.error = 'Error';
+        }
         throw e;
       } finally {
         await interactiveTaskRepository.updateTasks([interactiveTask]);

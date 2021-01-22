@@ -12,7 +12,7 @@ const _ = {
 };
 
 const walletRepository = {
-  async create(contractId, address, keys) {
+  async create(contractId, address, keys, isRestored) {
     const db = await database.getClient();
     const dbNetworks = await networkRepository.getAll();
     let networks = {};
@@ -23,13 +23,18 @@ const walletRepository = {
         balance: null,
       };
     }
-    let wallet = {name: '', contractId, address, keys, networks};
+    const isWalletMine = null;
+    let wallet = {name: '', contractId, address, keys, networks, isRestored, isWalletMine};
     wallet.id = await db.wallet.add(wallet);
     return wallet;
   },
   async updateName(wallet) {
     const db = await database.getClient();
     await db.wallet.update(wallet.id, {name: wallet.name});
+  },
+  async setWalletIsMine(wallet) {
+    const db = await database.getClient();
+    await db.wallet.update(wallet.id, {isWalletMine: true});
   },
   async remove(walletId) {
     const db = await database.getClient();
@@ -58,6 +63,8 @@ const walletRepository = {
         contractId: wallet.contractId,
         address: wallet.address,
         networks: wallet.networks,
+        isRestored: wallet.isRestored,
+        isWalletMine: wallet.isWalletMine,
       });
     }
     return _.indexEntitiesByField(walletsWithoutKeys, 'id');
