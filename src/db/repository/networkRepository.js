@@ -16,6 +16,10 @@ const networkRepository = {
     const networks = await db.network.orderBy('id').toArray();
     return _.indexEntitiesByField(networks, 'id');
   },
+  async getById(id) {
+    const db = await database.getClient();
+    return await db.network.get(id);
+  }
 };
 
 export {

@@ -65,6 +65,7 @@ const walletRepository = {
         networks: wallet.networks,
         isRestored: wallet.isRestored,
         isWalletMine: wallet.isWalletMine,
+        pubkey: wallet.keys.public,
       });
     }
     return _.indexEntitiesByField(walletsWithoutKeys, 'id');

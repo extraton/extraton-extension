@@ -13,6 +13,7 @@
         <v-form v-model="valid">
           <v-text-field :value="name" :rules="[rules.required, rules.maxLength]" @input="inputName" label="Name"/>
         </v-form>
+        <pubkey :pubkey="wallet.pubkey"/>
       </v-card-text>
       <v-card-actions>
         <v-btn v-if="isMoreThanOneWallet" @click="removeWallet" :loading="isDeleting" :disabled="isDeleting||isSaving"
@@ -29,8 +30,10 @@
 <script>
 import walletLib from "@/lib/wallet";
 import {mapState, mapMutations, mapActions, mapGetters} from "vuex";
+import Pubkey from "@/components/pubkey";
 
 export default {
+  components: {Pubkey},
   data: () => ({
     walletLib,
     rules: {

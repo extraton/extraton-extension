@@ -14,7 +14,7 @@
           </v-list-item-content>
           <v-list-item-action>
             <v-btn @click="startEditing({wallets, wallet: item})" icon>
-              <v-icon small>mdi-pencil</v-icon>
+              <v-icon small>mdi-cog</v-icon>
             </v-btn>
           </v-list-item-action>
         </v-list-item>
