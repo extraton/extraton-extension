@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import VueClipboards from "vue-clipboards";
-import App from './App.vue';
-import {router} from './plugins/router'
+import Keystore from './Keystore.vue';
 import vuetify from './plugins/vuetify';
 import snack from './plugins/snack';
 import store from './store';
@@ -15,8 +14,7 @@ Vue.use(snack);
 
 new Vue({
   store,
-  router,
   vuetify,
   i18n,
-  render: h => h(App)
+  render: h => h(Keystore)
 }).$mount('#app')

@@ -1,5 +1,8 @@
 <template>
   <div class="walletRestore">
+<!--    <v-btn style="top:12px" color="primary" href="/keystore.html" target="_blank" small absolute right text>-->
+<!--      Keystore<sup class="red&#45;&#45;text">Beta</sup>-->
+<!--    </v-btn>-->
     <v-form v-model="valid" ref="form" lazy-validation>
       <view-title>Restore your wallet</view-title>
       <v-textarea v-model="seed"

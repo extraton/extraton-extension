@@ -7,7 +7,8 @@ module.exports = {
     plugins: [
       new CopyPlugin({
         patterns: [
-          {from: './node_modules/ton-client-web-js/tonclient.wasm'}
+          {from: './node_modules/ton-client-web-js/tonclient.wasm'},
+          {from: './node_modules/@tonclient/lib-web/tonclient.wasm', to: 'tonclient_1.5.3.wasm'},
         ],
       }),
       new RemovePlugin({
@@ -37,11 +38,13 @@ module.exports = {
     index: {
       template: 'public/index.html',
       entry: './src/main.js',
-      // chunks: ['index']
+    },
+    'keystore': {
+      template: 'public/keystore.html',
+      entry: './src/keystore.js',
     },
     injection: {
       entry: './src/injection.js',
-      // chunks: ['injection']
     }
   },
   pluginOptions: {

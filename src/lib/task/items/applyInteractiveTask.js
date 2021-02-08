@@ -8,6 +8,8 @@ import {
 import TonApi from "@/api/ton";
 import database from '@/db';
 import insufficientFundsException from "@/lib/task/exception/insufficientFundsException";
+import keystoreLib from "@/lib/keystore";
+import keystoreException from "@/lib/keystore/keystoreException";
 
 const _ = {
   checkSufficientFunds(wallet, networkId, amount) {
@@ -21,7 +23,7 @@ const _ = {
 export default {
   name: 'applyInteractiveTask',
   async handle(task) {
-    const {interactiveTaskId, form} = task.data;
+    const {interactiveTaskId, password, form} = task.data;
     let interactiveTask = await interactiveTaskRepository.getTask(interactiveTaskId);
     if (interactiveTask.statusId === interactiveTaskStatus.new) {
       interactiveTask.statusId = interactiveTaskStatus.process;
@@ -34,6 +36,9 @@ export default {
         const db = await database.getClient();
         const wallet = await walletRepository.getCurrent();
         const server = (await db.network.get(interactiveTask.networkId)).server;
+        if (wallet.isKeysEncrypted) {
+          wallet.keys = await keystoreLib.decrypt(server, wallet.keys, password);
+        }
         switch (interactiveTask.typeId) {
           case interactiveTaskType.deployWalletContract: {
             //TODO FEES
@@ -87,8 +92,10 @@ export default {
             break;
           }
           case interactiveTaskType.transfer: {
-            const amountWithFee = BigInt('11000000') + BigInt(interactiveTask.params.amount);
-            _.checkSufficientFunds(wallet, interactiveTask.networkId, amountWithFee);
+            if (walletLib.isAddressesMatch(wallet.address, interactiveTask.params.walletAddress)) {
+              const amountWithFee = BigInt('11000000') + BigInt(interactiveTask.params.amount);
+              _.checkSufficientFunds(wallet, interactiveTask.networkId, amountWithFee);
+            }
             const message = await walletLib.createTransferMessage(
               server,
               wallet,
@@ -124,6 +131,8 @@ export default {
         interactiveTask.statusId = interactiveTaskStatus.new;
         if (e instanceof insufficientFundsException) {
           interactiveTask.error = e.error;
+        } else if (e instanceof keystoreException) {
+          interactiveTask.error = e.message;
         } else {
           interactiveTask.error = 'Error';
         }

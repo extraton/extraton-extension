@@ -26,11 +26,14 @@ import {
   applyInteractiveTaskTask,
   saveFormInteractiveTaskTask,
   requestInteractiveTasksTask,
+  encryptKeysTask,
+  setWalletByKeystoreTask,
 } from "@/lib/task/items";
 import taskNotExists from '@/lib/task/exception/taskNotExists';
 import {interactiveTaskRepository, interactiveTaskStatus} from "@/db/repository/interactiveTaskRepository";
 import {handleException, handleExceptionCodes} from '@/lib/task/exception/handleException';
 import {tonException, tonExceptionCodes} from '@/api/exception/tonException';
+import keystoreException from "@/lib/keystore/keystoreException";
 
 const taskList = {
   internal: {
@@ -50,10 +53,20 @@ const taskList = {
     applyInteractiveTaskTask,
     saveFormInteractiveTaskTask,
     requestInteractiveTasksTask,
+    encryptKeysTask,
+    setWalletByKeystoreTask,
   },
   external: {
     interactive: {deployTask, runTask, transferTask, confirmTransactionTask},
-    background: {getNetworkTask, getPublicKeyTask, getVersionTask, runGetTask, waitDeployTask, waitRunTask, getAddressTask},
+    background: {
+      getNetworkTask,
+      getPublicKeyTask,
+      getVersionTask,
+      runGetTask,
+      waitDeployTask,
+      waitRunTask,
+      getAddressTask
+    },
   },
 };
 const _ = {
@@ -87,6 +100,8 @@ const _ = {
           default:
             throw new handleException(handleExceptionCodes.tonClientError.code, e.message);
         }
+      } else if (e instanceof keystoreException) {
+        throw new handleException(handleExceptionCodes.keystore.code, e.message);
       }
       throw e;
     }

@@ -1,6 +1,6 @@
 {
   "name": "extraton",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service build --mode development --watch",
@@ -9,14 +9,19 @@
     "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'"
   },
   "dependencies": {
+    "@mdi/font": "^5.9.55",
+    "@tonclient/core": "^1.5.3",
+    "@tonclient/lib-web": "^1.5.3",
     "bignumber.js": "^9.0.1",
     "core-js": "^3.6.5",
     "dexie": "^3.0.2",
     "extension-port-stream": "^1.0.0",
     "extensionizer": "^1.0.1",
+    "js-base64": "^3.6.0",
     "obj-multiplex": "^1.0.0",
     "post-message-stream": "^3.0.0",
     "pump": "^3.0.0",
+    "roboto-fontface": "^0.10.0",
     "to-hex": "^0.0.16",
     "ton-client-web-js": "^0.26.0",
     "vue": "^2.6.11",

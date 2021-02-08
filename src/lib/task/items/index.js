@@ -25,6 +25,8 @@ import cancelInteractiveTaskTask from "@/lib/task/items/cancelInteractiveTask";
 import applyInteractiveTaskTask from "@/lib/task/items/applyInteractiveTask";
 import saveFormInteractiveTaskTask from "@/lib/task/items/saveFormInteractiveTask";
 import requestInteractiveTasksTask from "@/lib/task/items/requestInteractiveTasks";
+import encryptKeysTask from "@/lib/task/items/encryptKeys";
+import setWalletByKeystoreTask from "@/lib/task/items/setWalletByKeystore";
 
 export {
   getNetworkTask,
@@ -54,4 +56,6 @@ export {
   applyInteractiveTaskTask,
   saveFormInteractiveTaskTask,
   requestInteractiveTasksTask,
+  encryptKeysTask,
+  setWalletByKeystoreTask,
 }

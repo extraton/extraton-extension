@@ -4,6 +4,13 @@ import walletLib from '@/lib/wallet';
 import {handleException} from "@/lib/task/exception/handleException";
 import {interactiveTaskRepository} from "@/db/repository/interactiveTaskRepository";
 
+import {TonClient} from "@tonclient/core";
+import {libWeb, libWebSetup} from "@tonclient/lib-web";
+libWebSetup({
+  binaryURL: "/tonclient_1.5.3.wasm",
+});
+TonClient.useBinaryLibrary(libWeb);
+
 interactiveTaskRepository.makeProcessTasksUnknown();
 
 const extensionId = chrome.runtime.id;

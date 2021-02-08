@@ -196,5 +196,6 @@ export default {
       const isZeroBalance = wallet.networks[state.network].balance === 0;
       return state.isAddressDataGotOnce && wallet.isRestored && isOwnerUnknown && isCodeHashNull && isZeroBalance;
     },
+    isKeysEncrypted: (state) => state.wallets[state.walletId].isKeysEncrypted,
   }
 }

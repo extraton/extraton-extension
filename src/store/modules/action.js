@@ -98,10 +98,10 @@ export default {
           commit('setTasks', tasks);
         });
     },
-    apply({commit, state}, {interactiveTaskId}) {
+    apply({commit, state}, {interactiveTaskId, password}) {
       commit('setCurrentTaskProcess');
       const form = state.tasks[interactiveTaskId].form;
-      return BackgroundApi.request(applyInteractiveTaskTask, {interactiveTaskId, form})
+      return BackgroundApi.request(applyInteractiveTaskTask, {interactiveTaskId, password, form})
         .then((tasks) => {
           commit('setTasks', tasks);
         });

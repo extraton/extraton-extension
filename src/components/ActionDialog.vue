@@ -20,27 +20,27 @@
                                 :form="task.form"
                                 :disabled="!isApplyButtonEnabled"/>
             <deploy-contract v-if="task.typeId === interactiveTaskType.deployContract"
-                                @formChange="formChange"
-                                :form="task.form"
-                                :disabled="!isApplyButtonEnabled"/>
+                             @formChange="formChange"
+                             :form="task.form"
+                             :disabled="!isApplyButtonEnabled"/>
             <pre-deploy-transfer v-if="task.typeId === interactiveTaskType.preDeployTransfer"
-                                @formChange="formChange"
-                                :form="task.form"
-                                :disabled="!isApplyButtonEnabled"
-                                :amount="task.params.options.initAmount"/>
+                                 @formChange="formChange"
+                                 :form="task.form"
+                                 :disabled="!isApplyButtonEnabled"
+                                 :amount="task.params.options.initAmount"/>
             <run v-if="task.typeId === interactiveTaskType.runTransaction"
-                                @formChange="formChange"
-                                :form="task.form"
-                                :disabled="!isApplyButtonEnabled"
-                                :fees="task.data.fees"/>
+                 @formChange="formChange"
+                 :form="task.form"
+                 :disabled="!isApplyButtonEnabled"
+                 :fees="task.data.fees"/>
             <transfer v-if="task.typeId === interactiveTaskType.transfer"
-                                @formChange="formChange"
-                                :form="task.form"
-                                :disabled="!isApplyButtonEnabled"
-                                :amount="task.params.amount"
-                                :address="task.params.address"
-                                :wallet-address="task.params.walletAddress"
-                                :is-current-address="task.params.isItLoggedWalletAddress"/>
+                      @formChange="formChange"
+                      :form="task.form"
+                      :disabled="!isApplyButtonEnabled"
+                      :amount="task.params.amount"
+                      :address="task.params.address"
+                      :wallet-address="task.params.walletAddress"
+                      :is-current-address="task.params.isItLoggedWalletAddress"/>
             <confirm-transaction v-if="task.typeId === interactiveTaskType.confirmTransaction"
                                  @formChange="formChange"
                                  :form="task.form"
@@ -57,7 +57,7 @@
               Cancel
             </v-btn>
             <v-spacer></v-spacer>
-            <v-btn @click="submit()"
+            <v-btn @click="submit"
                    color="primary"
                    :disabled="!isApplyButtonEnabled"
                    :loading="isApplyButtonLoading" small>
@@ -82,7 +82,15 @@ import Transfer from "@/components/actions/transfer";
 import ConfirmTransaction from "@/components/actions/confirmTransaction";
 
 export default {
-  components: {Transfer, ConfirmTransaction, PreDeployTransfer, walletActivationAction, uiTransferAction, deployContract, run},
+  components: {
+    Transfer,
+    ConfirmTransaction,
+    PreDeployTransfer,
+    walletActivationAction,
+    uiTransferAction,
+    deployContract,
+    run
+  },
   data: () => ({
     interactiveTaskType,
     valid: true,
@@ -97,20 +105,31 @@ export default {
       isApplyButtonEnabled: 'isApplyButtonEnabled',
       isApplyButtonLoading: 'isApplyButtonLoading',
     }),
+    ...mapGetters('wallet', [
+      'isKeysEncrypted',
+    ])
   },
-  // mounted() {
-  //   console.log({task: this.task});
-  // },
   methods: {
     ...mapActions('action', [
       'cancel',
       'apply',
       'formChange',
     ]),
+    ...mapActions('password', {
+      askPassword: 'ask',
+    }),
     async submit() {
       await this.$refs.form.validate();
       if (this.valid) {
-        await this.apply({interactiveTaskId: this.task.id});
+        let applyData = {interactiveTaskId: this.task.id, password: null};
+        if (this.isKeysEncrypted) {
+          this.askPassword().then(async (password) => {
+            applyData.password = password;
+            await this.apply(applyData);
+          }).catch(() => null);
+        } else {
+          await this.apply(applyData);
+        }
       }
     }
   }
@@ -124,7 +143,7 @@ export default {
   height: 360px;
   margin: 0 auto !important;
   width: 290px !important;
-  overflow: hidden!important;
+  overflow: hidden !important;
 
   &__card {
     &__title {

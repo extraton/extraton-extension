@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import action from './modules/action'
+import password from './modules/wallet/password'
 import app from './modules/app'
 import wallet from './modules/wallet/wallet'
 import walletCreate from './modules/wallet/create'
@@ -13,6 +14,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     modules: {
         action,
+        password,
         app,
         wallet,
         walletCreate,

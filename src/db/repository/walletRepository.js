@@ -46,7 +46,9 @@ const walletRepository = {
     if (null === walletId) {
       throw "Wallet isn't set.";
     }
-    return await db.wallet.get(walletId);
+    const wallet = await db.wallet.get(walletId);
+    wallet.isKeysEncrypted = typeof wallet.keys.secret === 'undefined';
+    return wallet;
   },
   async getById(id) {
     const db = await database.getClient();
@@ -66,6 +68,7 @@ const walletRepository = {
         isRestored: wallet.isRestored,
         isWalletMine: wallet.isWalletMine,
         pubkey: wallet.keys.public,
+        isKeysEncrypted: typeof wallet.keys.secret === 'undefined',
       });
     }
     return _.indexEntitiesByField(walletsWithoutKeys, 'id');

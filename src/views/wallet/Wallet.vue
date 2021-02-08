@@ -1,6 +1,7 @@
 <template>
   <div class="wallet">
     <action-dialog/>
+    <password-dialog/>
     <edit-wallet-dialog/>
     <balance/>
     <div>
@@ -20,6 +21,7 @@
 
 import {mapActions, mapGetters} from "vuex";
 import ActionDialog from "@/components/ActionDialog";
+import PasswordDialog from "@/components/PasswordDialog";
 import Balance from "@/components/Balance";
 import MainAddress from "@/components/MainAddress";
 import IsItYourAddress from "@/components/IsItYourAddress";
@@ -29,7 +31,7 @@ import BuyTokens from "@/components/BuyTokens";
 import EditWalletDialog from "@/components/EditWalletDialog";
 
 export default {
-  components: {EditWalletDialog, ActionDialog, MainAddress, IsItYourAddress, Balance, GetTokens, BuyTokens, SendTokens},
+  components: {EditWalletDialog, ActionDialog, PasswordDialog, MainAddress, IsItYourAddress, Balance, GetTokens, BuyTokens, SendTokens},
   data() {
     return {};
   },

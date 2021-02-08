@@ -2,6 +2,7 @@ import TonApi from '@/api/ton';
 import walletContractLib from '@/lib/walletContract';
 import {walletRepository} from "@/db/repository/walletRepository";
 import utils from "@/lib/utils";
+import database from "@/db";
 const TransferAbi = require('@/contracts/Transfer.abi.json');
 
 
@@ -104,5 +105,16 @@ export default {
   },
   compileExplorerLink(explorer, address) {
     return `https://${explorer}/accounts/accountDetails?id=${address}`;
-  }
+  },
+  async restore(server, contractId, keys, isRestoring) {
+    const db = await database.getClient();
+    const contract = walletContractLib.getContractById(contractId);
+    const address = await TonApi.predictAddress(server, keys.public, contract.abi, contract.imageBase64);
+
+    const wallet = await walletRepository.create(contractId, address, keys, isRestoring);
+    wallet.name = wallet.id === 1 ? 'Main Wallet' : `Wallet ${wallet.id}`;
+    await walletRepository.updateName(wallet);
+
+    await db.param.update('wallet', {value: wallet.id});
+  },
 };
