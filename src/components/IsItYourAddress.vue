@@ -1,6 +1,6 @@
 <template>
   <div class="isItYourAddress">
-    <v-card>
+    <v-card style="z-index:1">
       <v-card-text class="text-center text-subtitle-2">
         Is it your address?
       </v-card-text>

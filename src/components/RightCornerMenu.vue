@@ -29,6 +29,17 @@
 
       <v-divider/>
 
+      <v-list-item href="http://extraton.io" target="_blank">
+        <v-list-item-icon>
+          <v-icon>mdi-information</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-list-item-title>Website</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-divider/>
+
       <v-list-item @click="logout">
         <v-list-item-icon>
           <v-icon>mdi-exit-run</v-icon>
