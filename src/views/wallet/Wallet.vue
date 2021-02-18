@@ -15,18 +15,6 @@
       </template>
       <send-tokens/>
     </div>
-    <v-card class="mx-auto" :elevation="2" style="margin-top:5px">
-      <v-img src="@/assets/support-us.png" class="ma-auto" width="100px" height="100px"/>
-      <v-card-subtitle class="text-center font-weight-bold">
-        Please, support our proposal<br/>on the forum.
-      </v-card-subtitle>
-      <v-card-actions style="padding-top:0">
-        <v-btn color="primary" class="ma-auto"
-               href="https://forum.freeton.org/t/proposal-extraton-partnership/8371?u=qwertys318" target="_blank" small>
-          Support
-        </v-btn>
-      </v-card-actions>
-    </v-card>
   </div>
 </template>
 
