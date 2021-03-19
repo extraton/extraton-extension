@@ -17,10 +17,15 @@ import removeWalletTask from "@/lib/task/items/removeWallet";
 import changeWalletTask from "@/lib/task/items/changeWallet";
 import editWalletTask from "@/lib/task/items/editWallet";
 import changeNetworkTask from "@/lib/task/items/changeNetwork";
-import requestAddressDataTask from "@/lib/task/items/requestAddressData";
+import setSettingTask from "@/lib/task/items/setSetting";
+import requestCurrentWalletDataTask from "@/lib/task/items/requestCurrentWalletData";
 import thatsMyAddressTask from "@/lib/task/items/thatsMyAddress";
 import logoutTask from "@/lib/task/items/logout";
 import initUiTransferTask from "@/lib/task/items/initUiTransfer";
+import initAddTokenTask from "@/lib/task/items/initAddToken";
+import hideTokenTask from "@/lib/task/items/hideToken";
+import activateTokenTask from "@/lib/task/items/activateToken";
+import initUiTransferTokenTask from "@/lib/task/items/initUiTransferToken";
 import cancelInteractiveTaskTask from "@/lib/task/items/cancelInteractiveTask";
 import applyInteractiveTaskTask from "@/lib/task/items/applyInteractiveTask";
 import saveFormInteractiveTaskTask from "@/lib/task/items/saveFormInteractiveTask";
@@ -48,10 +53,15 @@ export {
   changeWalletTask,
   editWalletTask,
   changeNetworkTask,
-  requestAddressDataTask,
+  setSettingTask,
+  requestCurrentWalletDataTask,
   thatsMyAddressTask,
   logoutTask,
   initUiTransferTask,
+  initUiTransferTokenTask,
+  initAddTokenTask,
+  hideTokenTask,
+  activateTokenTask,
   cancelInteractiveTaskTask,
   applyInteractiveTaskTask,
   saveFormInteractiveTaskTask,

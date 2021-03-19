@@ -75,9 +75,84 @@ export default {
     }
   },
   async chacha20Decrypt(server, data, nonce, password) {
+    try {
+      const client = await ton.getClient(server);
+      const key = (await client.crypto.sha256({data: Base64.encode(password)})).hash;
+      const decryptedData = (await client.crypto.chacha20({data, key, nonce})).data;
+      return Base64.decode(decryptedData);
+    } catch (e) {
+      throw _.getException(e);
+    }
+  },
+  async requestAccountData(server, address) {
+    try {
+      const client = await ton.getClient(server);
+      return (await client.net.query_collection({
+        collection: 'accounts',
+        filter: {id: {eq: address}},
+        result: 'balance(format: DEC), code_hash, boc',
+      })).result[0] || null;
+    } catch (e) {
+      throw _.getException(e);
+    }
+  },
+  async encodeMessage(server, address, abi, function_name, input = {}, keys = null) {
+    try {
+      const client = await ton.getClient(server);
+      const signer = null !== keys ? {type: 'Keys', keys} : {type: 'None'};
+      const call_set = {function_name, input};
+      return await client.abi.encode_message({abi, address, call_set, signer});
+    } catch (e) {
+      throw _.getException(e);
+    }
+  },
+  async encodeMessageBody(server, abi, function_name, input = {}, keys = null) {
     const client = await ton.getClient(server);
-    const key = (await client.crypto.sha256({data: Base64.encode(password)})).hash;
-    const decryptedData = (await client.crypto.chacha20({data, key, nonce})).data;
-    return Base64.decode(decryptedData);
-  }
+    const signer = null !== keys ? {type: 'Keys', keys} : {type: 'None'};
+    const call_set = {function_name, input};
+    return await client.abi.encode_message_body({abi, call_set, signer, is_internal: false});
+  },
+  async runTvm(server, abi, boc, message) {
+    try {
+      const client = await ton.getClient(server);
+      // @TODO by doc if pass abi then run_tvm should decode message, but it doesn't occur.
+      const resultOfRunTvm = await client.tvm.run_tvm({message, account: boc});
+      const result = await client.abi.decode_message({abi, message: resultOfRunTvm.out_messages[0]});
+      return result.value;
+    } catch (e) {
+      throw _.getException(e);
+    }
+  },
+  async sendMessage(server, message, abi) {
+    try {
+      const client = await ton.getClient(server);
+      const ResultOfSendMessage = await client.processing.send_message({message, abi, send_events: false});
+      return ResultOfSendMessage.shard_block_id;
+    } catch (e) {
+      throw _.getException(e);
+    }
+  },
+  async waitForTransaction(server, message, abi, shard_block_id) {
+    try {
+      const client = await ton.getClient(server);
+      await client.processing.wait_for_transaction({message, abi, shard_block_id, send_events: false});
+      // console.log(result);
+    } catch (e) {
+      throw _.getException(e);
+    }
+  },
+  async predictAddress(server, abi, tvc, public_key, workchain_id = 0, initial_data = {}) {
+    try {
+      const client = await ton.getClient(server);
+      const deploy_set = {tvc, initial_data, workchain_id};
+      const signer = {type: 'External', public_key};
+
+      return (await client.abi.encode_message({abi, deploy_set, signer})).address;
+    } catch (e) {
+      throw _.getException(e);
+    }
+  },
 }
+
+
+

@@ -1,0 +1,655 @@
+{
+  "type": "Contract",
+  "value": {
+    "ABI version": 2,
+    "header": [
+      "time",
+      "expire"
+    ],
+    "functions": [
+      {
+        "name": "constructor",
+        "inputs": [
+        ],
+        "outputs": [
+        ]
+      },
+      {
+        "name": "sendTransfer",
+        "inputs": [
+          {
+            "name": "dest",
+            "type": "address"
+          },
+          {
+            "name": "value",
+            "type": "uint128"
+          },
+          {
+            "name": "bounce",
+            "type": "bool"
+          }
+        ],
+        "outputs": [
+        ]
+      },
+      {
+        "name": "connectPair",
+        "inputs": [
+          {
+            "name": "pairAddr",
+            "type": "address"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "statusConnection",
+            "type": "bool"
+          }
+        ]
+      },
+      {
+        "name": "createNewEmptyWalletByOwner",
+        "inputs": [
+          {
+            "name": "rootAddr",
+            "type": "address"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "createStatus",
+            "type": "bool"
+          }
+        ]
+      },
+      {
+        "name": "setNewEmptyWallet",
+        "id": "0x7",
+        "inputs": [
+          {
+            "name": "value0",
+            "type": "address"
+          }
+        ],
+        "outputs": [
+        ]
+      },
+      {
+        "name": "getWalletByRoot",
+        "inputs": [
+          {
+            "name": "rootAddr",
+            "type": "address"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "wallet",
+            "type": "address"
+          }
+        ]
+      },
+      {
+        "name": "getAddressWTON",
+        "inputs": [
+        ],
+        "outputs": [
+          {
+            "name": "wallet",
+            "type": "address"
+          }
+        ]
+      },
+      {
+        "name": "setPair",
+        "id": "0x3",
+        "inputs": [
+          {
+            "name": "arg0",
+            "type": "address"
+          },
+          {
+            "name": "arg1",
+            "type": "address"
+          },
+          {
+            "name": "arg2",
+            "type": "address"
+          },
+          {
+            "name": "arg3",
+            "type": "address"
+          },
+          {
+            "name": "arg4",
+            "type": "address"
+          },
+          {
+            "name": "arg5",
+            "type": "address"
+          }
+        ],
+        "outputs": [
+        ]
+      },
+      {
+        "name": "setPairDepositA",
+        "id": "0x8",
+        "inputs": [
+          {
+            "name": "arg0",
+            "type": "address"
+          }
+        ],
+        "outputs": [
+        ]
+      },
+      {
+        "name": "getPair",
+        "inputs": [
+          {
+            "name": "value0",
+            "type": "address"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "pairRootA",
+            "type": "address"
+          },
+          {
+            "name": "pairReserveA",
+            "type": "address"
+          },
+          {
+            "name": "clientDepositA",
+            "type": "address"
+          },
+          {
+            "name": "clientAllowanceA",
+            "type": "uint128"
+          },
+          {
+            "name": "pairRootB",
+            "type": "address"
+          },
+          {
+            "name": "pairReserveB",
+            "type": "address"
+          },
+          {
+            "name": "clientDepositB",
+            "type": "address"
+          },
+          {
+            "name": "clientAllowanceB",
+            "type": "uint128"
+          },
+          {
+            "name": "curPair",
+            "type": "address"
+          }
+        ]
+      },
+      {
+        "name": "setPairDepositB",
+        "id": "0x9",
+        "inputs": [
+          {
+            "name": "arg0",
+            "type": "address"
+          }
+        ],
+        "outputs": [
+        ]
+      },
+      {
+        "name": "sendTokens",
+        "inputs": [
+          {
+            "name": "from",
+            "type": "address"
+          },
+          {
+            "name": "to",
+            "type": "address"
+          },
+          {
+            "name": "tokens",
+            "type": "uint128"
+          },
+          {
+            "name": "grams",
+            "type": "uint128"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "transmitter",
+            "type": "address"
+          },
+          {
+            "name": "receiver",
+            "type": "address"
+          },
+          {
+            "name": "body",
+            "type": "cell"
+          }
+        ]
+      },
+      {
+        "name": "sendTokens2",
+        "inputs": [
+          {
+            "name": "from",
+            "type": "address"
+          },
+          {
+            "name": "to",
+            "type": "address"
+          },
+          {
+            "name": "tokens",
+            "type": "uint128"
+          },
+          {
+            "name": "grams",
+            "type": "uint128"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "transmitter",
+            "type": "address"
+          },
+          {
+            "name": "receiver",
+            "type": "address"
+          }
+        ]
+      },
+      {
+        "name": "sendTokens3",
+        "inputs": [
+          {
+            "name": "from",
+            "type": "address"
+          },
+          {
+            "name": "to",
+            "type": "address"
+          },
+          {
+            "name": "tokens",
+            "type": "uint128"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "transmitter",
+            "type": "address"
+          },
+          {
+            "name": "receiver",
+            "type": "address"
+          },
+          {
+            "name": "body",
+            "type": "cell"
+          }
+        ]
+      },
+      {
+        "name": "askBalanceToken",
+        "inputs": [
+          {
+            "name": "walletAddr",
+            "type": "address"
+          }
+        ],
+        "outputs": [
+        ]
+      },
+      {
+        "name": "askBalanceAllTokens",
+        "inputs": [
+        ],
+        "outputs": [
+        ]
+      },
+      {
+        "name": "setBalanceToken",
+        "id": "0x4",
+        "inputs": [
+          {
+            "name": "value0",
+            "type": "uint128"
+          }
+        ],
+        "outputs": [
+        ]
+      },
+      {
+        "name": "getBalanceTokenWallet",
+        "inputs": [
+          {
+            "name": "walletAddr",
+            "type": "address"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "walletBal",
+            "type": "uint128"
+          }
+        ]
+      },
+      {
+        "name": "getPairClientWallets",
+        "inputs": [
+          {
+            "name": "pairAddr",
+            "type": "address"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "walletA",
+            "type": "address"
+          },
+          {
+            "name": "walletB",
+            "type": "address"
+          },
+          {
+            "name": "pairReturn",
+            "type": "address"
+          }
+        ]
+      },
+      {
+        "name": "askPairWalletsBalance",
+        "inputs": [
+          {
+            "name": "pairAddr",
+            "type": "address"
+          }
+        ],
+        "outputs": [
+        ]
+      },
+      {
+        "name": "getPairWalletsBalance",
+        "inputs": [
+          {
+            "name": "pairAddr",
+            "type": "address"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "balanceWalletA",
+            "type": "uint128"
+          },
+          {
+            "name": "balanceWalletB",
+            "type": "uint128"
+          }
+        ]
+      },
+      {
+        "name": "getAllDataPreparation",
+        "inputs": [
+        ],
+        "outputs": [
+          {
+            "name": "pairKeysR",
+            "type": "address[]"
+          },
+          {
+            "name": "walletKeysR",
+            "type": "address[]"
+          }
+        ]
+      },
+      {
+        "name": "showContractAddress",
+        "inputs": [
+        ],
+        "outputs": [
+          {
+            "name": "dexclient",
+            "type": "address"
+          },
+          {
+            "name": "dexclientUINT256",
+            "type": "uint256"
+          }
+        ]
+      },
+      {
+        "name": "makeABdepositToPair",
+        "inputs": [
+          {
+            "name": "pairAddr",
+            "type": "address"
+          },
+          {
+            "name": "qtyA",
+            "type": "uint128"
+          },
+          {
+            "name": "qtyB",
+            "type": "uint128"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "makeDepositStatus",
+            "type": "bool"
+          }
+        ]
+      },
+      {
+        "name": "makeAdepositToPair",
+        "inputs": [
+          {
+            "name": "pairAddr",
+            "type": "address"
+          },
+          {
+            "name": "qtyA",
+            "type": "uint128"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "makeDepositStatus",
+            "type": "bool"
+          }
+        ]
+      },
+      {
+        "name": "makeBdepositToPair",
+        "inputs": [
+          {
+            "name": "pairAddr",
+            "type": "address"
+          },
+          {
+            "name": "qtyB",
+            "type": "uint128"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "makeDepositStatus",
+            "type": "bool"
+          }
+        ]
+      },
+      {
+        "name": "returnDepositFromPair",
+        "inputs": [
+          {
+            "name": "pairAddr",
+            "type": "address"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "returnDepositStatus",
+            "type": "bool"
+          }
+        ]
+      },
+      {
+        "name": "processLiquidity",
+        "inputs": [
+          {
+            "name": "pairAddr",
+            "type": "address"
+          },
+          {
+            "name": "qtyA",
+            "type": "uint128"
+          },
+          {
+            "name": "qtyB",
+            "type": "uint128"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "processLiquidityStatus",
+            "type": "bool"
+          }
+        ]
+      },
+      {
+        "name": "returnAllLiquidity",
+        "inputs": [
+          {
+            "name": "pairAddr",
+            "type": "address"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "returnLiquidityStatus",
+            "type": "bool"
+          }
+        ]
+      },
+      {
+        "name": "processSwapA",
+        "inputs": [
+          {
+            "name": "pairAddr",
+            "type": "address"
+          },
+          {
+            "name": "qtyA",
+            "type": "uint128"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "processSwapStatus",
+            "type": "bool"
+          }
+        ]
+      },
+      {
+        "name": "processSwapB",
+        "inputs": [
+          {
+            "name": "pairAddr",
+            "type": "address"
+          },
+          {
+            "name": "qtyB",
+            "type": "uint128"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "processSwapStatus",
+            "type": "bool"
+          }
+        ]
+      },
+      {
+        "name": "getBalanceTONgrams",
+        "inputs": [
+        ],
+        "outputs": [
+          {
+            "name": "balanceTONgrams",
+            "type": "uint128"
+          }
+        ]
+      },
+      {
+        "name": "setWrapper",
+        "id": "0x89",
+        "inputs": [
+          {
+            "name": "arg0",
+            "type": "address"
+          },
+          {
+            "name": "arg1",
+            "type": "address"
+          }
+        ],
+        "outputs": [
+        ]
+      },
+      {
+        "name": "wrapTON",
+        "inputs": [
+          {
+            "name": "qtyTONgrams",
+            "type": "uint128"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "processWrapStatus",
+            "type": "bool"
+          }
+        ]
+      },
+      {
+        "name": "unwrapTON",
+        "inputs": [
+        ],
+        "outputs": [
+          {
+            "name": "processUnwrapStatus",
+            "type": "bool"
+          }
+        ]
+      },
+      {
+        "name": "callbackUnwrapTON",
+        "id": "0x24",
+        "inputs": [
+          {
+            "name": "value0",
+            "type": "uint128"
+          }
+        ],
+        "outputs": [
+        ]
+      }
+    ],
+    "data": [
+    ],
+    "events": [
+    ]
+  }
+}

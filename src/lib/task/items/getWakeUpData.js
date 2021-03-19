@@ -1,6 +1,16 @@
 import database from '@/db';
 import {interactiveTaskRepository} from "@/db/repository/interactiveTaskRepository";
 import {walletRepository} from "@/db/repository/walletRepository";
+import {tokenRepository} from "@/db/repository/tokenRepository";
+
+const _ = {
+  async getSettings(db) {
+    let tip3 = await db.param.get('tip3');
+    tip3 = typeof tip3 !== 'undefined' ? tip3.value : false;
+
+    return {tip3};
+  },
+}
 
 export default {
   name: 'getWakeUpData',
@@ -12,6 +22,8 @@ export default {
     const walletId = (await db.param.get('wallet')).value;
     const network = (await db.param.get('network')).value;
     const tasks = await interactiveTaskRepository.getAll();
+    const tokens = await tokenRepository.getAll();
+    const settings = await _.getSettings(db);
 
     const data = {
       wallets,
@@ -19,7 +31,10 @@ export default {
       network,
       tasks,
       networks,
+      tokens,
+      settings,
     };
+
     return data;
   }
 }

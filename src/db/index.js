@@ -4,11 +4,12 @@ const DB_NAME = 'db41';
 
 const _ = {
   setSchema: function (db) {
-    db.version(1).stores({
+    db.version(8).stores({
       param: '&key, value',
       wallet: '++id, name, contractId, address, keys, networks, isRestored, isWalletMine',
       network: '&id, server, explorer, info, isDev, faucet.address, faucet.isGettingTokens',
       interactiveTask: '++id, networkId, requestId, data, params, typeId, statusId, result, error, form',
+      token: '++id, contractId, networkId, walletId, rootAddress, name, symbol, isDeploying, walletAddress, balance, decimals, params',
     });
   },
   fillInitial: async function (db) {
@@ -16,6 +17,7 @@ const _ = {
       await db.param.bulkAdd([
         {key: 'wallet', value: null},
         {key: 'network', value: 1},
+        {key: 'tip3', value: false},
       ]);
       await db.network.bulkAdd([
         {

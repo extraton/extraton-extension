@@ -92,6 +92,14 @@ export default {
       throw _.getException(e);
     }
   },
+  async requestAccountsData(server, addresses) {
+    try {
+      const client = await ton.getClient(server);
+      return await client.queries.accounts.query({id: {in: addresses}}, 'id, balance(format: DEC), code_hash, boc');
+    } catch (e) {
+      throw _.getException(e);
+    }
+  },
   async createRunMessage(server, address, abi, functionName, input, keyPair) {
     try {
       const client = await ton.getClient(server);

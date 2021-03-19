@@ -17,7 +17,7 @@
       </v-card-text>
       <v-card-actions>
         <v-btn v-if="isMoreThanOneWallet" @click="removeWallet" :loading="isDeleting" :disabled="isDeleting||isSaving"
-               color="error" small>delete
+               color="error" small>hide
         </v-btn>
         <v-spacer/>
         <v-btn @click="save" :loading="isSaving" :disabled="isDeleting||isSaving" color="primary" small>save

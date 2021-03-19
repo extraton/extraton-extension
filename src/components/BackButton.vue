@@ -21,5 +21,6 @@ export default {
 <style lang="scss">
 .backButton {
   padding-left: 0 !important;
+  margin: 12px 0 0 12px;
 }
 </style>

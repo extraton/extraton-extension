@@ -7,7 +7,7 @@ import {
   getWakeUpDataTask,
   changeNetworkTask,
   changeWalletTask,
-  requestAddressDataTask,
+  requestCurrentWalletDataTask,
   logoutTask,
   initUiTransferTask,
   thatsMyAddressTask,
@@ -17,10 +17,11 @@ const _ = {
   updateBalanceEndless: async function (epoch, commit, state) {
     if (state.isAutoUpdatingOn && epoch === state.autoUpdateEpoch) {
       try {
-        const data = await BackgroundApi.request(requestAddressDataTask);
-        // console.log(data);
+        const {walletId, networkId, data, tokens} = await BackgroundApi.request(requestCurrentWalletDataTask);
         if (state.isAutoUpdatingOn && epoch === state.autoUpdateEpoch) {
-          commit('setNetworkAccountData', data);
+          // console.log({walletId, networkId, data, tokens});
+          commit('setNetworkAccountData', {walletId, networkId, data});
+          store.commit('token/setTokens', tokens);
         }
       } catch (err) {
         console.error(err);
@@ -92,6 +93,7 @@ export default {
       await BackgroundApi.request(logoutTask);
       commit('clear');
       store.commit('action/clear');
+      store.commit('token/clear');
       await router.push({name: routes.start});
     },
     startBalanceUpdating({state, commit}) {
@@ -112,9 +114,11 @@ export default {
     },
     changeWallet: async ({commit, state}, walletKey) => {
       const walletId = state.wallets[Object.keys(state.wallets)[walletKey]].id;
+      store.commit('globalError/clearText');
       BackgroundApi.request(changeWalletTask, {walletId})
         .then(() => {
           commit('setWallet', walletId);
+          router.push({name: routes.wallet})
         })
         .catch((err) => {
           console.error(err);
@@ -124,9 +128,11 @@ export default {
     wakeup: async ({commit}) => {
       return BackgroundApi.request(getWakeUpDataTask)
         .then((sleepState) => {
-          // console.log(sleepState);
+          // console.log({sleepState});
           commit('applySleepState', sleepState);
           store.commit('action/setTasks', sleepState.tasks);
+          store.commit('token/setTokens', sleepState.tokens);
+          store.commit('settings/setSettings', sleepState.settings);
           if (store.getters['wallet/isLoggedIn']) {
             store.dispatch('wallet/enterWallet');
           }

@@ -2,6 +2,7 @@ const handleExceptionCodes = {
   invalidSeed: {code: 10, text: 'Invalid seed.'},
   keystore: {code: 11, text: null},
   invalidKeystoreFile: {code: 12, text: 'Invalid keystore file.'},
+  tokenAlreadyActive: {code: 13, text: 'Token already active.'},
   canceledByUser: {code: 1000, text: 'Canceled by user.'},
   networkChanged: {code: 1001, text: 'Network changed'},
   prohibitedToRunWalletContract: {code: 1100, text: 'Running methods of user wallet contract is prohibited.'},

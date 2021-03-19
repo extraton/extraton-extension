@@ -1,6 +1,6 @@
 {
   "name": "extraton",
-  "version": "0.11.1",
+  "version": "0.12.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service build --mode development --watch",
@@ -17,6 +17,7 @@
     "dexie": "^3.0.2",
     "extension-port-stream": "^1.0.0",
     "extensionizer": "^1.0.1",
+    "hex2ascii": "^0.0.3",
     "js-base64": "^3.6.0",
     "obj-multiplex": "^1.0.0",
     "post-message-stream": "^3.0.0",

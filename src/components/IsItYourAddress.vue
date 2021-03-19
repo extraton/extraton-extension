@@ -5,9 +5,9 @@
         Is it your address?
       </v-card-text>
       <v-card-actions>
-        <v-btn href="https://docs.extraton.io/getting-started/contracts-support" target="_blank" small dark>Info</v-btn>
+        <v-btn href="https://docs.extraton.io/getting-started/contracts-support" target="_blank" color="primary" small>Info</v-btn>
         <v-spacer/>
-        <v-btn @click="$emit('yes')" small dark>Yes</v-btn>
+        <v-btn @click="$emit('yes')" color="primary" small>Yes</v-btn>
       </v-card-actions>
     </v-card>
   </div>
@@ -27,7 +27,7 @@ export default {}
     top: 10px;
 
     &__text {
-      color: #fff !important;
+      //color: #fff !important;
       padding: 12px;
     }
 

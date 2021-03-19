@@ -1,5 +1,5 @@
 <template>
-  <div class="sendTokens text-center">
+  <div class="sendTon text-center">
     <v-tooltip bottom>
       <template v-slot:activator="{ on, attrs }">
         <v-btn v-bind="attrs" v-on="on" @click="initTransfer({networkId})" :disabled="!isTransferAvailable" x-large icon>
@@ -32,6 +32,6 @@ export default {
 </script>
 
 <style lang="scss">
-.sendTokens {
+.sendTon {
 }
 </style>

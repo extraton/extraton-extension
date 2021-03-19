@@ -5068,6 +5068,11 @@ hex-color-regex@^1.1.0:
   resolved "https://registry.npm.taobao.org/hex-color-regex/download/hex-color-regex-1.1.0.tgz#4c06fccb4602fe2602b3c93df82d7e7dbf1a8a8e"
   integrity sha1-TAb8y0YC/iYCs8k9+C1+fb8aio4=
 
+hex2ascii@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/hex2ascii/-/hex2ascii-0.0.3.tgz#2dab08bad5a34430dd5cc751271eac4a90eae8fa"
+  integrity sha1-LasIutWjRDDdXMdRJx6sSpDq6Po=
+
 highlight.js@^9.6.0:
   version "9.18.3"
   resolved "https://registry.npm.taobao.org/highlight.js/download/highlight.js-9.18.3.tgz#a1a0a2028d5e3149e2380f8a865ee8516703d634"

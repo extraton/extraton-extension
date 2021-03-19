@@ -1,5 +1,5 @@
 <template>
-  <div class="walletCreate">
+  <v-container class="walletCreate">
     <view-title>Save your seed</view-title>
     <div>
       <span class="font-weight-bold">WARNING!</span> Losing seed phrase is equivalent to losing all your funds.
@@ -16,7 +16,7 @@
         i securely saved it
       </v-btn>
     </div>
-  </div>
+  </v-container>
 </template>
 
 <script>

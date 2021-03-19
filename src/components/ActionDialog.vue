@@ -19,6 +19,11 @@
                                 @formChange="formChange"
                                 :form="task.form"
                                 :disabled="!isApplyButtonEnabled"/>
+            <ui-transfer-token v-if="task.typeId === interactiveTaskType.uiTransferToken"
+                               @formChange="formChange"
+                               :form="task.form"
+                               :disabled="!isApplyButtonEnabled"
+                               :fees="task.data.fees"/>
             <deploy-contract v-if="task.typeId === interactiveTaskType.deployContract"
                              @formChange="formChange"
                              :form="task.form"
@@ -47,6 +52,10 @@
                                  :disabled="!isApplyButtonEnabled"
                                  :txid="task.params.txid"
                                  :wallet-address="task.params.walletAddress"/>
+            <add-token v-if="task.typeId === interactiveTaskType.addToken"
+                       @formChange="formChange"
+                       :form="task.form"
+                       :disabled="!isApplyButtonEnabled"/>
           </v-card-text>
         </div>
         <div>
@@ -80,9 +89,13 @@ import PreDeployTransfer from "@/components/actions/preDeployTransfer";
 import run from "@/components/actions/run";
 import Transfer from "@/components/actions/transfer";
 import ConfirmTransaction from "@/components/actions/confirmTransaction";
+import AddToken from "@/components/actions/addToken";
+import UiTransferToken from "@/components/actions/uiTransferToken";
 
 export default {
   components: {
+    UiTransferToken,
+    AddToken,
     Transfer,
     ConfirmTransaction,
     PreDeployTransfer,
@@ -121,7 +134,7 @@ export default {
     async submit() {
       await this.$refs.form.validate();
       if (this.valid) {
-        let applyData = {interactiveTaskId: this.task.id, password: null};
+        let applyData = {interactiveTask: this.task, password: null};
         if (this.isKeysEncrypted) {
           this.askPassword().then(async (password) => {
             applyData.password = password;

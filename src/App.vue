@@ -2,8 +2,10 @@
   <v-app class="app">
     <template v-if="isInited">
       <snack/>
+      <action-dialog/>
+      <password-dialog/>
+      <edit-wallet-dialog/>
       <v-app-bar class="" color="primary" app dense dark>
-<!--        <coin-icon left/>-->
         <v-icon left>mdi-diamond-stone</v-icon>
         <v-toolbar-title v-if="!isLoggedIn">extraTON</v-toolbar-title>
         <v-spacer></v-spacer>
@@ -13,11 +15,9 @@
         </template>
       </v-app-bar>
       <v-main>
-        <v-container>
-          <global-error/>
-          <back-button/>
-          <router-view/>
-        </v-container>
+        <global-error/>
+        <back-button/>
+        <router-view/>
       </v-main>
     </template>
     <template v-else>
@@ -35,10 +35,21 @@ import RightCornerMenu from "@/components/RightCornerMenu";
 import NetworkSelect from "@/components/NetworkSelect";
 import Snack from "@/components/Snack";
 import {mapGetters, mapActions, mapState} from "vuex";
-// import CoinIcon from "@/components/CoinIcon";
+import ActionDialog from "@/components/ActionDialog";
+import EditWalletDialog from "@/components/EditWalletDialog";
+import PasswordDialog from "@/components/PasswordDialog";
 
 export default {
-  components: {GlobalError, BackButton, RightCornerMenu, NetworkSelect, Snack/*, CoinIcon*/},
+  components: {
+    GlobalError,
+    BackButton,
+    RightCornerMenu,
+    NetworkSelect,
+    Snack,
+    ActionDialog,
+    EditWalletDialog,
+    PasswordDialog,
+  },
   created() {
     this.init();
   },
@@ -62,9 +73,11 @@ export default {
 html {
   overflow: hidden;
 }
+
 .app {
   width: 300px;
   height: 500px;
+  overflow: auto;
   //min-width: 300px;
   //min-height: 500px;
   //max-width: 300px;

@@ -34,6 +34,8 @@ const interactiveTaskType = {
   runTransaction: 5,
   transfer: 6,
   confirmTransaction: 7,
+  addToken: 8,
+  uiTransferToken: 9,
 };
 
 const interactiveTaskRepository = {
@@ -59,6 +61,7 @@ const interactiveTaskRepository = {
   },
   async getAll() {
     const db = await database.getClient();
+    // db.interactiveTask.clear();
     const tasks = await db.interactiveTask.orderBy('id').toArray();
     return _.indexEntitiesByField(tasks, 'id');
   },

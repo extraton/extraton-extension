@@ -1,5 +1,5 @@
 <template>
-  <div class="walletRestore">
+  <v-container class="walletRestore">
     <v-btn style="top:12px" color="primary" href="/keystore.html" target="_blank" small absolute right text>
       Keystore<sup class="red--text">Beta</sup>
     </v-btn>
@@ -42,7 +42,7 @@
         <v-btn @click="validateAndRestore" :loading="isRestoring" color="primary">restore</v-btn>
       </div>
     </v-form>
-  </div>
+  </v-container>
 </template>
 
 <script>

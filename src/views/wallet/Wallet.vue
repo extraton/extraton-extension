@@ -1,9 +1,6 @@
 <template>
   <div class="wallet">
-    <action-dialog/>
-    <password-dialog/>
-    <edit-wallet-dialog/>
-    <balance/>
+    <balance class="wallet__balance"/>
     <div>
       <main-address/>
       <is-it-your-address @yes="thatsMyAddress" v-if="isItYourAddressShowing"/>
@@ -13,33 +10,30 @@
         <get-tokens/>
         <div class="wallet__actions__spacer"/>
       </template>
-      <send-tokens/>
+      <send-ton/>
     </div>
+    <assets v-if="tip3"/>
   </div>
 </template>
 
 <script>
 
-import {mapActions, mapGetters} from "vuex";
-import ActionDialog from "@/components/ActionDialog";
-import PasswordDialog from "@/components/PasswordDialog";
+import {mapActions, mapGetters, mapState} from "vuex";
 import Balance from "@/components/Balance";
 import MainAddress from "@/components/MainAddress";
 import IsItYourAddress from "@/components/IsItYourAddress";
 import GetTokens from "@/components/GetTokens";
-import SendTokens from "@/components/SendTokens";
-import EditWalletDialog from "@/components/EditWalletDialog";
+import SendTon from "@/components/SendTon";
+import Assets from "@/components/assets/Assets";
 
 export default {
   components: {
-    EditWalletDialog,
-    ActionDialog,
-    PasswordDialog,
+    Assets,
     MainAddress,
     IsItYourAddress,
     Balance,
     GetTokens,
-    SendTokens
+    SendTon
   },
   data() {
     return {};
@@ -58,6 +52,9 @@ export default {
       'isLoggedIn',
       'isItYourAddressShowing',
     ]),
+    ...mapState('settings', [
+      'tip3',
+    ]),
   },
   methods: {
     ...mapActions('wallet', [
@@ -74,6 +71,9 @@ export default {
 
 <style lang="scss">
 .wallet {
+  &__balance {
+    margin: 30px 0;
+  }
   &__actions {
     margin-top: 30px;
     display: flex;

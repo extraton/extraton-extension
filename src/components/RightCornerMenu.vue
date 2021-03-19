@@ -29,6 +29,15 @@
 
       <v-divider/>
 
+      <v-list-item :to="{name:routes.settings}">
+        <v-list-item-icon>
+          <v-icon>mdi-cogs</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-list-item-title>Settings</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+
       <v-list-item href="http://extraton.io" target="_blank">
         <v-list-item-icon>
           <v-icon>mdi-information</v-icon>
@@ -56,6 +65,7 @@
 import {mapActions, mapState, mapMutations} from "vuex";
 import walletLib from "@/lib/wallet";
 import AddWalletDialog from "@/components/AddWalletDialog";
+import {routes} from "@/plugins/router";
 
 export default {
   components: {AddWalletDialog},
@@ -63,6 +73,7 @@ export default {
     menu: false,
     walletKey: null,
     walletLib,
+    routes,
   }),
   computed: {
     ...mapState('wallet', [

@@ -42,6 +42,18 @@
         "button": {
           "apply": "Confirm"
         }
+      },
+      "8": {
+        "name": "Add Token",
+        "button": {
+          "apply": "Add"
+        }
+      },
+      "9": {
+        "name": "Transfer Token",
+        "button": {
+          "apply": "Transfer"
+        }
       }
     }
   }
