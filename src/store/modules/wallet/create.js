@@ -2,6 +2,7 @@ import BackgroundApi from "@/api/background";
 import {generateSeedTask, setWalletBySeedTask} from "@/lib/task/items";
 import store from "@/store";
 import walletContractLib from '@/lib/walletContract';
+import {routes} from "@/plugins/router";
 
 export default {
   namespaced: true,
@@ -30,7 +31,7 @@ export default {
       store.commit('globalError/clearText');
       BackgroundApi.request(setWalletBySeedTask, {seed: state.seed, contractId: walletContractLib.ids.safeMultisig, isRestoring: false})
         .then(async () => {
-          await store.dispatch('wallet/wakeup');
+          await store.dispatch('wallet/wakeup', {name: routes.wallet, params: {}});
         })
         .catch(() => {
           commit('unsetIsGoingToWallet');

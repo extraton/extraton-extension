@@ -3,6 +3,8 @@ import {handleException, handleExceptionCodes} from "@/lib/task/exception/handle
 import wallet from "@/lib/wallet";
 import keystoreLib from "@/lib/keystore";
 import keystoreException from "@/lib/keystore/keystoreException";
+import {paramRepository} from "@/db/repository/paramRepository";
+import {routes} from "@/plugins/router";
 
 export default {
   name: 'setWalletByKeystore',
@@ -30,5 +32,6 @@ export default {
     }
 
     await wallet.restore(server, contractId, keystore, isRestoring);
+    await paramRepository.createOrUpdate('page', {name: routes.wallet});
   }
 }

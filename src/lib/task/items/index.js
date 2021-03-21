@@ -17,6 +17,7 @@ import removeWalletTask from "@/lib/task/items/removeWallet";
 import changeWalletTask from "@/lib/task/items/changeWallet";
 import editWalletTask from "@/lib/task/items/editWallet";
 import changeNetworkTask from "@/lib/task/items/changeNetwork";
+import setPageTask from "@/lib/task/items/setPage";
 import setSettingTask from "@/lib/task/items/setSetting";
 import requestCurrentWalletDataTask from "@/lib/task/items/requestCurrentWalletData";
 import thatsMyAddressTask from "@/lib/task/items/thatsMyAddress";
@@ -53,6 +54,7 @@ export {
   changeWalletTask,
   editWalletTask,
   changeNetworkTask,
+  setPageTask,
   setSettingTask,
   requestCurrentWalletDataTask,
   thatsMyAddressTask,

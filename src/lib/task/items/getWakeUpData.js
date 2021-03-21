@@ -10,6 +10,12 @@ const _ = {
 
     return {tip3};
   },
+  async getPage(db) {
+    // await db.param.delete('page');
+    let page = await db.param.get('page');
+    page = typeof page !== 'undefined' ? page.value : null;
+    return page;
+  },
 }
 
 export default {
@@ -21,6 +27,7 @@ export default {
     const wallets = await walletRepository.getAllWithoutKeys();
     const walletId = (await db.param.get('wallet')).value;
     const network = (await db.param.get('network')).value;
+    const page = await _.getPage(db);
     const tasks = await interactiveTaskRepository.getAll();
     const tokens = await tokenRepository.getAll();
     const settings = await _.getSettings(db);
@@ -33,6 +40,7 @@ export default {
       networks,
       tokens,
       settings,
+      page,
     };
 
     return data;

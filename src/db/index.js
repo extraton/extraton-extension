@@ -1,4 +1,5 @@
 import Dexie from "dexie";
+import {routes} from "@/plugins/router";
 
 const DB_NAME = 'db41';
 
@@ -18,6 +19,7 @@ const _ = {
         {key: 'wallet', value: null},
         {key: 'network', value: 1},
         {key: 'tip3', value: false},
+        {key: 'page', value: {name: routes.start, params: {}}},
       ]);
       await db.network.bulkAdd([
         {

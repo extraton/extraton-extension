@@ -15,6 +15,7 @@ export default {
         window.close();
       } else {
         await store.dispatch('wallet/wakeup');
+        await store.dispatch('action/startTaskUpdating');
         commit('setInited');
       }
     },

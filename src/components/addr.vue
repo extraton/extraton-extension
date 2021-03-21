@@ -2,10 +2,38 @@
   <div class="address">
     <v-tooltip bottom>
       <template v-slot:activator="{ on, attrs }">
-        <v-btn v-bind="attrs"
+        <v-dialog v-if="null!==copyWarning" v-model="copyWarningDialog">
+          <template v-slot:activator="{}">
+            <v-btn v-bind="attrs"
+                   v-on="on"
+                   @click="copyWarningDialog=true"
+                   :disabled="!address"
+                   icon small
+            >
+              <v-icon color="primary" small>mdi-content-copy</v-icon>
+            </v-btn>
+          </template>
+          <v-card>
+            <v-card-title>Warning!</v-card-title>
+            <v-card-text class="font-weight-bold">{{ copyWarning }}</v-card-text>
+            <v-card-actions>
+              <v-spacer/>
+              <v-btn
+                v-clipboard="address"
+                @success="onCopied"
+                @error="$snack.danger({text: 'Copy Error'})"
+                color="primary"
+                small
+              >Got it</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+        <v-btn v-else
+               v-bind="attrs"
                v-on="on"
                v-clipboard="address"
-               @click="$snack.success({text: 'Copied'})"
+               @success="onCopied"
+               @error="$snack.danger({text: 'Copy Error'})"
                :disabled="!address"
                icon small
         >
@@ -19,7 +47,8 @@
 
     <v-tooltip bottom>
       <template v-slot:activator="{ on, attrs }">
-        <v-btn v-bind="attrs" v-on="on" :disabled="!availableInExplorer" :href="explorerLink" target="_blank" icon small>
+        <v-btn v-bind="attrs" v-on="on" :disabled="!availableInExplorer" :href="explorerLink" target="_blank" icon
+               small>
           <v-icon color="primary" small>mdi-open-in-new</v-icon>
         </v-btn>
       </template>
@@ -37,6 +66,12 @@ export default {
   props: {
     address: String,
     availableInExplorer: {type: Boolean, default: true},
+    copyWarning: {type: String, default: null},
+  },
+  data() {
+    return {
+      copyWarningDialog: false,
+    };
   },
   computed: {
     addressView() {
@@ -48,7 +83,13 @@ export default {
     ...mapGetters('wallet', [
       'explorer',
     ]),
-  }
+  },
+  methods: {
+    onCopied() {
+      this.copyWarningDialog = false;
+      this.$snack.success({text: 'Copied'});
+    }
+  },
 }
 </script>
 

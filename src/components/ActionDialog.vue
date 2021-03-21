@@ -45,7 +45,7 @@
                       :amount="task.params.amount"
                       :address="task.params.address"
                       :wallet-address="task.params.walletAddress"
-                      :is-current-address="task.params.isItLoggedWalletAddress"/>
+                      :is-current-address="task.data.isItLoggedWalletAddress"/>
             <confirm-transaction v-if="task.typeId === interactiveTaskType.confirmTransaction"
                                  @formChange="formChange"
                                  :form="task.form"

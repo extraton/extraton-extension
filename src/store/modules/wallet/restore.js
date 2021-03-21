@@ -2,6 +2,7 @@ import BackgroundApi from "@/api/background";
 import {setWalletBySeedTask} from "@/lib/task/items";
 import store from "@/store";
 import walletContractLib from '@/lib/walletContract';
+import {routes} from "@/plugins/router";
 
 export default {
   namespaced: true,
@@ -26,7 +27,7 @@ export default {
       commit('setRestoring');
       BackgroundApi.request(setWalletBySeedTask, {seed, contractId, isRestoring: true})
         .then(async () => {
-          await store.dispatch('wallet/wakeup');
+          await store.dispatch('wallet/wakeup', {name: routes.wallet, params: {}});
           commit('unsetRestoring');
         })
         .catch((err) => {

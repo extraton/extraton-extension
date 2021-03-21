@@ -85,8 +85,9 @@ export default {
     },
   },
   actions: {
-    enterWallet: async () => {
-      return router.push({name: routes.wallet})
+    enterWallet: async (tools, page) => {
+      const to = page !== null ? page : {name: routes.wallet};
+      return router.push(to);
     },
     goToStart: () => router.push({name: routes.start}),
     logout: async ({commit}) => {
@@ -107,6 +108,9 @@ export default {
         .then(() => {
           store.dispatch('wallet/startBalanceUpdating');
           commit('setNetwork', network);
+          if ([routes.walletToken].includes(router.currentRoute.name)) {
+            router.push({name: routes.wallet});
+          }
         })
         .catch(() => {
           store.commit('globalError/setText', 'Failure during network changing.');
@@ -118,14 +122,14 @@ export default {
       BackgroundApi.request(changeWalletTask, {walletId})
         .then(() => {
           commit('setWallet', walletId);
-          router.push({name: routes.wallet})
+          router.push({name: routes.wallet});
         })
         .catch((err) => {
           console.error(err);
           store.commit('globalError/setText', 'Failure during wallet changing.');
         });
     },
-    wakeup: async ({commit}) => {
+    wakeup: async ({commit}, page) => {
       return BackgroundApi.request(getWakeUpDataTask)
         .then((sleepState) => {
           // console.log({sleepState});
@@ -134,7 +138,7 @@ export default {
           store.commit('token/setTokens', sleepState.tokens);
           store.commit('settings/setSettings', sleepState.settings);
           if (store.getters['wallet/isLoggedIn']) {
-            store.dispatch('wallet/enterWallet');
+            store.dispatch('wallet/enterWallet', page || sleepState.page);
           }
         });
     },
@@ -190,7 +194,8 @@ export default {
     },
     isFaucetAvailable: (state) => {
       const faucet = state.networks[state.network].faucet;
-      const isZeroBalance = state.wallets[state.walletId].networks[state.network].balance === 0;
+      const balance = state.wallets[state.walletId].networks[state.network].balance;
+      const isZeroBalance = null !== balance && BigInt(0) === BigInt(balance);
       return undefined !== faucet && faucet.isAvailable === true && isZeroBalance && !_.hasContract(state);
     },
     isAddressAvailableInExplorer: (state) => _.hasContract(state) || _.isBalancePositive(state),

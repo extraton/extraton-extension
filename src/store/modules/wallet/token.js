@@ -2,35 +2,18 @@ import BackgroundApi from '@/api/background';
 import {router, routes} from "@/plugins/router";
 import store from "@/store";
 import {
-  // requestCurrentWalletDataTask,
   initAddTokenTask,
   hideTokenTask,
   activateTokenTask,
   initUiTransferTokenTask,
 } from "@/lib/task/items";
+import BN from "bignumber.js";
 
-// const _ = {
-//   updateBalancesEndless: async function (epoch, commit, state) {
-//     if (state.isAutoUpdatingOn && epoch === state.autoUpdateEpoch) {
-//       try {
-//         const data = await BackgroundApi.request(requestCurrentWalletDataTask);
-//         console.log(data);
-        // if (state.isAutoUpdatingOn && epoch === state.autoUpdateEpoch) {
-        //   commit('setNetworkAccountData', data);
-        //   commit('setTokens', data.tokens);
-        // }
-      // } catch (err) {
-      //   console.error(err);
-      // } finally {
-      //   if (state.isAutoUpdatingOn && epoch === state.autoUpdateEpoch) {
-      //     setTimeout(async function () {
-      //       await this.updateBalancesEndless(epoch, commit, state);
-      //     }.bind(this), 4000);
-      //   }
-      // }
-    // }
-  // },
-// };
+const _ = {
+  ft(tokens, id) {
+    return tokens.find((token) => token.id === id);
+  },
+};
 
 export default {
   namespaced: true,
@@ -99,15 +82,22 @@ export default {
   },
   getters: {
     tokensByNetwork: (state) => state.tokens.filter((token) => token.networkId === store.state.wallet.network && token.walletId === store.state.wallet.walletId),
-    token: (state) => (id) => state.tokens.find((token) => token.id === id),
-    isTokenActive: (state) => (id) => state.tokens.find((token) => token.id === id).walletAddress !== null,
-    isTokenDeploying: (state) => (id) => state.tokens.find((token) => token.id === id).isDeploying,
-    isTransferAvailable: (state) => (id) => {
-      const token = state.tokens.find((token) => token.id === id);
+    token: ({tokens}) => (id) => _.ft(tokens, id),
+    isTokenActive: ({tokens}) => (id) => _.ft(tokens, id).walletAddress !== null,
+    isTokenDeploying: ({tokens}) => (id) => _.ft(tokens, id).isDeploying,
+    isTransferAvailable: ({tokens}) => (id) => {
+      const token = _.ft(tokens, id);
       if (null === token.walletAddress) {
         return false;
       }
       return null !== token.balance ? BigInt(token.balance) > BigInt(0) : false;
-    }
+    },
+    balanceView: ({tokens}) => (id) => {
+      const token = _.ft(tokens, id);
+      const decimals =  BN(token.decimals);
+      const divisionBy = BN('10').exponentiatedBy(decimals);
+      const decimalPoints = BN('3').isGreaterThan(decimals) ? decimals.toNumber() : 3;
+      return BN(token.balance).dividedBy(divisionBy).toFormat(decimalPoints, BN.ROUND_DOWN);
+    },
   }
 }

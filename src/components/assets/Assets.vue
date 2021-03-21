@@ -9,7 +9,7 @@
             <v-icon>$vuetify.icons.coins</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title>{{ BN(token.balance).toFormat(0) }} {{ token.symbol }}</v-list-item-title>
+            <v-list-item-title>{{ balanceView(token.id) }} {{ token.symbol }}</v-list-item-title>
             <v-list-item-subtitle>{{ token.name }}</v-list-item-subtitle>
           </v-list-item-content>
           <v-list-item-icon class="assets__item_chevron">
@@ -32,16 +32,15 @@
 <script>
 import {routes} from "@/plugins/router";
 import {mapActions, mapGetters} from "vuex";
-import BN from "bignumber.js";
 
 export default {
   data: () => ({
     routes,
-    BN,
   }),
   computed: {
     ...mapGetters('token', [
-      'tokensByNetwork'
+      'tokensByNetwork',
+      'balanceView'
     ]),
   },
   methods: {

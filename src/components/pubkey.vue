@@ -6,7 +6,8 @@
         <v-btn v-bind="attrs"
                v-on="on"
                v-clipboard="pubkey"
-               @click="$snack.success({text: 'Copied'})"
+               @success="$snack.success({text: 'Copied'})"
+               @error="$snack.danger({text: 'Copy Error'})"
                class="pubkey__copy"
                icon small
         >

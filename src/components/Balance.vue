@@ -8,7 +8,7 @@
     <template v-else>
       <span v-if="null!==tokenId" class="balance__symbol text-overline">{{ token(tokenId).symbol }}</span>
       <span class="text-h4">
-        {{ BN(token(tokenId).balance).toFormat(0) }}
+        {{ tokenBalanceView(tokenId) }}
       </span>
     </template>
   </div>
@@ -18,7 +18,6 @@
 import {mapGetters} from "vuex";
 import CoinIcon from "@/components/CoinIcon";
 import walletLib from "@/lib/wallet";
-import BN from "bignumber.js";
 
 export default {
   components: {CoinIcon},
@@ -26,16 +25,17 @@ export default {
     tokenId: {type: Number, default: null},
   },
   data() {
-    return {walletLib, BN};
+    return {walletLib};
   },
   computed: {
     ...mapGetters('wallet', [
       'balanceView',
       'isDevNetwork',
     ]),
-    ...mapGetters('token', [
-      'token'
-    ]),
+    ...mapGetters('token', {
+      token: 'token',
+      tokenBalanceView: 'balanceView',
+  }),
   },
 }
 </script>

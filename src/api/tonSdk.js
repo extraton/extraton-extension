@@ -110,7 +110,7 @@ export default {
     const client = await ton.getClient(server);
     const signer = null !== keys ? {type: 'Keys', keys} : {type: 'None'};
     const call_set = {function_name, input};
-    return await client.abi.encode_message_body({abi, call_set, signer, is_internal: false});
+    return await client.abi.encode_message_body({abi, call_set, signer, is_internal: true});
   },
   async runTvm(server, abi, boc, message) {
     try {

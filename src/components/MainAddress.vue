@@ -1,7 +1,7 @@
 <template>
   <div class="mainAddress text-center">
     <div class="mainAddress__title text-subtitle-2">{{ accountName }}:</div>
-    <addr v-if="address" :address="address" :available-in-explorer="isAddressAvailableInExplorer"/>
+    <addr v-if="address" :address="address" :available-in-explorer="isAddressAvailableInExplorer" :copy-warning="copyWarning"/>
     <v-skeleton-loader v-else type="text" width="180"/>
   </div>
 </template>
@@ -12,12 +12,16 @@ import Addr from "@/components/addr";
 
 export default {
   components: {Addr},
+  props: {pluralTokenName: String},
   computed: {
     ...mapGetters('wallet', [
       'address',
       'accountName',
       'isAddressAvailableInExplorer',
     ]),
+    copyWarning() {
+      return `Use this address only for TON ${this.pluralTokenName}. Every TIP-3 token has his own address.`;
+    },
   },
 }
 </script>

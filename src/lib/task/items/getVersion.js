@@ -1,6 +1,6 @@
 export default {
   name: 'getVersion',
   handle: function () {
-    return {name: 'extraton', version: '0.12.0'};
+    return {name: 'extraton', version: '0.12.1'};
   }
 }

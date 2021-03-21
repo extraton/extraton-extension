@@ -20,12 +20,12 @@ export default {
       task.data.walletAddress = loggedWalletAddress;
     }
 
-    task.data.isItLoggedWalletAddress = walletLib.isAddressesMatch(loggedWalletAddress, task.data.walletAddress);
+    const isItLoggedWalletAddress = walletLib.isAddressesMatch(loggedWalletAddress, task.data.walletAddress);
 
-    if (task.data.isItLoggedWalletAddress && !await walletLib.isContractDeployed(networkId)) {
+    if (isItLoggedWalletAddress && !await walletLib.isContractDeployed(networkId)) {
       await interactiveTaskRepository.createTask(interactiveTaskType.deployWalletContract, networkId, task.requestId);
     }
 
-    return await interactiveTaskRepository.createTask(interactiveTaskType.transfer, networkId, task.requestId, task.data);
+    return await interactiveTaskRepository.createTask(interactiveTaskType.transfer, networkId, task.requestId, task.data, {isItLoggedWalletAddress});
   }
 }

@@ -8,6 +8,8 @@ import Wallet from "@/views/wallet/Wallet";
 import WalletCreate from "@/views/wallet/Create";
 import WalletRestore from "@/views/wallet/Restore";
 import WalletToken from "@/views/wallet/Token";
+import BackgroundApi from "@/api/background";
+import {setPageTask} from "@/lib/task/items";
 
 Vue.use(VueRouter);
 
@@ -77,10 +79,12 @@ const list = [
   },
 ]
 
-const router = new VueRouter({routes: list})
-
+const router = new VueRouter({routes: list});
 
 router.beforeEach((to, from, next) => {
+  if (null !== from.name) {
+    BackgroundApi.request(setPageTask, {name: to.name, params: to.params});
+  }
   store.commit('globalError/clearText');
   next();
 });

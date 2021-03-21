@@ -2,7 +2,7 @@
   <div class="wallet">
     <balance class="wallet__balance"/>
     <div>
-      <main-address/>
+      <main-address :plural-token-name="isDevNetwork?'Rubies':'Crystals'"/>
       <is-it-your-address @yes="thatsMyAddress" v-if="isItYourAddressShowing"/>
     </div>
     <div class="wallet__actions">
@@ -43,7 +43,6 @@ export default {
       this.goToStart();
     } else {
       this.startBalanceUpdating();
-      this.startTaskUpdating();
     }
   },
   computed: {
@@ -61,9 +60,6 @@ export default {
       'goToStart',
       'startBalanceUpdating',
       'thatsMyAddress',
-    ]),
-    ...mapActions('action', [
-      'startTaskUpdating',
     ]),
   }
 }

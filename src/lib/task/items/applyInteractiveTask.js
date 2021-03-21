@@ -15,6 +15,7 @@ import {tokenContractException, tokenContractExceptionCodes} from "@/lib/token/T
 import {tokenRepository} from "@/db/repository/tokenRepository";
 import interactiveTaskCallback from "@/lib/task/interactive/callback";
 import addToken from "@/lib/task/interactive/callback/addToken";
+import UndecimalIsNotIntegerException from "@/lib/token/UndecimalIsNotIntegerException";
 
 const _ = {
   checkSufficientFunds(wallet, networkId, amount) {
@@ -148,7 +149,9 @@ export default {
           case interactiveTaskType.uiTransferToken: {
             const token = await tokenRepository.getToken(interactiveTask.params.tokenId);
             const contract = tokenContractLib.getContractById(token.contractId);
-            await contract.transfer(server, wallet.keys, token, form.address, form.amount);
+            const undecimalAmount = tokenContractLib.undecimal(token, form.amount);
+            tokenContractLib.checkSufficientFunds(token, undecimalAmount);
+            await contract.transfer(server, wallet.keys, token, form.address, undecimalAmount);
             break;
           }
           case interactiveTaskType.confirmTransaction: {
@@ -178,6 +181,8 @@ export default {
         console.error(e);
         interactiveTask.statusId = interactiveTaskStatus.new;
         if (e instanceof insufficientFundsException) {
+          interactiveTask.error = e.error;
+        } else if (e instanceof UndecimalIsNotIntegerException) {
           interactiveTask.error = e.error;
         } else if (e instanceof keystoreException) {
           interactiveTask.error = e.message;

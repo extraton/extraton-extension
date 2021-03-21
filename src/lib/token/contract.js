@@ -1,6 +1,9 @@
 import tonLib from "@/api/tonSdk";
 import {tokenContractException, tokenContractExceptionCodes} from "@/lib/token/TokenContractException";
 import tip3 from '@/lib/token/tip3';
+import BN from "bignumber.js";
+import UndecimalIsNotIntegerException from "@/lib/token/UndecimalIsNotIntegerException";
+import insufficientFundsException from "@/lib/task/exception/insufficientFundsException";
 
 const _ = {
   findTokenContractByCodeHash: (codeHash) => {
@@ -43,5 +46,20 @@ export default {
     }
 
     return contract;
+  },
+  undecimal: (token, amount) => {
+    const decimals =  BN(token.decimals);
+    const multiplyBy = BN('10').exponentiatedBy(decimals);
+    const undecimalAmount = BN(amount).multipliedBy(multiplyBy);
+    if (!undecimalAmount.isInteger()) {
+      throw new UndecimalIsNotIntegerException();
+    }
+
+    return undecimalAmount.toString();
+  },
+  checkSufficientFunds: (token, amount) => {
+    if (BN(token.balance).isLessThan(BN(amount))) {
+      throw new insufficientFundsException();
+    }
   },
 }

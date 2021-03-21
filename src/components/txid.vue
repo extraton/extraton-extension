@@ -5,7 +5,8 @@
         <v-btn v-bind="attrs"
                v-on="on"
                v-clipboard="txid"
-               @click="$snack.success({text: 'Copied'})"
+               @success="$snack.success({text: 'Copied'})"
+               @error="$snack.danger({text: 'Copy Error'})"
                icon small
         >
           <v-icon color="primary" small>mdi-content-copy</v-icon>

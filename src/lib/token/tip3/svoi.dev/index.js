@@ -5,6 +5,7 @@ import tokenWalletAbi from "@/lib/token/tip3/svoi.dev/TONTokenWallet.abi.json";
 import {interactiveTaskRepository, interactiveTaskType} from "@/db/repository/interactiveTaskRepository";
 import tonSdk from "@/api/tonSdk";
 import dexClientAbi from "@/lib/token/tip3/radiance/DEXclient.abi.json";
+import createNewEmptyTokenWalletCallback from "@/lib/task/interactive/callback/createNewEmptyTokenWallet";
 
 const _ = {
   getDetails: async (server, boc, rootAddress) => {
@@ -67,13 +68,13 @@ export default {
   async initTokenActivation(network, token, interactiveTaskRequestId, wallet) {
     //@TODO fees
     const fees = '0.011'
-    // const callback = {name: createNewEmptyTokenWallet.name, params: [network.server, token.id, dexClientAddress]};
+    const callback = {name: createNewEmptyTokenWalletCallback.name, params: [network.server, token.id]};
     const input = {
-      // grams: token.params.startGasBalance,
-      grams: '500000000',
+      grams: token.params.startGasBalance,
+      // grams: '100000000',
       wallet_public_key_: `0x${wallet.keys.public}`,
       owner_address_: "0:0000000000000000000000000000000000000000000000000000000000000000",
-      gas_back_address: wallet.address,
+      gas_back_address: "0:0000000000000000000000000000000000000000000000000000000000000000",
     };
     const payload = (await tonSdk.encodeMessageBody(network.server, rootAbi, 'deployEmptyWallet', input)).body;
     await interactiveTaskRepository.createTask(
@@ -83,13 +84,12 @@ export default {
       {
         walletAddress: wallet.address,
         address: token.rootAddress,
-        amount: '1000000000',
-        // amount: token.params.startGasBalance,
+        amount: (BigInt(token.params.startGasBalance) + BigInt('500000000')).toString(),
         bounce: true,
         payload,
         async: false,
       },
-      {fees, /*callback*/},
+      {fees, callback, isItLoggedWalletAddress: true},
     );
   },
   async transfer(server, keys, token, destAddress, amount) {

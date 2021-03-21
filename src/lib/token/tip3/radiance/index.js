@@ -5,7 +5,7 @@ import tokenWalletAbi from "@/lib/token/tip3/radiance/TONTokenWallet.abi.json";
 import dexClientAbi from "@/lib/token/tip3/radiance/DEXclient.abi.json";
 import dexClientTvc from "@/lib/token/tip3/radiance/DEXclient.tvc.base64";
 import {interactiveTaskRepository, interactiveTaskType} from "@/db/repository/interactiveTaskRepository";
-import createNewEmptyTokenWallet from "@/lib/task/interactive/callback/createNewEmptyTokenWallet";
+import createNewEmptyTokenWalletCallback from "@/lib/task/interactive/callback/createNewEmptyTokenWallet";
 import radianceDeployDexClient from "@/lib/task/interactive/callback/radianceDeployDexClient";
 
 const _ = {
@@ -124,7 +124,7 @@ export default {
   async addCreateNewEmptyWalletTask(token, network, interactiveTaskRequestId, dexClientAddress) {
     //@TODO fees
     const fees = '0.017518294'
-    const callback = {name: createNewEmptyTokenWallet.name, params: [network.server, token.id,]};
+    const callback = {name: createNewEmptyTokenWalletCallback.name, params: [network.server, token.id,]};
     await interactiveTaskRepository.createTask(
       interactiveTaskType.runTransaction,
       network.id,
