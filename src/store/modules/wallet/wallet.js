@@ -3,7 +3,6 @@ import {router, routes} from "@/plugins/router";
 import store from "@/store";
 import walletLib from "@/lib/wallet";
 import {
-  requestTokensFromFaucetTask,
   getWakeUpDataTask,
   changeNetworkTask,
   changeWalletTask,
@@ -56,9 +55,6 @@ export default {
     setNetwork: (state, network) => state.network = network,
     setAutoUpdateOn: (state) => state.isAutoUpdatingOn = true,
     nextAutoUpdateEpoch: (state) => state.autoUpdateEpoch += 1,
-    setGettingTokensFromFaucet: (state, network) => state.networks[network].faucet.isGettingTokens = true,
-    unsetGettingTokensFromFaucet: (state, network) => state.networks[network].faucet.isGettingTokens = false,
-    disableFaucet: (state) => state.networks[state.network].faucet.isAvailable = false,
     setWallet: (state, walletId) => state.walletId = walletId,
     thatsMyAddress: (state) => state.wallets[state.walletId].isWalletMine = true,
     clear: (state) => {
@@ -152,19 +148,6 @@ export default {
           store.commit('globalError/setText', 'Failure during transaction initialization.');
         });
     },
-    getTokensFromFaucet: async ({commit}, {snack, network}) => {
-      commit('setGettingTokensFromFaucet', network);
-      return BackgroundApi.request(requestTokensFromFaucetTask, {network})
-        .then(() => {
-          snack.success({text: 'Tokens will come in a moment.'});
-          commit('disableFaucet', network);
-          commit('unsetGettingTokensFromFaucet', network);
-        })
-        .catch(() => {
-          commit('unsetGettingTokensFromFaucet', network);
-          snack.danger({text: 'Error'});
-        });
-    },
     thatsMyAddress: async ({commit}) => {
       commit('thatsMyAddress');
       await BackgroundApi.request(thatsMyAddressTask);
@@ -188,16 +171,6 @@ export default {
     server: (state) => state.networks[state.network].server,
     isDevNetwork: (state) => state.networks[state.network].isDev,
     explorer: (state) => state.networks[state.network].explorer,
-    isGettingTokensFromFaucet: (state) => {
-      const faucet = state.networks[state.network].faucet;
-      return undefined !== faucet ? faucet.isGettingTokens : false;
-    },
-    isFaucetAvailable: (state) => {
-      const faucet = state.networks[state.network].faucet;
-      const balance = state.wallets[state.walletId].networks[state.network].balance;
-      const isZeroBalance = null !== balance && BigInt(0) === BigInt(balance);
-      return undefined !== faucet && faucet.isAvailable === true && isZeroBalance && !_.hasContract(state);
-    },
     isAddressAvailableInExplorer: (state) => _.hasContract(state) || _.isBalancePositive(state),
     isTransferAvailable: (state) => _.isBalancePositive(state),
     isItYourAddressShowing: (state) => {

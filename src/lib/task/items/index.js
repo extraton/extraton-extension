@@ -9,7 +9,6 @@ import deployTask from "@/lib/task/items/deploy";
 import runTask from "@/lib/task/items/run";
 import transferTask from "@/lib/task/items/transfer";
 import confirmTransactionTask from "@/lib/task/items/confirmTransaction";
-import requestTokensFromFaucetTask from "@/lib/task/items/requestTokensFromFaucet";
 import getWakeUpDataTask from "@/lib/task/items/getWakeUpData";
 import generateSeedTask from "@/lib/task/items/generateSeed";
 import setWalletBySeedTask from "@/lib/task/items/setWalletBySeed";
@@ -46,7 +45,6 @@ export {
   runTask,
   transferTask,
   confirmTransactionTask,
-  requestTokensFromFaucetTask,
   getWakeUpDataTask,
   generateSeedTask,
   setWalletBySeedTask,

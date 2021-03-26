@@ -5,10 +5,10 @@ const DB_NAME = 'db41';
 
 const _ = {
   setSchema: function (db) {
-    db.version(8).stores({
+    db.version(9).stores({
       param: '&key, value',
       wallet: '++id, name, contractId, address, keys, networks, isRestored, isWalletMine',
-      network: '&id, server, explorer, info, isDev, faucet.address, faucet.isGettingTokens',
+      network: '&id, server, explorer, info, isDev',
       interactiveTask: '++id, networkId, requestId, data, params, typeId, statusId, result, error, form',
       token: '++id, contractId, networkId, walletId, rootAddress, name, symbol, isDeploying, walletAddress, balance, decimals, params',
     });
@@ -36,11 +36,6 @@ const _ = {
           explorer: 'net.ton.live',
           info: 'Test network',
           isDev: true,
-          faucet: {
-            address: '0:553b3ea098c3bae9a60d9b689beb183c3cf9a5e6bc5f20acf34d5edfa49a31c1',
-            isGettingTokens: false,
-            isAvailable: true,
-          },
           account: {balance: null, codeHash: null},
         },
       ]);

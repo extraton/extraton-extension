@@ -10,7 +10,6 @@ import {
   runTask,
   transferTask,
   confirmTransactionTask,
-  requestTokensFromFaucetTask,
   getWakeUpDataTask,
   generateSeedTask,
   setWalletBySeedTask,
@@ -44,7 +43,6 @@ import keystoreException from "@/lib/keystore/keystoreException";
 const taskList = {
   internal: {
     getWakeUpDataTask,
-    requestTokensFromFaucetTask,
     generateSeedTask,
     setWalletBySeedTask,
     removeWalletTask,

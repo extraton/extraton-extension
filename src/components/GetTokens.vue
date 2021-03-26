@@ -2,9 +2,8 @@
   <div class="getTokens text-center">
     <v-tooltip bottom>
       <template v-slot:activator="{ on, attrs }">
-        <v-btn v-bind="attrs" v-on="on" x-large icon :loading="isGettingTokensFromFaucet"
-               :disabled="!isFaucetAvailable">
-          <v-icon @click="getTokensFromFaucet({snack: $snack, network})" color="primary" large>
+        <v-btn v-bind="attrs" v-on="on" href="https://faucet.extraton.io" target="_blank" x-large icon>
+          <v-icon color="primary" large>
             mdi-water-pump
           </v-icon>
         </v-btn>
@@ -15,23 +14,7 @@
 </template>
 
 <script>
-import {mapActions, mapState, mapGetters} from "vuex";
-
 export default {
-  computed: {
-    ...mapGetters('wallet', [
-      'isGettingTokensFromFaucet',
-      'isFaucetAvailable',
-    ]),
-    ...mapState('wallet', [
-      'network',
-    ]),
-  },
-  methods: {
-    ...mapActions('wallet', [
-      'getTokensFromFaucet'
-    ]),
-  }
 }
 </script>
 
