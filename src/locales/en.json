@@ -54,6 +54,18 @@
         "button": {
           "apply": "Transfer"
         }
+      },
+      "10": {
+        "name": "Transfer Token",
+        "button": {
+          "apply": "Transfer"
+        }
+      },
+      "11": {
+        "name": "Call Method",
+        "button": {
+          "apply": "Call"
+        }
       }
     }
   }

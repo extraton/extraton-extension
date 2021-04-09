@@ -7,6 +7,9 @@ import dexClientTvc from "@/lib/token/tip3/radiance/DEXclient.tvc.base64";
 import {interactiveTaskRepository, interactiveTaskType} from "@/db/repository/interactiveTaskRepository";
 import createNewEmptyTokenWalletCallback from "@/lib/task/interactive/callback/createNewEmptyTokenWallet";
 import radianceDeployDexClient from "@/lib/task/interactive/callback/radianceDeployDexClient";
+import CodeHashCallRestriction from "@/lib/callRestriction/item/CodeHashCallRestriction";
+
+const CONTRACT_DEX_CLIENT_CODE_HASH = '67860f3cbce73ea5c66f9792cb16c85040d2adeed94bd06f3374a61ad5bf536f';
 
 const _ = {
   getName: async (server, boc, rootAddress) => {
@@ -63,7 +66,8 @@ const _ = {
 
 export default {
   id: 1,
-  codeHash: '8d75a1d708598b6dc99afb34ef676ff6db9dca5a59ec01a101850d661c8e8729',//root
+  rootCodeHash: '8d75a1d708598b6dc99afb34ef676ff6db9dca5a59ec01a101850d661c8e8729',
+  walletCodeHash: 'dfdd2547c0e4fcf05aae09a4689c6945395f4fbf14ebc7b7e6b0cbd17c722b52',
   async getTokenData(server, boc, rootAddress, publicKey) {
     const dexClientAddress = await tonLib.predictAddress(server, dexClientAbi, dexClientTvc, publicKey);
 
@@ -149,12 +153,22 @@ export default {
       keys
     );
     const shardBlockId = await tonLib.sendMessage(server, message.message, dexClientAbi);
-    await tonLib.waitForTransaction(server, message.message, dexClientAbi, shardBlockId);
+    return {shardBlockId, message: message.message, abi: dexClientAbi.value};
   },
   async getBalanceByBoc(server, walletAddress, boc) {
     return await _.getBalanceByBoc(server, walletAddress, boc);
   },
   async fetchWalletAddress(server, token) {
     return await _.fetchWalletAddress(server, token.params.dexClientAddress, token.rootAddress);
-  }
+  },
+  compileApiDataView(token) {
+    return {
+      dexClientAddress: token.params.dexClientAddress,
+    };
+  },
+  getCallRestrictions() {
+    return [
+      new CodeHashCallRestriction(CONTRACT_DEX_CLIENT_CODE_HASH, ['connectPair', 'wrapTON', 'makeAdepositToPair', 'processSwapA']),
+    ];
+  },
 }

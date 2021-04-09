@@ -24,6 +24,15 @@
                                :form="task.form"
                                :disabled="!isApplyButtonEnabled"
                                :fees="task.data.fees"/>
+            <transfer-token v-if="task.typeId === interactiveTaskType.transferToken"
+                               @formChange="formChange"
+                               :form="task.form"
+                               :disabled="!isApplyButtonEnabled"
+                               :token-name="task.data.tokenName"
+                               :token-symbol="task.data.tokenSymbol"
+                               :address="task.params.address"
+                               :amount-view="task.data.amountView"
+                               :balance-view="task.data.balanceView"/>
             <deploy-contract v-if="task.typeId === interactiveTaskType.deployContract"
                              @formChange="formChange"
                              :form="task.form"
@@ -38,6 +47,13 @@
                  :form="task.form"
                  :disabled="!isApplyButtonEnabled"
                  :fees="task.data.fees"/>
+            <call-contract-method v-if="task.typeId === interactiveTaskType.callContractMethod"
+                 @formChange="formChange"
+                 :form="task.form"
+                 :disabled="!isApplyButtonEnabled"
+                 :fees="task.data.fees"
+                 :address="task.params.address"
+                 :method="task.params.method"/>
             <transfer v-if="task.typeId === interactiveTaskType.transfer"
                       @formChange="formChange"
                       :form="task.form"
@@ -91,9 +107,12 @@ import Transfer from "@/components/actions/transfer";
 import ConfirmTransaction from "@/components/actions/confirmTransaction";
 import AddToken from "@/components/actions/addToken";
 import UiTransferToken from "@/components/actions/uiTransferToken";
+import TransferToken from "@/components/actions/transferToken";
+import CallContractMethod from "@/components/actions/callContractMethod";
 
 export default {
   components: {
+    CallContractMethod,
     UiTransferToken,
     AddToken,
     Transfer,
@@ -102,7 +121,8 @@ export default {
     walletActivationAction,
     uiTransferAction,
     deployContract,
-    run
+    run,
+    TransferToken
   },
   data: () => ({
     interactiveTaskType,

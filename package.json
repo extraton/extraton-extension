@@ -1,6 +1,6 @@
 {
   "name": "extraton",
-  "version": "0.12.2",
+  "version": "0.13.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service build --mode development --watch",
@@ -23,6 +23,7 @@
     "post-message-stream": "^3.0.0",
     "pump": "^3.0.0",
     "roboto-fontface": "^0.10.0",
+    "sprintf-js": "^1.1.2",
     "to-hex": "^0.0.16",
     "ton-client-web-js": "^0.26.0",
     "vue": "^2.6.11",

@@ -36,6 +36,8 @@ const interactiveTaskType = {
   confirmTransaction: 7,
   addToken: 8,
   uiTransferToken: 9,
+  transferToken: 10,
+  callContractMethod: 11,
 };
 
 const interactiveTaskRepository = {

@@ -2,12 +2,17 @@ import getNetworkTask from "@/lib/task/items/getNetwork";
 import getPublicKeyTask from "@/lib/task/items/getPublicKey";
 import getVersionTask from "@/lib/task/items/getVersion";
 import runGetTask from "@/lib/task/items/runGet";
+import runContractMethodTask from "@/lib/task/items/runContractMethod";
 import waitDeployTask from "@/lib/task/items/waitDeploy";
 import waitRunTask from "@/lib/task/items/waitRun";
+import waitForTransactionTask from "@/lib/task/items/waitForTransaction";
 import getAddressTask from "@/lib/task/items/getAddress";
+import getTokenListTask from "@/lib/task/items/getTokenList";
 import deployTask from "@/lib/task/items/deploy";
 import runTask from "@/lib/task/items/run";
+import callContractMethodTask from "@/lib/task/items/callContractMethod";
 import transferTask from "@/lib/task/items/transfer";
+import transferTokenTask from "@/lib/task/items/transferToken";
 import confirmTransactionTask from "@/lib/task/items/confirmTransaction";
 import getWakeUpDataTask from "@/lib/task/items/getWakeUpData";
 import generateSeedTask from "@/lib/task/items/generateSeed";
@@ -38,12 +43,17 @@ export {
   getPublicKeyTask,
   getVersionTask,
   runGetTask,
+  runContractMethodTask,
   waitDeployTask,
   waitRunTask,
+  waitForTransactionTask,
   getAddressTask,
+  getTokenListTask,
   deployTask,
   runTask,
+  callContractMethodTask,
   transferTask,
+  transferTokenTask,
   confirmTransactionTask,
   getWakeUpDataTask,
   generateSeedTask,

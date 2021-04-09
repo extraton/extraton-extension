@@ -3,6 +3,7 @@ import walletContractLib from '@/lib/walletContract';
 import {walletRepository} from "@/db/repository/walletRepository";
 import utils from "@/lib/utils";
 import database from "@/db";
+import BN from "bignumber.js";
 const TransferAbi = require('@/contracts/Transfer.abi.json');
 
 
@@ -61,6 +62,13 @@ export default {
     const integerFormatted = integer.toLocaleString();
     return `${integerFormatted}.${decimalResult}`;
   },
+  convertToView(amount, decimals, decimalPoints = 3) {
+    const decimalPointsBn = BN(decimalPoints);
+    const decimalsBn =  BN(decimals);
+    const divisionBy = BN('10').exponentiatedBy(decimalsBn);
+    const decimalPointsInFine = (decimalPointsBn.isGreaterThan(decimalsBn) ? decimalsBn : decimalPointsBn).toNumber();
+    return BN(amount).dividedBy(divisionBy).toFormat(decimalPointsInFine, BN.ROUND_DOWN);
+  },
   async createTransferMessage(server, wallet, walletAddress, destinationAddress, nanoAmount, bounce = false, payload = '') {
     const walletContract = walletContractLib.getContractById(wallet.contractId);
     const abi = walletContract.abi;
@@ -102,6 +110,9 @@ export default {
   },
   isAddressesMatch(address1, address2) {
     return address1.toLowerCase() === address2.toLowerCase();
+  },
+  isKeysEncrypted(keys) {
+    return typeof keys.secret === 'undefined';
   },
   compileExplorerLink(explorer, address) {
     return `https://${explorer}/accounts/accountDetails?id=${address}`;

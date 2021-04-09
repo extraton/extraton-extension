@@ -7,7 +7,7 @@ import {
   activateTokenTask,
   initUiTransferTokenTask,
 } from "@/lib/task/items";
-import BN from "bignumber.js";
+import walletLib from '@/lib/wallet';
 
 const _ = {
   ft(tokens, id) {
@@ -94,10 +94,7 @@ export default {
     },
     balanceView: ({tokens}) => (id) => {
       const token = _.ft(tokens, id);
-      const decimals =  BN(token.decimals);
-      const divisionBy = BN('10').exponentiatedBy(decimals);
-      const decimalPoints = BN('3').isGreaterThan(decimals) ? decimals.toNumber() : 3;
-      return BN(token.balance).dividedBy(divisionBy).toFormat(decimalPoints, BN.ROUND_DOWN);
+      return walletLib.convertToView(token.balance, token.decimals);
     },
   }
 }

@@ -1,5 +1,6 @@
 import database from '@/db';
 import {networkRepository} from '@/db/repository/networkRepository';
+import walletLib from '@/lib/wallet';
 
 const _ = {
   indexEntitiesByField(entities, field) {
@@ -47,7 +48,7 @@ const walletRepository = {
       throw "Wallet isn't set.";
     }
     const wallet = await db.wallet.get(walletId);
-    wallet.isKeysEncrypted = typeof wallet.keys.secret === 'undefined';
+    wallet.isKeysEncrypted = walletLib.isKeysEncrypted(wallet.keys);
     return wallet;
   },
   async getById(id) {
@@ -68,7 +69,7 @@ const walletRepository = {
         isRestored: wallet.isRestored,
         isWalletMine: wallet.isWalletMine,
         pubkey: wallet.keys.public,
-        isKeysEncrypted: typeof wallet.keys.secret === 'undefined',
+        isKeysEncrypted: walletLib.isKeysEncrypted(wallet.keys),
       });
     }
     return _.indexEntitiesByField(walletsWithoutKeys, 'id');

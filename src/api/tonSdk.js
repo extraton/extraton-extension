@@ -14,7 +14,7 @@ const _ = {
       message = 'Unknown TON error';
     }
     return new tonException(code, message);
-  }
+  },
 };
 
 const ton = {
@@ -58,6 +58,9 @@ export default {
       throw _.getException(e);
     }
   },
+  compileContractAbi: (value) => {
+    return {type: "Contract", value};
+  },
   async chacha20Encrypt(server, data, password) {
     try {
       const client = await ton.getClient(server);
@@ -90,7 +93,7 @@ export default {
       return (await client.net.query_collection({
         collection: 'accounts',
         filter: {id: {eq: address}},
-        result: 'balance(format: DEC), code_hash, boc',
+        result: 'id, balance(format: DEC), code_hash, boc',
       })).result[0] || null;
     } catch (e) {
       throw _.getException(e);
@@ -134,9 +137,10 @@ export default {
   },
   async waitForTransaction(server, message, abi, shard_block_id) {
     try {
+      const contractAbi = this.compileContractAbi(abi);
       const client = await ton.getClient(server);
-      await client.processing.wait_for_transaction({message, abi, shard_block_id, send_events: false});
-      // console.log(result);
+      const result = await client.processing.wait_for_transaction({message, abi: contractAbi, shard_block_id, send_events: false});
+      return {id: result.transaction.id};
     } catch (e) {
       throw _.getException(e);
     }
@@ -148,6 +152,15 @@ export default {
       const signer = {type: 'External', public_key};
 
       return (await client.abi.encode_message({abi, deploy_set, signer})).address;
+    } catch (e) {
+      throw _.getException(e);
+    }
+  },
+  async runExecutor(server, message, account, abi) {
+    try {
+      const client = await ton.getClient(server);
+
+      return await client.tvm.run_executor({message, account, abi});
     } catch (e) {
       throw _.getException(e);
     }

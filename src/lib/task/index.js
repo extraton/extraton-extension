@@ -3,12 +3,17 @@ import {
   getPublicKeyTask,
   getVersionTask,
   runGetTask,
+  runContractMethodTask,
   waitDeployTask,
   waitRunTask,
+  waitForTransactionTask,
   getAddressTask,
+  getTokenListTask,
   deployTask,
   runTask,
+  callContractMethodTask,
   transferTask,
+  transferTokenTask,
   confirmTransactionTask,
   getWakeUpDataTask,
   generateSeedTask,
@@ -67,15 +72,18 @@ const taskList = {
     setWalletByKeystoreTask,
   },
   external: {
-    interactive: {deployTask, runTask, transferTask, confirmTransactionTask},
+    interactive: {deployTask, runTask, callContractMethodTask, transferTask, transferTokenTask, confirmTransactionTask},
     background: {
       getNetworkTask,
       getPublicKeyTask,
       getVersionTask,
       runGetTask,
+      runContractMethodTask,
       waitDeployTask,
       waitRunTask,
-      getAddressTask
+      waitForTransactionTask,
+      getAddressTask,
+      getTokenListTask
     },
   },
 };

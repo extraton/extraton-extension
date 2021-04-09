@@ -4,7 +4,6 @@ import rootAbi from "@/lib/token/tip3/svoi.dev/RootTokenContract.abi.json";
 import tokenWalletAbi from "@/lib/token/tip3/svoi.dev/TONTokenWallet.abi.json";
 import {interactiveTaskRepository, interactiveTaskType} from "@/db/repository/interactiveTaskRepository";
 import tonSdk from "@/api/tonSdk";
-import dexClientAbi from "@/lib/token/tip3/radiance/DEXclient.abi.json";
 import createNewEmptyTokenWalletCallback from "@/lib/task/interactive/callback/createNewEmptyTokenWallet";
 
 const _ = {
@@ -53,7 +52,8 @@ const _ = {
 
 export default {
   id: 2,
-  codeHash: '2ff4aaaab0f31d5a7b276b78a490277aa043d445bb71ac7c3dac8ae9e39b4d23',//root
+  rootCodeHash: '2ff4aaaab0f31d5a7b276b78a490277aa043d445bb71ac7c3dac8ae9e39b4d23',
+  walletCodeHash: '2f062cde9cc0e2999f6bded5b4f160578b81530aaa3ae7d7077df60cd40f6056',
   async getTokenData(server, boc, rootAddress, publicKey) {
     const details = await _.getDetails(server, boc, rootAddress);
     const name = hex2ascii(details.name);
@@ -102,13 +102,19 @@ export default {
       {to: destAddress, tokens: amount, grams: '150000000'},
       keys
     );
-    const shardBlockId = await tonLib.sendMessage(server, message.message, dexClientAbi);
-    await tonLib.waitForTransaction(server, message.message, dexClientAbi, shardBlockId);
+    const shardBlockId = await tonLib.sendMessage(server, message.message, tokenWalletAbi);
+    return {shardBlockId, message: message.message, abi: tokenWalletAbi.value};
   },
   async getBalanceByBoc(server, walletAddress, boc) {
     return await _.getBalanceByBoc(server, walletAddress, boc);
   },
   async fetchWalletAddress(server, token, publicKey) {
     return await _.fetchWalletAddress(server, token.rootAddress, publicKey);
-  }
+  },
+  compileApiDataView() {
+    return {};
+  },
+  getCallRestrictions() {
+    return [];
+  },
 }

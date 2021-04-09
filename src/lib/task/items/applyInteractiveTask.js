@@ -16,6 +16,7 @@ import {tokenRepository} from "@/db/repository/tokenRepository";
 import interactiveTaskCallback from "@/lib/task/interactive/callback";
 import addToken from "@/lib/task/interactive/callback/addToken";
 import UndecimalIsNotIntegerException from "@/lib/token/UndecimalIsNotIntegerException";
+import tonLib from "@/api/tonSdk";
 
 const _ = {
   checkSufficientFunds(wallet, networkId, amount) {
@@ -102,6 +103,14 @@ export default {
             result = {txid};
             break;
           }
+          case interactiveTaskType.callContractMethod: {
+            //@TODO check suffisient funds (remind fees temporally can be null)
+            const contractAbi = tonLib.compileContractAbi(interactiveTask.params.abi);
+            const message = await tonLib.encodeMessage(server, interactiveTask.params.address, contractAbi, interactiveTask.params.method, interactiveTask.params.input, wallet.keys);
+            const shardBlockId = await tonLib.sendMessage(server, message.message, contractAbi);
+            result = {message: message.message, shardBlockId};
+            break;
+          }
           case interactiveTaskType.transfer: {
             if (walletLib.isAddressesMatch(wallet.address, interactiveTask.params.walletAddress)) {
               const amountWithFee = BigInt('11000000') + BigInt(interactiveTask.params.amount);
@@ -151,7 +160,16 @@ export default {
             const contract = tokenContractLib.getContractById(token.contractId);
             const undecimalAmount = tokenContractLib.undecimal(token, form.amount);
             tokenContractLib.checkSufficientFunds(token, undecimalAmount);
-            await contract.transfer(server, wallet.keys, token, form.address, undecimalAmount);
+            const {message, shardBlockId, abi} = await contract.transfer(server, wallet.keys, token, form.address, undecimalAmount);
+            await tonLib.waitForTransaction(server, message, abi, shardBlockId);
+
+            break;
+          }
+          case interactiveTaskType.transferToken: {
+            const token = await tokenRepository.getToken(interactiveTask.data.tokenId);
+            const contract = tokenContractLib.getContractById(token.contractId);
+            tokenContractLib.checkSufficientFunds(token, interactiveTask.params.amount);
+            result = await contract.transfer(server, wallet.keys, token, interactiveTask.params.address, interactiveTask.params.amount);
             break;
           }
           case interactiveTaskType.confirmTransaction: {

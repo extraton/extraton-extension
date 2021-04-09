@@ -34,6 +34,10 @@ const tokenRepository = {
     const db = await database.getClient();
     return await db.token.where({walletId, networkId}).toArray();
   },
+  async findOneByWalletAndNetworkAndRootAddress(walletId, networkId, rootAddress) {
+    const db = await database.getClient();
+    return (await db.token.where({walletId, networkId, rootAddress}).toArray())[0] ?? null;
+  },
   async delete(id) {
     const db = await database.getClient();
     await db.token.where('id').equals(id).delete();

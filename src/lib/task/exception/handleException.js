@@ -5,7 +5,12 @@ const handleExceptionCodes = {
   tokenAlreadyActive: {code: 13, text: 'Token already active.'},
   canceledByUser: {code: 1000, text: 'Canceled by user.'},
   networkChanged: {code: 1001, text: 'Network changed'},
+  walletChanged: {code: 1002, text: 'Wallet changed'},
+  tokenNotFound: {code: 1003, text: 'Token wallet not found'},
+  tokenNotActive: {code: 1004, text: 'Token wallet is not active'},
+  accountNotExists: {code: 1005, text: 'Account does not exists in blockchain'},
   prohibitedToRunWalletContract: {code: 1100, text: 'Running methods of user wallet contract is prohibited.'},
+  callingContractMethodRestricted: {code: 1101, text: null},
   tonClientError: {code: 1200, text: 'TON Client error'},
   syncTime: {code: 1201, text: 'Device time is not synced.'},
 }
@@ -27,9 +32,13 @@ const handleException = function (code, message = null) {
   };
   this.toString = function () {
     const text = getCode(code).text;
-    return null === this.message
-      ? text
-      : `${text}: ${this.message}`;
+    if (null === this.message) {
+      return text;
+    } else if (null === text) {
+      return this.message;
+    } else {
+      return `${text}: ${this.message}`;
+    }
   };
 };
 
