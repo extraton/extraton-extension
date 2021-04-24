@@ -19,59 +19,6 @@
                                 @formChange="formChange"
                                 :form="task.form"
                                 :disabled="!isApplyButtonEnabled"/>
-            <ui-transfer-token v-if="task.typeId === interactiveTaskType.uiTransferToken"
-                               @formChange="formChange"
-                               :form="task.form"
-                               :disabled="!isApplyButtonEnabled"
-                               :fees="task.data.fees"/>
-            <transfer-token v-if="task.typeId === interactiveTaskType.transferToken"
-                               @formChange="formChange"
-                               :form="task.form"
-                               :disabled="!isApplyButtonEnabled"
-                               :token-name="task.data.tokenName"
-                               :token-symbol="task.data.tokenSymbol"
-                               :address="task.params.address"
-                               :amount-view="task.data.amountView"
-                               :balance-view="task.data.balanceView"/>
-            <deploy-contract v-if="task.typeId === interactiveTaskType.deployContract"
-                             @formChange="formChange"
-                             :form="task.form"
-                             :disabled="!isApplyButtonEnabled"/>
-            <pre-deploy-transfer v-if="task.typeId === interactiveTaskType.preDeployTransfer"
-                                 @formChange="formChange"
-                                 :form="task.form"
-                                 :disabled="!isApplyButtonEnabled"
-                                 :amount="task.params.options.initAmount"/>
-            <run v-if="task.typeId === interactiveTaskType.runTransaction"
-                 @formChange="formChange"
-                 :form="task.form"
-                 :disabled="!isApplyButtonEnabled"
-                 :fees="task.data.fees"/>
-            <call-contract-method v-if="task.typeId === interactiveTaskType.callContractMethod"
-                 @formChange="formChange"
-                 :form="task.form"
-                 :disabled="!isApplyButtonEnabled"
-                 :fees="task.data.fees"
-                 :address="task.params.address"
-                 :method="task.params.method"/>
-            <transfer v-if="task.typeId === interactiveTaskType.transfer"
-                      @formChange="formChange"
-                      :form="task.form"
-                      :disabled="!isApplyButtonEnabled"
-                      :amount="task.params.amount"
-                      :address="task.params.address"
-                      :wallet-address="task.params.walletAddress"
-                      :is-current-address="task.data.isItLoggedWalletAddress"/>
-            <confirm-transaction v-if="task.typeId === interactiveTaskType.confirmTransaction"
-                                 @formChange="formChange"
-                                 :form="task.form"
-                                 :disabled="!isApplyButtonEnabled"
-                                 :txid="task.params.txid"
-                                 :wallet-address="task.params.walletAddress"/>
-            <add-token v-if="task.typeId === interactiveTaskType.addToken"
-                       @formChange="formChange"
-                       :form="task.form"
-                       :disabled="!isApplyButtonEnabled"/>
           </v-card-text>
         </div>
         <div>
@@ -98,31 +45,13 @@
 <script>
 import walletActivationAction from "@/components/actions/walletActivation";
 import uiTransferAction from "@/components/actions/uiTransfer";
-import deployContract from "@/components/actions/deployContract";
 import {mapGetters, mapActions} from "vuex";
 import {interactiveTaskType} from '@/db/repository/interactiveTaskRepository';
-import PreDeployTransfer from "@/components/actions/preDeployTransfer";
-import run from "@/components/actions/run";
-import Transfer from "@/components/actions/transfer";
-import ConfirmTransaction from "@/components/actions/confirmTransaction";
-import AddToken from "@/components/actions/addToken";
-import UiTransferToken from "@/components/actions/uiTransferToken";
-import TransferToken from "@/components/actions/transferToken";
-import CallContractMethod from "@/components/actions/callContractMethod";
 
 export default {
   components: {
-    CallContractMethod,
-    UiTransferToken,
-    AddToken,
-    Transfer,
-    ConfirmTransaction,
-    PreDeployTransfer,
     walletActivationAction,
     uiTransferAction,
-    deployContract,
-    run,
-    TransferToken
   },
   data: () => ({
     interactiveTaskType,

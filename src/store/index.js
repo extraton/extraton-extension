@@ -9,7 +9,6 @@ import walletCreate from './modules/wallet/create'
 import walletRestore from './modules/wallet/restore'
 import walletEdit from './modules/wallet/edit'
 import globalError from './modules/globalError'
-import token from "@/store/modules/wallet/token";
 
 Vue.use(Vuex);
 
@@ -24,6 +23,5 @@ export default new Vuex.Store({
         walletRestore,
         walletEdit,
         globalError,
-        token,
     }
 })

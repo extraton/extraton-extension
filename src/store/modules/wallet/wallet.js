@@ -16,11 +16,9 @@ const _ = {
   updateBalanceEndless: async function (epoch, commit, state) {
     if (state.isAutoUpdatingOn && epoch === state.autoUpdateEpoch) {
       try {
-        const {walletId, networkId, data, tokens} = await BackgroundApi.request(requestCurrentWalletDataTask);
+        const {walletId, networkId, data} = await BackgroundApi.request(requestCurrentWalletDataTask);
         if (state.isAutoUpdatingOn && epoch === state.autoUpdateEpoch) {
-          // console.log({walletId, networkId, data, tokens});
           commit('setNetworkAccountData', {walletId, networkId, data});
-          store.commit('token/setTokens', tokens);
         }
       } catch (err) {
         console.error(err);
@@ -49,7 +47,8 @@ export default {
     networks: null,
     isAutoUpdatingOn: false,
     autoUpdateEpoch: 0,
-    isAddressDataGotOnce: false
+    isAddressDataGotOnce: false,
+    isPasswordSet: false,
   },
   mutations: {
     setNetwork: (state, network) => state.network = network,
@@ -64,12 +63,14 @@ export default {
       state.networks = null;
       state.isAutoUpdatingOn = false;
       state.isAddressDataGotOnce = false;
+      state.isPasswordSet = false;
     },
     applySleepState: (state, sleepState) => {
       state.wallets = sleepState.wallets;
       state.walletId = sleepState.walletId;
       state.network = sleepState.network;
       state.networks = sleepState.networks;
+      state.isPasswordSet = sleepState.isPasswordSet;
     },
     setWalletsAfterRemoving: (state, {wallets, walletId}) => {
       state.walletId = walletId;
@@ -90,7 +91,6 @@ export default {
       await BackgroundApi.request(logoutTask);
       commit('clear');
       store.commit('action/clear');
-      store.commit('token/clear');
       await router.push({name: routes.start});
     },
     startBalanceUpdating({state, commit}) {
@@ -104,9 +104,6 @@ export default {
         .then(() => {
           store.dispatch('wallet/startBalanceUpdating');
           commit('setNetwork', network);
-          if ([routes.walletToken].includes(router.currentRoute.name)) {
-            router.push({name: routes.wallet});
-          }
         })
         .catch(() => {
           store.commit('globalError/setText', 'Failure during network changing.');
@@ -128,10 +125,8 @@ export default {
     wakeup: async ({commit}, page) => {
       return BackgroundApi.request(getWakeUpDataTask)
         .then((sleepState) => {
-          // console.log({sleepState});
           commit('applySleepState', sleepState);
           store.commit('action/setTasks', sleepState.tasks);
-          store.commit('token/setTokens', sleepState.tokens);
           store.commit('settings/setSettings', sleepState.settings);
           if (store.getters['wallet/isLoggedIn']) {
             store.dispatch('wallet/enterWallet', page || sleepState.page);

@@ -38,7 +38,7 @@
         </v-list-item-content>
       </v-list-item>
 
-      <v-list-item href="http://extraton.io" target="_blank">
+      <v-list-item href="https://extraton.io" target="_blank">
         <v-list-item-icon>
           <v-icon>mdi-information</v-icon>
         </v-list-item-icon>
@@ -54,7 +54,7 @@
           <v-icon>mdi-exit-run</v-icon>
         </v-list-item-icon>
         <v-list-item-content>
-          <v-list-item-title>Logout</v-list-item-title>
+          <v-list-item-title>Delete all data and logout</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
     </v-list>

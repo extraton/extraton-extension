@@ -9,7 +9,12 @@ const paramRepository = {
     } else {
       await db.param.update(key, {value});
     }
-  }
+  },
+  async getParam(key) {
+    const db = await database.getClient();
+    const param = await db.param.get(key);
+    return typeof param === 'undefined' ? null : param.value;
+  },
 };
 
 export {

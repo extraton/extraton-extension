@@ -1,8 +1,5 @@
 <template>
   <v-container class="walletRestore">
-    <v-btn style="top:12px" color="primary" href="/keystore.html" target="_blank" small absolute right text>
-      Keystore<sup class="red--text">Beta</sup>
-    </v-btn>
     <v-form v-model="valid" ref="form" lazy-validation>
       <view-title>Restore your wallet</view-title>
       <v-textarea v-model="seed"
@@ -15,7 +12,7 @@
       >
 
         <template v-slot:counter="{props}">
-          <v-counter v-bind="props" :value="`${matchSeed.length}/12`"/>
+          <v-counter v-bind="props" :value="`${matchSeed.length}/12 or 24`"/>
         </template>
       </v-textarea>
       <v-select v-model="contractId"
@@ -82,16 +79,21 @@ export default {
     ...mapActions('walletRestore', [
       'restore',
     ]),
+    ...mapActions('password', {
+      askPassword: 'ask',
+    }),
     wordsNum() {
-      return this.matchSeed.length !== 12
-        ? 'Should be 12 words.'
+      return this.matchSeed.length !== 12 && this.matchSeed.length !== 24
+        ? 'Should be 12 or 24 words.'
         : true;
     },
     async validateAndRestore() {
       await this.$refs.form.validate();
       if (this.valid) {
-        const seed = this.matchSeed.join(' ').toLowerCase();
-        await this.restore({seed, contractId: this.contractId});
+        this.askPassword().then(async (pass) => {
+          const seed = this.matchSeed.join(' ').toLowerCase();
+          await this.restore({seed, contractId: this.contractId, pass});
+        }).catch(() => null);
       }
     }
   },

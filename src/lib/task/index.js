@@ -1,20 +1,4 @@
 import {
-  getNetworkTask,
-  getPublicKeyTask,
-  getVersionTask,
-  runGetTask,
-  runContractMethodTask,
-  waitDeployTask,
-  waitRunTask,
-  waitForTransactionTask,
-  getAddressTask,
-  getTokenListTask,
-  deployTask,
-  runTask,
-  callContractMethodTask,
-  transferTask,
-  transferTokenTask,
-  confirmTransactionTask,
   getWakeUpDataTask,
   generateSeedTask,
   setWalletBySeedTask,
@@ -28,22 +12,15 @@ import {
   thatsMyAddressTask,
   logoutTask,
   initUiTransferTask,
-  initUiTransferTokenTask,
-  initAddTokenTask,
-  hideTokenTask,
-  activateTokenTask,
   cancelInteractiveTaskTask,
   applyInteractiveTaskTask,
   saveFormInteractiveTaskTask,
   requestInteractiveTasksTask,
-  encryptKeysTask,
-  setWalletByKeystoreTask,
 } from "@/lib/task/items";
 import taskNotExists from '@/lib/task/exception/taskNotExists';
 import {interactiveTaskRepository, interactiveTaskStatus} from "@/db/repository/interactiveTaskRepository";
 import {handleException, handleExceptionCodes} from '@/lib/task/exception/handleException';
 import {tonException, tonExceptionCodes} from '@/api/exception/tonException';
-import keystoreException from "@/lib/keystore/keystoreException";
 
 const taskList = {
   internal: {
@@ -60,31 +37,10 @@ const taskList = {
     thatsMyAddressTask,
     logoutTask,
     initUiTransferTask,
-    initUiTransferTokenTask,
-    initAddTokenTask,
-    hideTokenTask,
-    activateTokenTask,
     cancelInteractiveTaskTask,
     applyInteractiveTaskTask,
     saveFormInteractiveTaskTask,
     requestInteractiveTasksTask,
-    encryptKeysTask,
-    setWalletByKeystoreTask,
-  },
-  external: {
-    interactive: {deployTask, runTask, callContractMethodTask, transferTask, transferTokenTask, confirmTransactionTask},
-    background: {
-      getNetworkTask,
-      getPublicKeyTask,
-      getVersionTask,
-      runGetTask,
-      runContractMethodTask,
-      waitDeployTask,
-      waitRunTask,
-      waitForTransactionTask,
-      getAddressTask,
-      getTokenListTask
-    },
   },
 };
 const _ = {
@@ -99,18 +55,17 @@ const _ = {
   isTaskInList: function (list, name) {
     return this.getTaskHandler(list, name) !== null;
   },
-  compileTaskByRequest: function (request, isInteractive = false) {
+  compileTaskByRequest: function (request) {
     return {
       requestId: request.requestId,
       method: request.method,
       data: request.data,
-      isInteractive,
     };
   },
   handleTask: async function (list, task) {
     try {
       return await _.getTaskHandler(list, task.method).handle(task);
-    } catch (e) { //@TODO move it out here
+    } catch (e) {
       if (e instanceof tonException) {
         switch (e.code) {
           case tonExceptionCodes.syncTime:
@@ -118,8 +73,6 @@ const _ = {
           default:
             throw new handleException(handleExceptionCodes.tonClientError.code, e.message);
         }
-      } else if (e instanceof keystoreException) {
-        throw new handleException(handleExceptionCodes.keystore.code, e.message);
       }
       throw e;
     }
@@ -128,14 +81,6 @@ const _ = {
 };
 
 export default {
-  compileExternalTaskByRequest: function (request) {
-    const isInteractiveTask = _.isTaskInList(taskList.external.interactive, request.method);
-    const isBackgroundTask = _.isTaskInList(taskList.external.background, request.method);
-    if (!isInteractiveTask && !isBackgroundTask) {
-      throw new taskNotExists(request.method);
-    }
-    return _.compileTaskByRequest(request, isInteractiveTask);
-  },
   compileInternalTaskByRequest: function (request) {
     const isTaskExists = _.isTaskInList(taskList.internal, request.method);
     if (!isTaskExists) {
@@ -157,10 +102,4 @@ export default {
   handleInternalTask: async function (task) {
     return _.handleTask(taskList.internal, task);
   },
-  handleExternalBackgroundTask: async function (task) {
-    return _.handleTask(taskList.external.background, task);
-  },
-  handleExternalInteractiveTask: async function (task) {
-    return _.handleTask(taskList.external.interactive, task);
-  }
 };

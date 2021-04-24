@@ -8,8 +8,6 @@ import {
   requestInteractiveTasksTask,
 } from "@/lib/task/items";
 
-import frontPostApply from "@/lib/task/interactive/frontPostApply";
-
 const _ = {
   findCurrentTask(tasks) {
     const taskArraySortedById = Object.entries(tasks).sort((a, b) => (a.id - 0) - (b.id - 0));
@@ -47,7 +45,6 @@ const _ = {
   updateTaskEndless: async function (commit, state) {
     try {
       const tasks = await BackgroundApi.request(requestInteractiveTasksTask);
-      // console.log(tasks);
       commit('setTasks', tasks);
     } catch (err) {
       console.error(err);
@@ -104,11 +101,8 @@ export default {
       commit('setCurrentTaskProcess');
       const form = state.tasks[interactiveTask.id].form;
       return BackgroundApi.request(applyInteractiveTaskTask, {interactiveTaskId: interactiveTask.id, password, form})
-        .then(async ({interactiveTasks, interactiveTask}) => {
+        .then(async ({interactiveTasks}) => {
           commit('setTasks', interactiveTasks);
-          if (interactiveTask.data.frontPostApply !== undefined) {
-            await frontPostApply.call(interactiveTask.data.frontPostApply);
-          }
         });
     },
     formChange({state}, form) {

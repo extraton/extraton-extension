@@ -1,16 +1,8 @@
 <template>
   <div class="balance">
-    <template v-if="null===tokenId">
-      <coin-icon :ruby="isDevNetwork" left/>
-      <span v-if="null !== balanceView" class="text-h4">{{ balanceView }}</span>
-      <v-skeleton-loader v-else type="heading" width="86"/>
-    </template>
-    <template v-else>
-      <span v-if="null!==tokenId" class="balance__symbol text-overline">{{ token(tokenId).symbol }}</span>
-      <span class="text-h4">
-        {{ tokenBalanceView(tokenId) }}
-      </span>
-    </template>
+    <coin-icon :ruby="isDevNetwork" left/>
+    <span v-if="null !== balanceView" class="text-h4">{{ balanceView }}</span>
+    <v-skeleton-loader v-else type="heading" width="86"/>
   </div>
 </template>
 
@@ -21,9 +13,7 @@ import walletLib from "@/lib/wallet";
 
 export default {
   components: {CoinIcon},
-  props: {
-    tokenId: {type: Number, default: null},
-  },
+  props: {},
   data() {
     return {walletLib};
   },
@@ -32,10 +22,6 @@ export default {
       'balanceView',
       'isDevNetwork',
     ]),
-    ...mapGetters('token', {
-      token: 'token',
-      tokenBalanceView: 'balanceView',
-  }),
   },
 }
 </script>

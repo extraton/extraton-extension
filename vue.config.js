@@ -1,5 +1,4 @@
 const CopyPlugin = require('copy-webpack-plugin');
-const RemovePlugin = require('remove-files-webpack-plugin');
 
 module.exports = {
   transpileDependencies: ['vuetify', 'dexie'],
@@ -7,16 +6,8 @@ module.exports = {
     plugins: [
       new CopyPlugin({
         patterns: [
-          {from: './node_modules/ton-client-web-js/tonclient.wasm'},
-          {from: './node_modules/@tonclient/lib-web/tonclient.wasm', to: 'tonclient_1.5.3.wasm'},
+          {from: './node_modules/@tonclient/lib-web/tonclient.wasm', to: 'tonclient_1.12.0.wasm'},
         ],
-      }),
-      new RemovePlugin({
-        after: {
-          include: [
-            './dist/injection.html'
-          ]
-        }
       }),
     ],
     output: {
@@ -39,26 +30,12 @@ module.exports = {
       template: 'public/index.html',
       entry: './src/main.js',
     },
-    'keystore': {
-      template: 'public/keystore.html',
-      entry: './src/keystore.js',
-    },
-    injection: {
-      entry: './src/injection.js',
-    }
   },
   pluginOptions: {
     browserExtension: {
       componentOptions: {
         background: {
           entry: 'src/event-page.js'
-        },
-        contentScripts: {
-          entries: {
-            'content-script': [
-              'src/content-script.js'
-            ]
-          }
         }
       }
     },

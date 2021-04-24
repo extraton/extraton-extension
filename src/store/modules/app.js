@@ -1,5 +1,4 @@
 import store from '@/store'
-import popupLib from '@/lib/popup';
 
 export default {
   namespaced: true,
@@ -11,13 +10,9 @@ export default {
   },
   actions: {
     init: async ({commit}) => {
-      if (await popupLib.callPopup(false)) {
-        window.close();
-      } else {
-        await store.dispatch('wallet/wakeup');
-        await store.dispatch('action/startTaskUpdating');
-        commit('setInited');
-      }
+      await store.dispatch('wallet/wakeup');
+      await store.dispatch('action/startTaskUpdating');
+      commit('setInited');
     },
   },
 }

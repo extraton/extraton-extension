@@ -3,7 +3,6 @@ import database from '@/db';
 const _ = {
   indexEntitiesByField(entities, field) {
     let result = {};
-    // console.log(entities);
     for (const element of entities) {
       result[element[field]] = element;
     }
@@ -29,15 +28,6 @@ const interactiveTaskActiveStatusIds = [
 const interactiveTaskType = {
   deployWalletContract: 1,
   uiTransfer: 2,
-  preDeployTransfer: 3,
-  deployContract: 4,
-  runTransaction: 5,
-  transfer: 6,
-  confirmTransaction: 7,
-  addToken: 8,
-  uiTransferToken: 9,
-  transferToken: 10,
-  callContractMethod: 11,
 };
 
 const interactiveTaskRepository = {

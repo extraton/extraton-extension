@@ -1,16 +1,15 @@
 import Dexie from "dexie";
 import {routes} from "@/plugins/router";
 
-const DB_NAME = 'db41';
+const DB_NAME = 'db1';
 
 const _ = {
   setSchema: function (db) {
-    db.version(9).stores({
+    db.version(1).stores({
       param: '&key, value',
       wallet: '++id, name, contractId, address, keys, networks, isRestored, isWalletMine',
       network: '&id, server, explorer, info, isDev',
       interactiveTask: '++id, networkId, requestId, data, params, typeId, statusId, result, error, form',
-      token: '++id, contractId, networkId, walletId, rootAddress, name, symbol, isDeploying, walletAddress, balance, decimals, params',
     });
   },
   fillInitial: async function (db) {
@@ -18,8 +17,8 @@ const _ = {
       await db.param.bulkAdd([
         {key: 'wallet', value: null},
         {key: 'network', value: 1},
-        {key: 'tip3', value: false},
         {key: 'page', value: {name: routes.start, params: {}}},
+        {key: 'pass', value: null},
       ]);
       await db.network.bulkAdd([
         {

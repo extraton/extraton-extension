@@ -23,7 +23,6 @@ const ton = {
   hdPath: "m/44'/396'/0'/0/0",
   async getClient(server) {
     if (null === this.client || server !== this.client.config.data.servers[0]) {
-      // console.log(`Getting TON client for '${server}'`);
       this.client = await TONClient.create({
         servers: [server] //@TODO multiple servers??
       });
@@ -163,7 +162,6 @@ export default {
         initParams,
         keyPair,
       };
-      // console.log(data);
       return await client.contracts.createDeployMessage(data);
     } catch (e) {
       throw _.getException(e);

@@ -22,16 +22,17 @@ export default {
     },
   },
   actions: {
-    restore: async ({commit}, {seed, contractId}) => {
+    restore: async ({commit}, {seed, contractId, pass}) => {
       commit('clearError');
       commit('setRestoring');
-      BackgroundApi.request(setWalletBySeedTask, {seed, contractId, isRestoring: true})
+      BackgroundApi.request(setWalletBySeedTask, {seed, contractId, isRestoring: true, pass})
         .then(async () => {
           await store.dispatch('wallet/wakeup', {name: routes.wallet, params: {}});
           commit('unsetRestoring');
         })
-        .catch((err) => {
-          commit('setError', err);
+        .catch((e) => {
+          const error = (typeof e === 'string') ? e : 'Failure during wallet entering.';
+          commit('setError', error);
           commit('unsetRestoring');
         });
     },

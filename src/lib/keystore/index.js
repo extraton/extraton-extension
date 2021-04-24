@@ -33,6 +33,18 @@ const _ = {
 }
 
 export default {
+  async encrypt(server, keys, password) {
+    const chacha20 = await tonSdkLib.chacha20Encrypt(server, keys.secret, password);
+    return {
+      version: 1,
+      public: keys.public,
+      Crypto: {
+        cipher: 'chacha20',
+        cipherparams: {nonce: chacha20.nonce},
+        ciphertext: chacha20.data,
+      }
+    };
+  },
   async decrypt(server, keystore, password) {
     switch (keystore.version) {
       case 1:

@@ -1,14 +1,12 @@
 import database from '@/db';
 import {interactiveTaskRepository} from "@/db/repository/interactiveTaskRepository";
 import {walletRepository} from "@/db/repository/walletRepository";
-import {tokenRepository} from "@/db/repository/tokenRepository";
+import {paramRepository} from "@/db/repository/paramRepository";
 
 const _ = {
-  async getSettings(db) {
-    let tip3 = await db.param.get('tip3');
-    tip3 = typeof tip3 !== 'undefined' ? tip3.value : false;
+  async getSettings(/*db*/) {
 
-    return {tip3};
+    return {};
   },
   async getPage(db) {
     // await db.param.delete('page');
@@ -25,11 +23,12 @@ export default {
     let networks = {};
     await db.network.orderBy('id').each(network => networks[network.id] = network);
     const wallets = await walletRepository.getAllWithoutKeys();
-    const walletId = (await db.param.get('wallet')).value;
-    const network = (await db.param.get('network')).value;
+    const walletId = await paramRepository.getParam('wallet');
+    const network = await paramRepository.getParam('network');
+    const pass = await paramRepository.getParam('pass');
+    const isPasswordSet = null !== pass;
     const page = await _.getPage(db);
     const tasks = await interactiveTaskRepository.getAll();
-    const tokens = await tokenRepository.getAll();
     const settings = await _.getSettings(db);
 
     const data = {
@@ -38,9 +37,9 @@ export default {
       network,
       tasks,
       networks,
-      tokens,
       settings,
       page,
+      isPasswordSet,
     };
 
     return data;

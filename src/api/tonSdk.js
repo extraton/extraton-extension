@@ -19,7 +19,6 @@ const _ = {
 
 const ton = {
   client: null,
-  seedPhraseWorldCount: 12,
   seedPhraseDictionaryEnglish: 1,
   hdPath: "m/44'/396'/0'/0/0",
   async getClient(server) {
@@ -45,12 +44,24 @@ const ton = {
 };
 
 export default {
+  async generateSeed(server) {
+    try {
+      const client = await ton.getClient(server);
+      return (await client.crypto.mnemonic_from_random({
+        dictionary: ton.seedPhraseDictionaryEnglish,
+        word_count: 12,
+      })).phrase;
+    } catch (e) {
+      throw _.getException(e);
+    }
+  },
   async convertSeedToKeys(server, seed) {
     try {
       const client = await ton.getClient(server);
+      const worldCount = seed.match(/[^\s-.]+/g).length === 12 ? 12 : 24;
       return await client.crypto.mnemonic_derive_sign_keys({
         dictionary: ton.seedPhraseDictionaryEnglish,
-        word_count: ton.seedPhraseWorldCount,
+        word_count: worldCount,
         phrase: seed,
         path: ton.hdPath
       });
@@ -61,10 +72,14 @@ export default {
   compileContractAbi: (value) => {
     return {type: "Contract", value};
   },
+  async sha256(server, data) {
+    const client = await ton.getClient(server);
+    return (await client.crypto.sha256({data: Base64.encode(data)})).hash;
+  },
   async chacha20Encrypt(server, data, password) {
     try {
       const client = await ton.getClient(server);
-      const key = (await client.crypto.sha256({data: Base64.encode(password)})).hash;
+      const key = await this.sha256(server, password);
 
       const randomBytesBase64 = (await client.crypto.generate_random_bytes({length: 12})).bytes;
       const nonce = ton.base64ToHex(randomBytesBase64);
@@ -80,7 +95,7 @@ export default {
   async chacha20Decrypt(server, data, nonce, password) {
     try {
       const client = await ton.getClient(server);
-      const key = (await client.crypto.sha256({data: Base64.encode(password)})).hash;
+      const key = await this.sha256(server, password);
       const decryptedData = (await client.crypto.chacha20({data, key, nonce})).data;
       return Base64.decode(decryptedData);
     } catch (e) {
@@ -105,6 +120,17 @@ export default {
       const signer = null !== keys ? {type: 'Keys', keys} : {type: 'None'};
       const call_set = {function_name, input};
       return await client.abi.encode_message({abi, address, call_set, signer});
+    } catch (e) {
+      throw _.getException(e);
+    }
+  },
+  async encodeDeployMessage(server, abi, tvc, initial_data, constructorParams, keys) {
+    try {
+      const client = await ton.getClient(server);
+      const signer = {type: 'Keys', keys};
+      const deploy_set = {tvc, initial_data};
+      const call_set = {function_name: 'constructor', constructorParams};
+      return await client.abi.encode_message({abi, deploy_set, call_set, signer});
     } catch (e) {
       throw _.getException(e);
     }
@@ -139,7 +165,12 @@ export default {
     try {
       const contractAbi = this.compileContractAbi(abi);
       const client = await ton.getClient(server);
-      const result = await client.processing.wait_for_transaction({message, abi: contractAbi, shard_block_id, send_events: false});
+      const result = await client.processing.wait_for_transaction({
+        message,
+        abi: contractAbi,
+        shard_block_id,
+        send_events: false
+      });
       return {id: result.transaction.id};
     } catch (e) {
       throw _.getException(e);

@@ -12,23 +12,20 @@
       </template>
       <send-ton/>
     </div>
-    <assets v-if="tip3"/>
   </div>
 </template>
 
 <script>
 
-import {mapActions, mapGetters, mapState} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 import Balance from "@/components/Balance";
 import MainAddress from "@/components/MainAddress";
 import IsItYourAddress from "@/components/IsItYourAddress";
 import GetTokens from "@/components/GetTokens";
 import SendTon from "@/components/SendTon";
-import Assets from "@/components/assets/Assets";
 
 export default {
   components: {
-    Assets,
     MainAddress,
     IsItYourAddress,
     Balance,
@@ -50,9 +47,6 @@ export default {
       'isDevNetwork',
       'isLoggedIn',
       'isItYourAddressShowing',
-    ]),
-    ...mapState('settings', [
-      'tip3',
     ]),
   },
   methods: {

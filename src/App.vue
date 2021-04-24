@@ -78,10 +78,6 @@ html {
   width: 300px;
   height: 500px;
   overflow: auto;
-  //min-width: 300px;
-  //min-height: 500px;
-  //max-width: 300px;
-  //max-height: 500px;
 
   &__preloader {
     display: flex;

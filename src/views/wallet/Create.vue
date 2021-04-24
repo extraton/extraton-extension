@@ -49,10 +49,15 @@ export default {
     ...mapMutations('walletCreate', [
       'clear',
     ]),
+    ...mapActions('password', {
+      askPassword: 'ask',
+    }),
     async validateAndCreate() {
       await this.$refs.form.validate();
       if (this.valid) {
-        await this.goToWallet();
+        this.askPassword().then(async (pass) => {
+          await this.goToWallet(pass);
+        }).catch(() => null);
       }
     }
   }

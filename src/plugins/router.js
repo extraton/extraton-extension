@@ -7,7 +7,6 @@ import Settings from "@/views/Settings";
 import Wallet from "@/views/wallet/Wallet";
 import WalletCreate from "@/views/wallet/Create";
 import WalletRestore from "@/views/wallet/Restore";
-import WalletToken from "@/views/wallet/Token";
 import BackgroundApi from "@/api/background";
 import {setPageTask} from "@/lib/task/items";
 
@@ -21,7 +20,6 @@ const routes = {
   walletAdd: 'walletAdd',
   walletRestore: 'walletRestore',
   walletAddRestore: 'walletAddRestore',
-  walletToken: 'walletToken',
 };
 
 const list = [
@@ -67,12 +65,6 @@ const list = [
         path: 'add-restore',
         name: routes.walletAddRestore,
         component: WalletRestore,
-        meta: {back: routes.wallet}
-      },
-      {
-        path: 'token/:id',
-        name: routes.walletToken,
-        component: WalletToken,
         meta: {back: routes.wallet}
       },
     ]

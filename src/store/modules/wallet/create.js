@@ -26,16 +26,17 @@ export default {
           commit('setSeed', seed);
         }).catch(() => store.commit('globalError/setText', 'Failure during seed generation.'));
     },
-    goToWallet: async ({commit, state}) => {
+    goToWallet: async ({commit, state}, pass) => {
       commit('setIsGoingToWallet');
       store.commit('globalError/clearText');
-      BackgroundApi.request(setWalletBySeedTask, {seed: state.seed, contractId: walletContractLib.ids.safeMultisig, isRestoring: false})
+      BackgroundApi.request(setWalletBySeedTask, {seed: state.seed, contractId: walletContractLib.ids.safeMultisig, isRestoring: false, pass})
         .then(async () => {
           await store.dispatch('wallet/wakeup', {name: routes.wallet, params: {}});
         })
-        .catch(() => {
+        .catch((e) => {
+          const error = (typeof e === 'string') ? e : 'Failure during wallet entering.';
           commit('unsetIsGoingToWallet');
-          store.commit('globalError/setText', 'Failure during wallet entering.');
+          store.commit('globalError/setText', error);
         });
     },
   },
