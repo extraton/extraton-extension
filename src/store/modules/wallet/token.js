@@ -4,7 +4,7 @@ import store from "@/store";
 import {
   initAddTokenTask,
   hideTokenTask,
-  activateTokenTask,
+  uiActivateTokenTask,
   initUiTransferTokenTask,
 } from "@/lib/task/items";
 import walletLib from '@/lib/wallet';
@@ -60,7 +60,7 @@ export default {
       store.commit('globalError/clearText');
       commit('setTokenActivatingInit', true);
       const networkId = store.state.wallet.network;
-      return BackgroundApi.request(activateTokenTask, {networkId, tokenId})
+      return BackgroundApi.request(uiActivateTokenTask, {networkId, tokenId})
         .then(({tasks}) => {
           store.commit('action/setTasks', tasks);
         })

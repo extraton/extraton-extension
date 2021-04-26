@@ -5,12 +5,13 @@ const DB_NAME = 'db41';
 
 const _ = {
   setSchema: function (db) {
-    db.version(9).stores({
+    db.version(11).stores({
       param: '&key, value',
       wallet: '++id, name, contractId, address, keys, networks, isRestored, isWalletMine',
       network: '&id, server, explorer, info, isDev',
       interactiveTask: '++id, networkId, requestId, data, params, typeId, statusId, result, error, form',
       token: '++id, contractId, networkId, walletId, rootAddress, name, symbol, isDeploying, walletAddress, balance, decimals, params',
+      subscriber: '++id, &tabId'
     });
   },
   fillInitial: async function (db) {
@@ -46,7 +47,7 @@ const _ = {
 export default {
   getClient: async function () {
     const isInited = await Dexie.exists(DB_NAME);
-    const db = new Dexie(DB_NAME);
+    const db = new Dexie(DB_NAME);//@TODO
     _.setSchema(db);
     await db.open();
     if (!isInited) {

@@ -3,6 +3,7 @@ import tokenContractLib from "@/lib/token/contract";
 import {handleException, handleExceptionCodes} from "@/lib/task/exception/handleException";
 import walletLib from "@/lib/wallet";
 import database from "@/db";
+import compileApiView from "@/lib/token/compileApiView";
 
 export default {
   name: 'getTokenList',
@@ -24,18 +25,7 @@ export default {
     let tokenList = [];
     for (const token of tokens) {
       const contract = tokenContractLib.getContractById(token.contractId);
-
-      tokenList.push({
-        type: token.contractId,
-        name: token.name,
-        symbol: token.symbol,
-        balance: token.balance,
-        decimals: token.decimals,
-        rootAddress: token.rootAddress,
-        isActive: token.walletAddress !== null,
-        walletAddress: token.walletAddress,
-        data: contract.compileApiDataView(token),
-      });
+      tokenList.push(compileApiView(contract, token));
     }
 
     return tokenList;

@@ -66,6 +66,12 @@
         "button": {
           "apply": "Call"
         }
+      },
+      "12": {
+        "name": "Add Token",
+        "button": {
+          "apply": "Add"
+        }
       }
     }
   }

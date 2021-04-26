@@ -77,7 +77,7 @@ export default {
       gas_back_address: "0:0000000000000000000000000000000000000000000000000000000000000000",
     };
     const payload = (await tonSdk.encodeMessageBody(network.server, rootAbi, 'deployEmptyWallet', input)).body;
-    await interactiveTaskRepository.createTask(
+    return await interactiveTaskRepository.createTask(
       interactiveTaskType.transfer,
       network.id,
       interactiveTaskRequestId,

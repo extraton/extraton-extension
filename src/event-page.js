@@ -29,7 +29,7 @@ const handleMessage = async (request, sender) => {
     } else {
       //@TODO site connection:  console.log({eventPageSender: sender});
       result.requestId = request.requestId;
-      task = taskLib.compileExternalTaskByRequest(request);
+      task = taskLib.compileExternalTaskByRequest(request, sender.tab.id);
     }
 
     if (task.isInteractive) {

@@ -26,8 +26,16 @@ const request = async (method, params) => {
   stream.write(data);
   return waitResponse(requestId);
 };
-stream.on('data', (data) => responses.push(data));
 
 window.freeton = {
   request: (method, params) => request(method, params),
+  eventListener: null,
 };
+
+stream.on('data', (data) => {
+  if (data.type === 'response') {
+    responses.push(data.data);
+  } else if (data.type === 'event' && null !== window.freeton.eventListener) {
+    window.freeton.eventListener(data.data);
+  }
+});

@@ -2,6 +2,7 @@ import {
   getNetworkTask,
   getPublicKeyTask,
   getVersionTask,
+  subscribeToEventsTask,
   runGetTask,
   runContractMethodTask,
   waitDeployTask,
@@ -14,6 +15,8 @@ import {
   callContractMethodTask,
   transferTask,
   transferTokenTask,
+  addTokenTask,
+  activateTokenTask,
   confirmTransactionTask,
   getWakeUpDataTask,
   generateSeedTask,
@@ -31,7 +34,7 @@ import {
   initUiTransferTokenTask,
   initAddTokenTask,
   hideTokenTask,
-  activateTokenTask,
+  uiActivateTokenTask,
   cancelInteractiveTaskTask,
   applyInteractiveTaskTask,
   saveFormInteractiveTaskTask,
@@ -63,7 +66,7 @@ const taskList = {
     initUiTransferTokenTask,
     initAddTokenTask,
     hideTokenTask,
-    activateTokenTask,
+    uiActivateTokenTask,
     cancelInteractiveTaskTask,
     applyInteractiveTaskTask,
     saveFormInteractiveTaskTask,
@@ -72,11 +75,21 @@ const taskList = {
     setWalletByKeystoreTask,
   },
   external: {
-    interactive: {deployTask, runTask, callContractMethodTask, transferTask, transferTokenTask, confirmTransactionTask},
+    interactive: {
+      deployTask,
+      runTask,
+      callContractMethodTask,
+      transferTask,
+      transferTokenTask,
+      addTokenTask,
+      activateTokenTask,
+      confirmTransactionTask
+    },
     background: {
       getNetworkTask,
       getPublicKeyTask,
       getVersionTask,
+      subscribeToEventsTask,
       runGetTask,
       runContractMethodTask,
       waitDeployTask,
@@ -99,12 +112,13 @@ const _ = {
   isTaskInList: function (list, name) {
     return this.getTaskHandler(list, name) !== null;
   },
-  compileTaskByRequest: function (request, isInteractive = false) {
+  compileTaskByRequest: function (request, isInteractive = false, tabId = null) {
     return {
       requestId: request.requestId,
       method: request.method,
       data: request.data,
       isInteractive,
+      tabId,
     };
   },
   handleTask: async function (list, task) {
@@ -128,13 +142,13 @@ const _ = {
 };
 
 export default {
-  compileExternalTaskByRequest: function (request) {
+  compileExternalTaskByRequest: function (request, tabId) {
     const isInteractiveTask = _.isTaskInList(taskList.external.interactive, request.method);
     const isBackgroundTask = _.isTaskInList(taskList.external.background, request.method);
     if (!isInteractiveTask && !isBackgroundTask) {
       throw new taskNotExists(request.method);
     }
-    return _.compileTaskByRequest(request, isInteractiveTask);
+    return _.compileTaskByRequest(request, isInteractiveTask, tabId);
   },
   compileInternalTaskByRequest: function (request) {
     const isTaskExists = _.isTaskInList(taskList.internal, request.method);

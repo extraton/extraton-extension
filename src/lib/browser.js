@@ -1,11 +1,11 @@
 export default {
   throwErrorIfOccurred: function() {
-    const error = this._findError();
+    const error = this.findError();
     if (null !== error) {
       throw error;
     }
   },
-  _findError: function () {
+  findError: function () {
     const {lastError} = chrome.runtime;
     if (!lastError) {
       return null;

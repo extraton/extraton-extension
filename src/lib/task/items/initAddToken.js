@@ -8,7 +8,7 @@ export default {
   handle: async function (task) {
     const {networkId, walletId} = task.data;
     await interactiveTaskRepository.createTask(
-      interactiveTaskType.addToken,
+      interactiveTaskType.uiAddToken,
       networkId,
       null,
       {walletId}

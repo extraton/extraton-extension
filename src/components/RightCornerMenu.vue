@@ -13,7 +13,7 @@
             <v-list-item-subtitle class="text-overline">{{ walletLib.addressToView(item.address) }}</v-list-item-subtitle>
           </v-list-item-content>
           <v-list-item-action>
-            <v-btn @click="startEditing({wallets, wallet: item})" icon>
+            <v-btn @click.stop="startEditing({wallets, wallet: item})" icon>
               <v-icon small>mdi-cog</v-icon>
             </v-btn>
           </v-list-item-action>

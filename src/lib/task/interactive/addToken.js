@@ -1,7 +1,7 @@
 import {interactiveTaskType} from "@/db/repository/interactiveTaskRepository";
 
 export default {
-  typeId: interactiveTaskType.addToken,
+  typeId: interactiveTaskType.uiAddToken,
   onPostApply: () => {
   }
 }

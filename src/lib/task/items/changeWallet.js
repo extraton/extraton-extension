@@ -1,10 +1,9 @@
-import database from "@/db";
+import walletLib from "@/lib/wallet";
 
 export default {
   name: 'changeWallet',
   handle: async function (task) {
     const {walletId} = task.data;
-    const db = await database.getClient();
-    await db.param.update('wallet', {value: walletId});
+    await walletLib.changeWallet(walletId);
   }
 }

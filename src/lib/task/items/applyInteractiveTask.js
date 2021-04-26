@@ -11,12 +11,14 @@ import insufficientFundsException from "@/lib/task/exception/insufficientFundsEx
 import keystoreLib from "@/lib/keystore";
 import keystoreException from "@/lib/keystore/keystoreException";
 import tokenContractLib from "@/lib/token/contract";
-import {tokenContractException, tokenContractExceptionCodes} from "@/lib/token/TokenContractException";
+import {tokenContractException} from "@/lib/token/TokenContractException";
 import {tokenRepository} from "@/db/repository/tokenRepository";
 import interactiveTaskCallback from "@/lib/task/interactive/callback";
-import addToken from "@/lib/task/interactive/callback/addToken";
+import addTokenCallback from "@/lib/task/interactive/callback/addToken";
 import UndecimalIsNotIntegerException from "@/lib/token/UndecimalIsNotIntegerException";
 import tonLib from "@/api/tonSdk";
+import addTokenByAddress from "@/lib/token/addTokenByAddress";
+import compileTokenApiView from "@/lib/token/compileApiView";
 
 const _ = {
   checkSufficientFunds(wallet, networkId, amount) {
@@ -42,7 +44,8 @@ export default {
         //@TODO refactoring
         const db = await database.getClient();
         const wallet = await walletRepository.getCurrent();
-        const server = (await db.network.get(interactiveTask.networkId)).server;
+        const network = await db.network.get(interactiveTask.networkId);
+        const server = network.server;
         if (wallet.isKeysEncrypted) {
           wallet.keys = await keystoreLib.decrypt(server, wallet.keys, password);
         }
@@ -133,26 +136,16 @@ export default {
             break;
           }
           case interactiveTaskType.addToken: {
+            const token = await addTokenByAddress(network, wallet, interactiveTask.params.rootAddress);
+            interactiveTask.data.callback = {name: addTokenCallback.name, params: [token.id]};
+            const contract = tokenContractLib.getContractById(token.contractId);
+            result = compileTokenApiView(contract, token);
+            break;
+          }
+          case interactiveTaskType.uiAddToken: {
             //@TODO validate address
-            const {contract, boc} = await tokenContractLib.getContractByAddress(server, form.address);
-            const tokenData = await contract.getTokenData(server, boc, form.address, wallet.keys.public);
-            if (await tokenRepository.isTokenExists(interactiveTask.networkId, form.address, interactiveTask.params.walletId)) {
-              throw new tokenContractException(tokenContractExceptionCodes.alreadyAdded.code);
-            }
-            const token = await tokenRepository.create(
-              contract.id,
-              interactiveTask.networkId,
-              interactiveTask.params.walletId,
-              form.address,
-              tokenData.name,
-              tokenData.symbol,
-              tokenData.decimals,
-              tokenData.walletAddress,
-              tokenData.balance,
-              tokenData.params,
-            );
-            interactiveTask.data.callback = {name: addToken.name, params: [token.id]};
-
+            const token = await addTokenByAddress(network, wallet, form.address);
+            interactiveTask.data.callback = {name: addTokenCallback.name, params: [token.id]};
             break;
           }
           case interactiveTaskType.uiTransferToken: {

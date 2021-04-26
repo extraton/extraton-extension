@@ -1,6 +1,7 @@
 import getNetworkTask from "@/lib/task/items/getNetwork";
 import getPublicKeyTask from "@/lib/task/items/getPublicKey";
 import getVersionTask from "@/lib/task/items/getVersion";
+import subscribeToEventsTask from "@/lib/task/items/subscribeToEvents";
 import runGetTask from "@/lib/task/items/runGet";
 import runContractMethodTask from "@/lib/task/items/runContractMethod";
 import waitDeployTask from "@/lib/task/items/waitDeploy";
@@ -13,6 +14,8 @@ import runTask from "@/lib/task/items/run";
 import callContractMethodTask from "@/lib/task/items/callContractMethod";
 import transferTask from "@/lib/task/items/transfer";
 import transferTokenTask from "@/lib/task/items/transferToken";
+import addTokenTask from "@/lib/task/items/addToken";
+import activateTokenTask from "@/lib/task/items/activateToken";
 import confirmTransactionTask from "@/lib/task/items/confirmTransaction";
 import getWakeUpDataTask from "@/lib/task/items/getWakeUpData";
 import generateSeedTask from "@/lib/task/items/generateSeed";
@@ -29,7 +32,7 @@ import logoutTask from "@/lib/task/items/logout";
 import initUiTransferTask from "@/lib/task/items/initUiTransfer";
 import initAddTokenTask from "@/lib/task/items/initAddToken";
 import hideTokenTask from "@/lib/task/items/hideToken";
-import activateTokenTask from "@/lib/task/items/activateToken";
+import uiActivateTokenTask from "@/lib/task/items/uiActivateToken";
 import initUiTransferTokenTask from "@/lib/task/items/initUiTransferToken";
 import cancelInteractiveTaskTask from "@/lib/task/items/cancelInteractiveTask";
 import applyInteractiveTaskTask from "@/lib/task/items/applyInteractiveTask";
@@ -42,6 +45,7 @@ export {
   getNetworkTask,
   getPublicKeyTask,
   getVersionTask,
+  subscribeToEventsTask,
   runGetTask,
   runContractMethodTask,
   waitDeployTask,
@@ -54,6 +58,8 @@ export {
   callContractMethodTask,
   transferTask,
   transferTokenTask,
+  addTokenTask,
+  activateTokenTask,
   confirmTransactionTask,
   getWakeUpDataTask,
   generateSeedTask,
@@ -71,7 +77,7 @@ export {
   initUiTransferTokenTask,
   initAddTokenTask,
   hideTokenTask,
-  activateTokenTask,
+  uiActivateTokenTask,
   cancelInteractiveTaskTask,
   applyInteractiveTaskTask,
   saveFormInteractiveTaskTask,

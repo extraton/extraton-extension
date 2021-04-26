@@ -4,31 +4,22 @@
       <div class="text-center addTokenAction__icon">
         <v-icon>$vuetify.icons.coins</v-icon>
       </div>
-      <v-text-field v-model="address" @input="sync" :rules="[rules.required]" :disabled="disabled"
-                    label="Root Contract Address"
-      />
+      <addr :address="rootAddress"/>
+      <div class="text-center text-h6">{{symbol}}</div>
+      <div class="text-center subtitle-1">{{name}}</div>
     </div>
   </div>
 </template>
 
 <script>
+import Addr from "@/components/addr";
 export default {
-  props: {disabled: Boolean, form: Object},
-  data: () => ({
-    address: '',
-    rules: {
-      required: value => !!value || 'Required.',
-    },
-  }),
+  components: {Addr},
+  props: {disabled: Boolean, rootAddress: String, name: String, symbol: String},
+  data: () => ({}),
   created() {
-    this.address = this.form.address || '';
   },
   methods: {
-    sync() {
-      this.$emit('formChange', {
-        address: this.address.trim(),
-      });
-    },
   }
 }
 </script>

@@ -68,10 +68,16 @@
                                  :disabled="!isApplyButtonEnabled"
                                  :txid="task.params.txid"
                                  :wallet-address="task.params.walletAddress"/>
-            <add-token v-if="task.typeId === interactiveTaskType.addToken"
+            <ui-add-token v-if="task.typeId === interactiveTaskType.uiAddToken"
                        @formChange="formChange"
                        :form="task.form"
                        :disabled="!isApplyButtonEnabled"/>
+            <add-token v-if="task.typeId === interactiveTaskType.addToken"
+                       @formChange="formChange"
+                       :disabled="!isApplyButtonEnabled"
+                       :rootAddress="task.params.rootAddress"
+                       :name="task.data.name"
+                       :symbol="task.data.symbol"/>
           </v-card-text>
         </div>
         <div>
@@ -106,6 +112,7 @@ import run from "@/components/actions/run";
 import Transfer from "@/components/actions/transfer";
 import ConfirmTransaction from "@/components/actions/confirmTransaction";
 import AddToken from "@/components/actions/addToken";
+import UiAddToken from "@/components/actions/uiAddToken";
 import UiTransferToken from "@/components/actions/uiTransferToken";
 import TransferToken from "@/components/actions/transferToken";
 import CallContractMethod from "@/components/actions/callContractMethod";
@@ -115,6 +122,7 @@ export default {
     CallContractMethod,
     UiTransferToken,
     AddToken,
+    UiAddToken,
     Transfer,
     ConfirmTransaction,
     PreDeployTransfer,

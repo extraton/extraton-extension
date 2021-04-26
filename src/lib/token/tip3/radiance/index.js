@@ -6,7 +6,7 @@ import dexClientAbi from "@/lib/token/tip3/radiance/DEXclient.abi.json";
 import dexClientTvc from "@/lib/token/tip3/radiance/DEXclient.tvc.base64";
 import {interactiveTaskRepository, interactiveTaskType} from "@/db/repository/interactiveTaskRepository";
 import createNewEmptyTokenWalletCallback from "@/lib/task/interactive/callback/createNewEmptyTokenWallet";
-import radianceDeployDexClient from "@/lib/task/interactive/callback/radianceDeployDexClient";
+// import radianceDeployDexClient from "@/lib/task/interactive/callback/radianceDeployDexClient";
 import CodeHashCallRestriction from "@/lib/callRestriction/item/CodeHashCallRestriction";
 
 const CONTRACT_DEX_CLIENT_CODE_HASH = '67860f3cbce73ea5c66f9792cb16c85040d2adeed94bd06f3374a61ad5bf536f';
@@ -104,10 +104,10 @@ export default {
           constructorParams: {},
         },
       );
-      const callback = {
-        name: radianceDeployDexClient.name,
-        params: [token.id, network.id, interactiveTaskRequestId, dexClientAddress]
-      };
+      // const callback = {
+      //   name: radianceDeployDexClient.name,
+      //   params: [token.id, network.id, interactiveTaskRequestId, dexClientAddress]
+      // };
       await interactiveTaskRepository.createTask(
         interactiveTaskType.deployContract,
         network.id,
@@ -119,17 +119,17 @@ export default {
           constructorParams: {},
           async: false,
         },
-        {callback}
+        // {callback}
       );
-    } else {
-      await this.addCreateNewEmptyWalletTask(token, network, interactiveTaskRequestId, dexClientAddress);
-    }
+    }// else {
+      return await this.addCreateNewEmptyWalletTask(token, network, interactiveTaskRequestId, dexClientAddress);
+    // }
   },
   async addCreateNewEmptyWalletTask(token, network, interactiveTaskRequestId, dexClientAddress) {
     //@TODO fees
     const fees = '0.017518294'
     const callback = {name: createNewEmptyTokenWalletCallback.name, params: [network.server, token.id,]};
-    await interactiveTaskRepository.createTask(
+    return await interactiveTaskRepository.createTask(
       interactiveTaskType.runTransaction,
       network.id,
       interactiveTaskRequestId,

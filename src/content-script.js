@@ -12,6 +12,12 @@ const injectionStream = new PostMessageStream({name: 'content-script', target: '
 injectionStream.on('data', (data) => {
   //@todo disconnect
   chrome.runtime.sendMessage(data, function(response) {
-    injectionStream.write(response);
+    injectionStream.write({type: 'response', data: response});
   });
+});
+
+extensionizer.runtime.onMessage.addListener(function(message, sender) {
+  if (extensionizer.runtime.id === sender.id) {
+    injectionStream.write({type: 'event', data: message});
+  }
 });

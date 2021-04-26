@@ -9,7 +9,20 @@ const paramRepository = {
     } else {
       await db.param.update(key, {value});
     }
-  }
+  },
+  async get(key) {
+    const db = await database.getClient();
+    const params = await db.param.where({key}).toArray();
+    if (0 === params.length) {
+      throw `Param '${key}' not found`;
+    }
+    return params[0].value;
+  },
+  async find(key) {
+    const db = await database.getClient();
+    const params = await db.param.where({key}).toArray();
+    return params.length > 0 ? params[0].value : null;
+  },
 };
 
 export {
