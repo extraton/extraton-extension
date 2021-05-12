@@ -1,7 +1,6 @@
 .DS_Store
 node_modules
 /dist
-/artifacts
 
 # local env files
 .env.local
@@ -29,3 +28,4 @@ pnpm-debug.log*
 *.pem
 *.pub
 *.zip
+!artifacts/*.zip
