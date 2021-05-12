@@ -17,7 +17,7 @@ Private keys and seed phrases are storing encoded in indexedDB with chacha20 enc
 ![Architecture](img/architecture.png?raw=true)
 
 ## User Flow
-![Architecture](img/userflow.png?raw=true)
+![User Flow](img/userFlow.png?raw=true)
 
 ## Installation
 Download and unzip https://github.com/extraton/extraton-extension/raw/contest-stage-1/artifacts/extraton-v0.100.0-production.zip
