@@ -1,40 +1,46 @@
 <template>
   <div class="uiTransferAction">
-    <div>
-      <!--      <div class="text-body-1">Transfer tokens to other address.</div>-->
-      <!--      <div class="text-center walletActivationAction__icon">-->
-      <!--        <v-icon>mdi-send</v-icon>-->
-      <!--      </div>-->
-      <v-text-field v-model="address" @input="sync" :rules="[rules.required]" :disabled="disabled" label="Address"/>
-      <v-text-field v-model="amount" @input="sync" :rules="[rules.required, rules.greaterOrEqualZero]"
-                    :disabled="disabled" type="number" label="Amount"/>
-      <v-text-field v-model="comment" @input="sync" :rules="[rules.commentLength]" counter="120"
-                    :disabled="disabled" label="Comment"/>
+    <div class="text-center uiTransferAction__icon">
+      <v-icon>mdi-cash-multiple</v-icon>
     </div>
-    <amount info="Estimated fee" value="0.011" approx/>
+    <div v-if="null===task.preparation">
+      <v-text-field v-model="address" @input="sync" :rules="[$validation.required]" :disabled="disabled"
+                    :label="$t('actionDialog.type.2.address')"/>
+      <v-text-field v-model="amount" @input="sync" :rules="[$validation.required, $validation.gt(0)]"
+                    :disabled="disabled" type="number" :label="$t('actionDialog.type.2.amount')"/>
+      <v-text-field v-model="comment" @input="sync" :rules="[$validation.transferCommentLength]" counter="120"
+                    :disabled="disabled" :label="$t('actionDialog.type.2.comment')"/>
+    </div>
+    <div v-else>
+      <div class="subtitle-2" v-text="$t('actionDialog.type.2.toAddress')"/>
+      <addr :address="task.preparation.address" class="uiTransferAction__address"/>
+      <amount :info="$t('actionDialog.type.2.amount')" symbol="TON" :value="task.form.amount"/>
+      <amount :info="$t('actionDialog.estimatedFee')" symbol="TON" :value="task.preparation.fee" :convert="[9,3]"
+              approx/>
+      <template v-if="'' !== task.form.comment">
+        <div class="subtitle-2">{{ $t('actionDialog.type.2.comment') }}:</div>
+        <div class="text-body-1">{{ task.form.comment }}</div>
+      </template>
+    </div>
   </div>
 </template>
 
 <script>
 import amount from "@/components/amount";
+import addr from "@/components/addr";
 
 export default {
-  components: {amount},
-  props: {disabled: Boolean, form: Object},
+  components: {amount, addr},
+  props: {disabled: Boolean, task: Object},
   data: () => ({
     address: '',
     amount: '',
     comment: '',
-    rules: {
-      required: value => !!value || 'Required.',
-      greaterOrEqualZero: value => value - 0 > 0 || 'Must be greater or equal 0.',
-      commentLength: value => value.length < 121 || 'Too long.',
-    },
   }),
   created() {
-    this.address = this.form.address || '';
-    this.amount = this.form.amount || '';
-    this.comment = this.form.comment || '';
+    this.address = this.task.form.address || '';
+    this.amount = this.task.form.amount || '';
+    this.comment = this.task.form.comment || '';
   },
   methods: {
     sync() {
@@ -50,14 +56,12 @@ export default {
 
 <style lang="scss">
 .uiTransferAction {
-  //display: flex;
-  //flex-direction: column;
-  //justify-content: space-between;
-  //height: 100%;
-  //padding-bottom: 52px;
+  &__address {
+    margin: 3px 0;
+  }
 
   &__icon {
-    margin: 20px 0;
+    margin: 10px 0;
 
     i {
       font-size: 55px !important;

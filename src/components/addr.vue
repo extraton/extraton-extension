@@ -14,17 +14,17 @@
             </v-btn>
           </template>
           <v-card>
-            <v-card-title>Warning!</v-card-title>
+            <v-card-title v-text="$t('address.warning')"/>
             <v-card-text class="font-weight-bold">{{ copyWarning }}</v-card-text>
             <v-card-actions>
               <v-spacer/>
               <v-btn
                 v-clipboard="address"
                 @success="onCopied"
-                @error="$snack.danger({text: 'Copy Error'})"
+                @error="$snack.danger({text: $t('common.error')})"
                 color="primary"
                 small
-              >Got it</v-btn>
+                v-text="$t('address.gotIt')"/>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -33,14 +33,14 @@
                v-on="on"
                v-clipboard="address"
                @success="onCopied"
-               @error="$snack.danger({text: 'Copy Error'})"
+               @error="$snack.danger({text: $t('common.error')})"
                :disabled="!address"
                icon small
         >
           <v-icon color="primary" small>mdi-content-copy</v-icon>
         </v-btn>
       </template>
-      <span>Copy address</span>
+      <span v-text="$t('common.copy')"/>
     </v-tooltip>
 
     <span class="text-overline">{{ addressView }}</span>
@@ -52,7 +52,7 @@
           <v-icon color="primary" small>mdi-open-in-new</v-icon>
         </v-btn>
       </template>
-      <span>Open in explorer</span>
+      <span v-text="$t('common.openExplorer')"/>
     </v-tooltip>
 
   </div>
@@ -87,7 +87,7 @@ export default {
   methods: {
     onCopied() {
       this.copyWarningDialog = false;
-      this.$snack.success({text: 'Copied'});
+      this.$snack.success({text: this.$t('common.copied')});
     }
   },
 }

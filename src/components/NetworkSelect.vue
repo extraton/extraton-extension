@@ -3,7 +3,7 @@
             @change="changeNetwork"
             :items="items"
             class="networkSelect"
-            label="Network"
+            :label="$t(`network.title`)"
             hide-details
             filled
             dense
@@ -16,7 +16,7 @@
         </v-list-item-icon>
         <v-list-item-content style="max-width:140px">
           <v-list-item-title>{{ item.text }}</v-list-item-title>
-          <v-list-item-subtitle>{{ item.info }}</v-list-item-subtitle>
+          <v-list-item-subtitle v-text="$t(`network.items.${item.value}.info`)"/>
         </v-list-item-content>
       </v-list-item>
       <v-divider class="mt-2"></v-divider>
@@ -37,7 +37,7 @@ export default {
   created() {
     for (let i in this.networks) {
       let network = this.networks[i];
-      this.items.push({text: network.server, info: network.info, value: network.id, isDev: network.isDev});
+      this.items.push({text: network.server, value: network.id, isDev: network.isDev});
     }
     this.select = this.network;
   },

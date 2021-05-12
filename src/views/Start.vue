@@ -1,15 +1,17 @@
 <template>
   <div class="startView">
     <create-or-restore :route-create="routes.walletCreate" :route-restore="routes.walletRestore"/>
+    <select-language/>
   </div>
 </template>
 
 <script>
 import CreateOrRestore from "@/components/CreateOrRestore";
 import {routes} from '@/plugins/router'
+import SelectLanguage from "@/components/SelectLanguage";
 
 export default {
-  components: {CreateOrRestore},
+  components: {SelectLanguage, CreateOrRestore},
   data: () => ({
     routes,
   }),
@@ -18,6 +20,6 @@ export default {
 
 <style lang="scss">
 .startView {
-  padding-top: 50px;
+  padding-top: 110px;
 }
 </style>

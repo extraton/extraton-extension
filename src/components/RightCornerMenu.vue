@@ -34,7 +34,7 @@
           <v-icon>mdi-cogs</v-icon>
         </v-list-item-icon>
         <v-list-item-content>
-          <v-list-item-title>Settings</v-list-item-title>
+          <v-list-item-title v-text="$t('menu.settings')"/>
         </v-list-item-content>
       </v-list-item>
 
@@ -43,7 +43,7 @@
           <v-icon>mdi-information</v-icon>
         </v-list-item-icon>
         <v-list-item-content>
-          <v-list-item-title>Website</v-list-item-title>
+          <v-list-item-title v-text="$t('menu.website')"/>
         </v-list-item-content>
       </v-list-item>
 
@@ -54,7 +54,7 @@
           <v-icon>mdi-exit-run</v-icon>
         </v-list-item-icon>
         <v-list-item-content>
-          <v-list-item-title>Delete all data and logout</v-list-item-title>
+          <v-list-item-title v-text="$t('menu.logout')"/>
         </v-list-item-content>
       </v-list-item>
     </v-list>

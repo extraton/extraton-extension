@@ -1,0 +1,155 @@
+{
+  "common": {
+    "confirm": "Confirmar",
+    "save": "Guardar",
+    "create": "Crear",
+    "back": "Atrás",
+    "cancel": "Cancelar",
+    "or": "o",
+    "copy": "Copiar",
+    "copied": "Copiado",
+    "error": "Error",
+    "openExplorer": "Abrir en Explorer",
+    "seedPhrase": "Frase semilla",
+    "contract": "Contrato",
+    "sendTokens": "Enviar tokens",
+    "requestTokens": "Solicitar tokens"
+  },
+  "createOrRestore": {
+    "restore": "Restaurar mi monedero",
+    "create": "Crear un nuevo monedero"
+  },
+  "settings": {
+    "language": {
+      "title": "Idioma",
+      "items": {
+        "en": "English",
+        "ru": "Русский",
+        "kr": "한국어",
+        "cn": "中文",
+        "es": "Español",
+        "fr": "Français"
+      }
+    }
+  },
+  "actionDialog": {
+    "prepare": "Preparar",
+    "waiting": "Esperando",
+    "estimatedFee": "Tarifa",
+    "messageExpired": "El mensaje expiró",
+    "actionCounter": "Acción 1 de {0}",
+    "type": {
+      "1": {
+        "name": "Activación del monedero",
+        "button": {
+          "apply": "Activar"
+        },
+        "description": "Antes de realizar cualquier operación, despliegue el contrato del monedero en su dirección"
+      },
+      "2": {
+        "name": "Transferencia",
+        "address": "Dirección",
+        "amount": "Monto",
+        "comment": "Comentario",
+        "toAddress": "Receptor:",
+        "button": {
+          "apply": "Enviar"
+        }
+      }
+    }
+  },
+  "transactions": {
+    "title": "TRANSACCIONES",
+    "empty": "Vacío"
+  },
+  "validation": {
+    "required": "Requerido",
+    "wrongWord": "Palabra equivocada",
+    "wordsNum": "Hay que ser 12 o 24 palabras",
+    "tooLong": "Muy largo",
+    "minimumCharacters": "{0} caracteres por lo menos.",
+    "gte": "Hay que ser mayor o igual que {0}",
+    "gt": "Hay que ser mayor que {0}",
+    "insufficientFunds": "Fondos insuficientes"
+  },
+  "restore": {
+    "title": "Restauración del monedero",
+    "restore": "Restaurar"
+  },
+  "createWallet": {
+    "title": "Guarde su frase semilla",
+    "warning": "¡ATENCIÓN!",
+    "losing": "Perder su contraseña equivale a perder todos sus fondos.",
+    "saved": "La guardé de forma segura",
+    "checkIt": "Chequear"
+  },
+  "contracts": {
+    "1": {
+      "name": "Safe Multisig (recomendado)",
+      "info": "Contrato formalmente verificado"
+    },
+    "2": {
+      "name": "Set Code Multisig",
+      "info": "Surf expirado"
+    },
+    "3": {
+      "name": "Set Code Multisig 2",
+      "info": "Surf actual"
+    }
+  },
+  "agreement": {
+    "agreed": "Estoy de acuerdo con",
+    "pp": "la política de privacidad"
+  },
+  "network": {
+    "title": "Red",
+    "items": {
+      "1": {
+        "info": "Red principal"
+      },
+      "2": {
+        "info": "Red de prueba"
+      }
+    }
+  },
+  "menu": {
+    "addWallet": "Agregar el monedero",
+    "settings": "Ajustes",
+    "website": "Sitio web",
+    "logout": "Eliminar todos los datos y cerrar sesión"
+  },
+  "walletSettings": {
+    "name": "Nombre",
+    "publicKey": "Llave pública",
+    "showPrivate": "Mostrar la llave privada",
+    "privateKey": "Llave privada",
+    "showSeed": "Mostrar la frase semilla",
+    "seed": "Frase semilla",
+    "hide": "Ocultar el monedero",
+    "mainWallet": "Monedero principal",
+    "wallet": "Monedero"
+  },
+  "password": {
+    "enter": "Introduzca la contraseña",
+    "create": "Cree la contraseña",
+    "password": "contraseña",
+    "password2": "Contraseña",
+    "invalid": "Contraseña invalida"
+  },
+  "address": {
+    "warning": "¡Atención!",
+    "tip": "Use esta dirección solo para TON {0}. Cada token TIP-3 tiene su propia dirección.",
+    "gotIt": "Entiendo"
+  },
+  "globalError": {
+    "networkChanging": "Error al cambiar la red.",
+    "walletChanging": "Error al cambiar el monedero.",
+    "transactionInitialization": "Error al inicializar la transacción.",
+    "walletEditing": "Error al editar el monedero.",
+    "walletRemoving": "Error al eliminar el monedero.",
+    "seedGeneration": "Error al generar la frase semilla.",
+    "walletEntering": "Error al iniciar sesión en el monedero.",
+    "changeLanguage": "Error al cambiar el idioma.",
+    "syncTime": "Por favor, sincronice la hora en su dispositivo y luego vuelva a abrir su navegador."
+  }
+}

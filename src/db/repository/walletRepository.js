@@ -1,6 +1,5 @@
 import database from '@/db';
 import {networkRepository} from '@/db/repository/networkRepository';
-import walletLib from '@/lib/wallet';
 
 const _ = {
   indexEntitiesByField(entities, field) {
@@ -13,7 +12,7 @@ const _ = {
 };
 
 const walletRepository = {
-  async create(contractId, address, keys, isRestored) {
+  async create(contractId, address, keys, seed, isRestored) {
     const db = await database.getClient();
     const dbNetworks = await networkRepository.getAll();
     let networks = {};
@@ -22,10 +21,11 @@ const walletRepository = {
       networks[id] = {
         codeHash: null,
         balance: null,
+        transactions: [],
       };
     }
     const isWalletMine = null;
-    let wallet = {name: '', contractId, address, keys, networks, isRestored, isWalletMine};
+    let wallet = {name: '', contractId, address, keys, seed, networks, isRestored, isWalletMine};
     wallet.id = await db.wallet.add(wallet);
     return wallet;
   },
@@ -48,7 +48,6 @@ const walletRepository = {
       throw "Wallet isn't set.";
     }
     const wallet = await db.wallet.get(walletId);
-    wallet.isKeysEncrypted = walletLib.isKeysEncrypted(wallet.keys);
     return wallet;
   },
   async getById(id) {
@@ -69,15 +68,15 @@ const walletRepository = {
         isRestored: wallet.isRestored,
         isWalletMine: wallet.isWalletMine,
         pubkey: wallet.keys.public,
-        isKeysEncrypted: walletLib.isKeysEncrypted(wallet.keys),
       });
     }
     return _.indexEntitiesByField(walletsWithoutKeys, 'id');
   },
-  async updateNetworkData(wallet, networkId, balance, codeHash) {
+  async updateNetworkData(wallet, networkId, balance, codeHash, transactions) {
     const db = await database.getClient();
     wallet.networks[networkId].balance = balance;
     wallet.networks[networkId].codeHash = codeHash;
+    wallet.networks[networkId].transactions = transactions;
     await db.wallet.update(wallet, {networks: wallet.networks});
   }
 };

@@ -19,14 +19,9 @@ const _ = {
     }
     return null;
   },
-  hasCurrentTaskStatus(tasks, statusId) {
+  hasCurrentTaskStatus(tasks, statusIds) {
     const task = this.findCurrentTask(tasks);
-    if (null !== task) {
-      if (task.statusId === statusId) {
-        return true;
-      }
-    }
-    return false;
+    return null !== task && statusIds.includes(task.statusId);
   },
   countTasks(tasks, onlyActive = false) {
     let num = 0;
@@ -67,12 +62,10 @@ export default {
         if (undefined === state.tasks[id]) {
           Vue.set(state.tasks, id, task)
         } else {
-          // Vue.set(state.tasks[id], 'statusId', task.statusId)
-          // Vue.set(state.tasks[id], 'result', task.result)
-          // Vue.set(state.tasks[id], 'error', task.error)
           state.tasks[id].statusId = task.statusId;
           state.tasks[id].result = task.result;
           state.tasks[id].error = task.error;
+          state.tasks[id].preparation = task.preparation;
         }
       }
     },
@@ -100,10 +93,13 @@ export default {
     async apply({commit, state}, {interactiveTask, password}) {
       commit('setCurrentTaskProcess');
       const form = state.tasks[interactiveTask.id].form;
-      return BackgroundApi.request(applyInteractiveTaskTask, {interactiveTaskId: interactiveTask.id, password, form})
-        .then(async ({interactiveTasks}) => {
-          commit('setTasks', interactiveTasks);
-        });
+      return BackgroundApi.request(applyInteractiveTaskTask, {
+        interactiveTaskId: interactiveTask.id,
+        password,
+        form,
+      }).then(async ({interactiveTasks}) => {
+        commit('setTasks', interactiveTasks);
+      }).catch();
     },
     formChange({state}, form) {
       const taskId = _.findCurrentTask(state.tasks).id;
@@ -118,9 +114,9 @@ export default {
     isDialogShowing: (state) => _.countTasks(state.tasks, true) > 0,
     currentTask: (state) => _.findCurrentTask(state.tasks),
     activeTasksAmount: (state) => _.countTasks(state.tasks, true),
-    isCancelButtonEnabled: (state) => _.hasCurrentTaskStatus(state.tasks, interactiveTaskStatus.new),
-    isCancelButtonLoading: (state) => _.hasCurrentTaskStatus(state.tasks, interactiveTaskStatus.cancellation),
-    isApplyButtonEnabled: (state) => _.hasCurrentTaskStatus(state.tasks, interactiveTaskStatus.new),
-    isApplyButtonLoading: (state) => _.hasCurrentTaskStatus(state.tasks, interactiveTaskStatus.process),
+    isCancelButtonEnabled: (state) => _.hasCurrentTaskStatus(state.tasks, [interactiveTaskStatus.new, interactiveTaskStatus.prepared]),
+    isCancelButtonLoading: (state) => _.hasCurrentTaskStatus(state.tasks, [interactiveTaskStatus.cancellation]),
+    isApplyButtonEnabled: (state) => _.hasCurrentTaskStatus(state.tasks, [interactiveTaskStatus.new, interactiveTaskStatus.prepared]),
+    isApplyButtonLoading: (state) => _.hasCurrentTaskStatus(state.tasks, [interactiveTaskStatus.process]),
   },
 }

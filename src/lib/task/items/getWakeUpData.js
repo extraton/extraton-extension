@@ -5,8 +5,8 @@ import {paramRepository} from "@/db/repository/paramRepository";
 
 const _ = {
   async getSettings(/*db*/) {
-
-    return {};
+    const language = await paramRepository.getParam('language');
+    return {language};
   },
   async getPage(db) {
     // await db.param.delete('page');

@@ -3,7 +3,7 @@ import database from "@/db";
 
 export default {
   name: 'removeWallet',
-  handle: async function (task) {
+  handle: async function (i18n, task) {
     const db = await database.getClient();
     const {walletId} = task.data;
     await walletRepository.remove(walletId);

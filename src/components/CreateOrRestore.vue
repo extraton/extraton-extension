@@ -1,15 +1,11 @@
 <template>
   <div class="createOrRestore text-center">
     <div>
-      <v-btn :to="{name:routeRestore}" @click="$emit('choose')" color="primary">
-        Restore via seed
-      </v-btn>
+      <v-btn :to="{name:routeRestore}" @click="$emit('choose')" color="primary" v-text="$t('createOrRestore.restore')"/>
     </div>
-    <div class="createOrRestore__or text-h6">or</div>
+    <div class="createOrRestore__or text-h6" v-text="$t('common.or')"/>
     <div>
-      <v-btn :to="{name:routeCreate}" @click="$emit('choose')" small text>
-        create new wallet
-      </v-btn>
+      <v-btn :to="{name:routeCreate}" @click="$emit('choose')" small text v-text="$t('createOrRestore.create')"/>
     </div>
   </div>
 </template>

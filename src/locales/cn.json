@@ -1,0 +1,155 @@
+{
+  "common": {
+    "confirm": "确认",
+    "save": "保存",
+    "create": "创造",
+    "back": "后退",
+    "cancel": "取消",
+    "or": "或",
+    "copy": "复制",
+    "copied": "已经复制",
+    "error": "错误",
+    "openExplorer": "在Explorer中打开",
+    "seedPhrase": "秘密短语",
+    "contract": "合同",
+    "sendTokens": "发送令牌",
+    "requestTokens": "请求令牌"
+  },
+  "createOrRestore": {
+    "restore": "恢复钱包",
+    "create": "创建一个新的钱包"
+  },
+  "settings": {
+    "language": {
+      "title": "语",
+      "items": {
+        "en": "English",
+        "ru": "Русский",
+        "kr": "한국어",
+        "cn": "中文",
+        "es": "Español",
+        "fr": "Français"
+      }
+    }
+  },
+  "actionDialog": {
+    "prepare": "备",
+    "waiting": "等候",
+    "estimatedFee": "费用",
+    "messageExpired": "消息已过期",
+    "actionCounter": "{0}的动作1",
+    "type": {
+      "1": {
+        "name": "钱包激活",
+        "button": {
+          "apply": "启动"
+        },
+        "description": "在执行任何操作之前，您需要将钱包合同部署到您的地址"
+      },
+      "2": {
+        "name": "转移",
+        "address": "地址",
+        "amount": "额",
+        "comment": "评论",
+        "toAddress": "接受者",
+        "button": {
+          "apply": "发送"
+        }
+      }
+    }
+  },
+  "transactions": {
+    "title": "交易",
+    "empty": "空的"
+  },
+  "validation": {
+    "required": "所需的",
+    "wrongWord": "单词错误",
+    "wordsNum": "应该是12或24个字",
+    "tooLong": "单词太长",
+    "minimumCharacters": "最少{0}个字符",
+    "gte": "必须大于或等于{0}",
+    "gt": "必须大于{0}",
+    "insufficientFunds": "不充足的资金"
+  },
+  "restore": {
+    "title": "钱包恢复",
+    "restore": "恢复"
+  },
+  "createWallet": {
+    "title": "保存您的秘密短语",
+    "warning": "注意力！",
+    "losing": "失去你的秘密短语是相当于失去所有的资金。",
+    "saved": "我安全地保存了它",
+    "checkIt": "验证"
+  },
+  "contracts": {
+    "1": {
+      "name": "Safe Multisig（推荐）",
+      "info": "经正式核实的合同"
+    },
+    "2": {
+      "name": "Set Code Multisig",
+      "info": "旧 surf"
+    },
+    "3": {
+      "name": "Set Code Multisig 2",
+      "info": "目前的 surf"
+    }
+  },
+  "agreement": {
+    "agreed": "我同意",
+    "pp": "隐私政策"
+  },
+  "network": {
+    "title": "网",
+    "items": {
+      "1": {
+        "info": "主网络"
+      },
+      "2": {
+        "info": "测试网"
+      }
+    }
+  },
+  "menu": {
+    "addWallet": "添加钱包",
+    "settings": "设置",
+    "website": "网站",
+    "logout": "删除所有数据并退出"
+  },
+  "walletSettings": {
+    "name": "名称",
+    "publicKey": "公钥",
+    "showPrivate": "显示私钥",
+    "privateKey": "私钥",
+    "showSeed": "显示秘密短语",
+    "seed": "秘密短语",
+    "hide": "隐藏钱包",
+    "mainWallet": "主钱包",
+    "wallet": "钱包"
+  },
+  "password": {
+    "enter": "输入密码",
+    "create": "创建密码",
+    "password": "密码",
+    "password2": "密码",
+    "invalid": "无效的密码"
+  },
+  "address": {
+    "warning": "注意力！",
+    "tip": "只对TON {0}使用此地址。每个TIP-3令牌都有自己的地址。",
+    "gotIt": "知道了"
+  },
+  "globalError": {
+    "networkChanging": "在改变网络时出错。",
+    "walletChanging": "更改钱包时发生了错误。",
+    "transactionInitialization": "在初始化交易时发生了一个错误。",
+    "walletEditing": "在编辑钱包时发生了一个错误。",
+    "walletRemoving": "在删除钱包时发生了一个错误。",
+    "seedGeneration": "而生成的秘密短语时发生错误。",
+    "walletEntering": "登录钱包时发生了一个错误。",
+    "changeLanguage": "在改变语言时发生了一个错误。",
+    "syncTime": "请在您的设备上同步时间，然后重新打开您的浏览器。"
+  }
+}

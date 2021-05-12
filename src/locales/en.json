@@ -1,18 +1,155 @@
 {
+  "common": {
+    "confirm": "Confirm",
+    "save": "Save",
+    "create": "Create",
+    "back": "Back",
+    "cancel": "Cancel",
+    "or": "or",
+    "copy": "Copy",
+    "copied": "Copied",
+    "error": "Error",
+    "openExplorer": "Open in explorer",
+    "seedPhrase": "Seed phrase",
+    "contract": "Contract",
+    "sendTokens": "Send Tokens",
+    "requestTokens": "Request Tokens"
+  },
+  "createOrRestore": {
+    "restore": "Restore via seed",
+    "create": "create new wallet"
+  },
+  "settings": {
+    "language": {
+      "title": "Language",
+      "items": {
+        "en": "English",
+        "ru": "Русский",
+        "kr": "한국어",
+        "cn": "中文",
+        "es": "Español",
+        "fr": "Français"
+      }
+    }
+  },
   "actionDialog": {
+    "prepare": "Prepare",
+    "waiting": "Waiting",
+    "estimatedFee": "Estimated fee",
+    "messageExpired": "Message expired",
+    "actionCounter": "Action 1 of {0}",
     "type": {
       "1": {
         "name": "Wallet Activation",
         "button": {
           "apply": "Deploy"
-        }
+        },
+        "description": "Before perform any transactions you need to deploy wallet contract to your address."
       },
       "2": {
         "name": "Transfer",
+        "address": "Address",
+        "amount": "Amount",
+        "comment": "Comment",
+        "toAddress": "To address:",
         "button": {
           "apply": "Transfer"
         }
       }
     }
+  },
+  "transactions": {
+    "title": "TRANSACTIONS",
+    "empty": "Empty"
+  },
+  "validation": {
+    "required": "Required",
+    "wrongWord": "Wrong word",
+    "wordsNum": "Should be 12 or 24 words.",
+    "tooLong": "Too long.",
+    "minimumCharacters": "Minimum {0} characters.",
+    "gte": "Must be greater than or equal to {0}.",
+    "gt": "Must be greater than {0}.",
+    "insufficientFunds": "Insufficient funds"
+  },
+  "restore": {
+    "title": "Restore your wallet",
+    "restore": "restore"
+  },
+  "createWallet": {
+    "title": "Save your seed",
+    "warning": "WARNING!",
+    "losing": "Losing seed phrase is equivalent to losing all your funds.",
+    "saved": "i securely saved it",
+    "checkIt": "Check it"
+  },
+  "contracts": {
+    "1": {
+      "name": "Safe Multisig (Recommended)",
+      "info": "Formal verified wallet contract"
+    },
+    "2": {
+      "name": "Set Code Multisig",
+      "info": "Old surf"
+    },
+    "3": {
+      "name": "Set Code Multisig 2",
+      "info": "Current surf"
+    }
+  },
+  "agreement": {
+    "agreed": "I'm agreed with",
+    "pp": "Privacy Policy"
+  },
+  "network": {
+    "title": "Network",
+    "items": {
+      "1": {
+        "info": "The main network"
+      },
+      "2": {
+        "info": "Test network"
+      }
+    }
+  },
+  "menu": {
+    "addWallet": "Add wallet",
+    "settings": "Settings",
+    "website": "Website",
+    "logout": "Delete all data and logout"
+  },
+  "walletSettings": {
+    "name": "Name",
+    "publicKey": "Public Key",
+    "showPrivate": "Show Private Key",
+    "privateKey": "Private Key",
+    "showSeed": "Show Seed",
+    "seed": "Seed",
+    "hide": "Hide wallet",
+    "mainWallet": "Main wallet",
+    "wallet": "Wallet"
+  },
+  "password": {
+    "enter": "Enter Password",
+    "create": "Create Password",
+    "password": "password",
+    "password2": "Password",
+    "invalid": "Invalid password."
+  },
+  "address": {
+    "warning": "Warning!",
+    "tip": "Use this address only for TON {0}. Every TIP-3 token has his own address.",
+    "gotIt": "Got it"
+  },
+  "globalError": {
+    "networkChanging": "Failure during network changing.",
+    "walletChanging": "Failure during wallet changing.",
+    "transactionInitialization": "Failure during transaction initialization.",
+    "walletEditing": "Failure during wallet editing.",
+    "walletRemoving": "Failure during wallet removing.",
+    "seedGeneration": "Failure during seed generation.",
+    "walletEntering": "Failure during wallet entering.",
+    "changeLanguage": "Failure change language.",
+    "syncTime": "Please, sync time on your device, then reopen browser."
   }
 }

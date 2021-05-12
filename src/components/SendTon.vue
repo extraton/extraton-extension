@@ -6,7 +6,7 @@
           <v-icon color="primary" large>mdi-send</v-icon>
         </v-btn>
       </template>
-      <span>Send Tokens</span>
+      <span v-text="$t('common.sendTokens')"/>
     </v-tooltip>
   </div>
 </template>

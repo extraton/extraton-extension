@@ -114,6 +114,20 @@ export default {
       throw _.getException(e);
     }
   },
+  async requestAccountTransactions(server, address) {
+    try {
+      const client = await ton.getClient(server);
+      return (await client.net.query_collection({
+        collection: 'transactions',
+        filter: {account_addr: {eq: address}},
+        order: [{path: "now", direction: "DESC"}],
+        result: 'id, now, balance_delta(format:DEC)',
+        limit: 15,
+      })).result;
+    } catch (e) {
+      throw _.getException(e);
+    }
+  },
   async encodeMessage(server, address, abi, function_name, input = {}, keys = null) {
     try {
       const client = await ton.getClient(server);
@@ -124,12 +138,12 @@ export default {
       throw _.getException(e);
     }
   },
-  async encodeDeployMessage(server, abi, tvc, initial_data, constructorParams, keys) {
+  async encodeDeployMessage(server, abi, tvc, initial_data, input, keys) {
     try {
       const client = await ton.getClient(server);
       const signer = {type: 'Keys', keys};
       const deploy_set = {tvc, initial_data};
-      const call_set = {function_name: 'constructor', constructorParams};
+      const call_set = {function_name: 'constructor', input};
       return await client.abi.encode_message({abi, deploy_set, call_set, signer});
     } catch (e) {
       throw _.getException(e);
@@ -139,7 +153,7 @@ export default {
     const client = await ton.getClient(server);
     const signer = null !== keys ? {type: 'Keys', keys} : {type: 'None'};
     const call_set = {function_name, input};
-    return await client.abi.encode_message_body({abi, call_set, signer, is_internal: true});
+    return (await client.abi.encode_message_body({abi, call_set, signer, is_internal: true})).body;
   },
   async runTvm(server, abi, boc, message) {
     try {
@@ -183,6 +197,14 @@ export default {
       const signer = {type: 'External', public_key};
 
       return (await client.abi.encode_message({abi, deploy_set, signer})).address;
+    } catch (e) {
+      throw _.getException(e);
+    }
+  },
+  async convertAddress(server, address,) {
+    try {
+      const client = await ton.getClient(server);
+      return (await client.utils.convert_address({address, output_format: {type: 'Hex'}})).address;
     } catch (e) {
       throw _.getException(e);
     }

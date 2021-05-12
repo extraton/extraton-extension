@@ -52,7 +52,7 @@ export default {
         .catch((err) => {
           commit('setIsSaving', false);
           console.error(err);
-          store.commit('globalError/setText', 'Failure during wallet editing.');
+          store.commit('globalError/setText', store.state.app.i18n.t('globalError.walletEditing'));
         });
       commit('endEditing');
     },
@@ -67,7 +67,7 @@ export default {
         .catch((err) => {
           commit('setIsDeleting', false);
           console.error(err);
-          store.commit('globalError/setText', 'Failure during wallet removing.');
+          store.commit('globalError/setText', store.state.app.i18n.t('globalError.walletRemoving'));
         });
     },
   },

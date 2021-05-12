@@ -1,0 +1,155 @@
+{
+  "common": {
+    "confirm": "Confirmer",
+    "save": "Enregistrer",
+    "create": "Créer",
+    "back": "Précédent",
+    "cancel": "Annuler",
+    "or": "ou",
+    "copy": "Copier",
+    "copied": "Copié",
+    "error": "Erreur",
+    "openExplorer": "Ouvrir dans Explorer",
+    "seedPhrase": "Phrase secrète",
+    "contract": "Contracter",
+    "sendTokens": "Envoyer tokens",
+    "requestTokens": "Demander tokens"
+  },
+  "createOrRestore": {
+    "restore": "Restaurer le portefeuille",
+    "create": "créer un nouveau"
+  },
+  "settings": {
+    "language": {
+      "title": "Langue",
+      "items": {
+        "en": "English",
+        "ru": "Русский",
+        "kr": "한국어",
+        "cn": "中文",
+        "es": "Español",
+        "fr": "Français"
+      }
+    }
+  },
+  "actionDialog": {
+    "prepare": "Préparer",
+    "waiting": "Expectance",
+    "estimatedFee": "Commission",
+    "messageExpired": "Message expiré",
+    "actionCounter": "Action 1 de {0}",
+    "type": {
+      "1": {
+        "name": "Activation du portefeuille",
+        "button": {
+          "apply": "Déclencher"
+        },
+        "description": "Avant d'effectuer des opérations, vous devez déployer le contrat de portefeuille à votre adresse"
+      },
+      "2": {
+        "name": "Transfert",
+        "address": "Adresse",
+        "amount": "Montant",
+        "comment": "Commentaire",
+        "toAddress": "Accipiens",
+        "button": {
+          "apply": "Envoyer"
+        }
+      }
+    }
+  },
+  "transactions": {
+    "title": "Transactions",
+    "empty": "Vierge"
+  },
+  "validation": {
+    "required": "Obligatoirement",
+    "wrongWord": "Mot incorrect",
+    "wordsNum": "Devrait contenir 12 ou 24 mots",
+    "tooLong": "Trop long",
+    "minimumCharacters": "{0} caractères minimum.",
+    "gte": "Doit être supérieur ou égal à {0}",
+    "gt": "Doit être supérieur à {0}",
+    "insufficientFunds": "Fonds insuffisants"
+  },
+  "restore": {
+    "title": "Récupération de portefeuille",
+    "restore": "récupérer"
+  },
+  "createWallet": {
+    "title": "Sauvegarder votre phrase secrète",
+    "warning": "Important",
+    "losing": "Perdre de votre phrase secrète équivaut à perdre de tous vos fonds",
+    "saved": "Je l'ai sauvegardée en toute sécurité",
+    "checkIt": "Contrôle"
+  },
+  "contracts": {
+    "1": {
+      "name": "Safe Multisig (recommandé)",
+      "info": "Contrat officiellement vérifié"
+    },
+    "2": {
+      "name": "Set Code Multisig",
+      "info": "Vieux surf"
+    },
+    "3": {
+      "name": "Set Code Multisig 2",
+      "info": "Surf actuel"
+    }
+  },
+  "agreement": {
+    "agreed": "je suis d'accord avec",
+    "pp": "la politique de confidentialité"
+  },
+  "network": {
+    "title": "Réseau",
+    "items": {
+      "1": {
+        "info": "Réseau principal"
+      },
+      "2": {
+        "info": "Test réseau"
+      }
+    }
+  },
+  "menu": {
+    "addWallet": "Ajouter un portefeuille",
+    "settings": "Paramètres",
+    "website": "Website",
+    "logout": "Supprimer toutes les données et quitter"
+  },
+  "walletSettings": {
+    "name": "Nom",
+    "publicKey": "Clé publique",
+    "showPrivate": "Afficher la clé privée",
+    "privateKey": "Clé privée",
+    "showSeed": "Faire voir la phrase secrète",
+    "seed": "La phrase secrète",
+    "hide": "Cacher le portefeuille",
+    "mainWallet": "Portefeuille principal",
+    "wallet": "Portefeuille"
+  },
+  "password": {
+    "enter": "Entrer le mot de passe",
+    "create": "Créer un mot de passe",
+    "password": "Mot de passe",
+    "password2": "Mot de passe",
+    "invalid": "Mot de passe incorrect"
+  },
+  "address": {
+    "warning": "Important!",
+    "tip": "Utilisez cette adresse uniquement pour TON {0}. Chaque tocken TIP-3 a sa propre adresse.",
+    "gotIt": "J'ai compris"
+  },
+  "globalError": {
+    "networkChanging": "Erreur lors du changement de réseau.",
+    "walletChanging": "Erreur lors du changement de portefeuille",
+    "transactionInitialization": "Erreur lors de l'initialisation de la transaction",
+    "walletEditing": "Erreur lors de la modification du portefeuille",
+    "walletRemoving": "Erreur lors de la suppression du portefeuille",
+    "seedGeneration": "Erreur lors de la génération de la phrase secrète",
+    "walletEntering": "Erreur lors de la connexion au portefeuille",
+    "changeLanguage": "Erreur lors du changement de langue",
+    "syncTime": "Veuillez synchroniser l'heure sur votre appareil, puis rouvrir le navigateur"
+  }
+}

@@ -1,5 +1,7 @@
 const tonExceptionCodes = {
-  syncTime: 1013,
+  // syncTime: 1013,
+  syncTime: 606,
+  messageExpired: 501,
 }
 
 const tonException = function (code, message) {

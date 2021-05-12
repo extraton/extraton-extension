@@ -16,7 +16,8 @@ export default {
       walletBalance = accountData.balance;
       walletCodeHash = accountData.code_hash;
     }
-    await walletRepository.updateNetworkData(wallet, networkId, walletBalance, walletCodeHash);
+    const transactions = await tonLib.requestAccountTransactions(network.server, wallet.address);
+    await walletRepository.updateNetworkData(wallet, networkId, walletBalance, walletCodeHash, transactions);
 
     return {walletId: wallet.id, networkId, data: wallet.networks[networkId]};
   }

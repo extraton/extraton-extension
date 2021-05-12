@@ -2,6 +2,8 @@ import getWakeUpDataTask from "@/lib/task/items/getWakeUpData";
 import generateSeedTask from "@/lib/task/items/generateSeed";
 import setWalletBySeedTask from "@/lib/task/items/setWalletBySeed";
 import removeWalletTask from "@/lib/task/items/removeWallet";
+import decryptPrivateKeyTask from "@/lib/task/items/decryptPrivateKey";
+import decryptSeedPhraseTask from "@/lib/task/items/decryptSeedPhrase";
 import changeWalletTask from "@/lib/task/items/changeWallet";
 import editWalletTask from "@/lib/task/items/editWallet";
 import changeNetworkTask from "@/lib/task/items/changeNetwork";
@@ -21,6 +23,8 @@ export {
   generateSeedTask,
   setWalletBySeedTask,
   removeWalletTask,
+  decryptPrivateKeyTask,
+  decryptSeedPhraseTask,
   changeWalletTask,
   editWalletTask,
   changeNetworkTask,

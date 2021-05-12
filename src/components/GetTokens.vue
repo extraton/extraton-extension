@@ -8,7 +8,7 @@
           </v-icon>
         </v-btn>
       </template>
-      <span>Request Tokens</span>
+      <span v-text="$t('common.requestTokens')"/>
     </v-tooltip>
   </div>
 </template>

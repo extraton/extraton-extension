@@ -1,20 +1,20 @@
 <template>
   <div class="pubkey">
-    <v-text-field :value="pubkey" label="Public Key" disabled/>
+    <v-text-field :value="pubkey" :label="$t('walletSettings.publicKey')" disabled/>
     <v-tooltip bottom>
       <template v-slot:activator="{ on, attrs }">
         <v-btn v-bind="attrs"
                v-on="on"
                v-clipboard="pubkey"
-               @success="$snack.success({text: 'Copied'})"
-               @error="$snack.danger({text: 'Copy Error'})"
+               @success="$snack.success({text: $t('common.copied')})"
+               @error="$snack.danger({text: $t('common.error')})"
                class="pubkey__copy"
                icon small
         >
           <v-icon color="primary" small>mdi-content-copy</v-icon>
         </v-btn>
       </template>
-      <span>Copy public key</span>
+      <span v-text="$t('common.copy')"/>
     </v-tooltip>
   </div>
 </template>

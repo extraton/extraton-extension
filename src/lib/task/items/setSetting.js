@@ -2,7 +2,7 @@ import database from '@/db';
 
 export default {
   name: 'setSetting',
-  handle: async function (task) {
+  handle: async function (i18n, task) {
     const {name, value} = task.data;
     const db = await database.getClient();
     //@TODO list of available to change parameters

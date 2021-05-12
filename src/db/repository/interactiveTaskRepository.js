@@ -15,14 +15,16 @@ const interactiveTaskStatus = {
   cancellation: 2,
   canceled: 3,
   process: 4,
-  performed: 5,
-  unknown: 6,
+  prepared: 5,
+  performed: 6,
+  unknown: 7,
 };
 
 const interactiveTaskActiveStatusIds = [
   interactiveTaskStatus.new,
   interactiveTaskStatus.cancellation,
   interactiveTaskStatus.process,
+  interactiveTaskStatus.prepared,
 ];
 
 const interactiveTaskType = {
@@ -41,7 +43,8 @@ const interactiveTaskRepository = {
       params,
       statusId: interactiveTaskStatus.new,
       error: null,
-      form: {}
+      form: {},
+      preparation: null,
     };
     task.id = await db.interactiveTask.add(task);
     return task;

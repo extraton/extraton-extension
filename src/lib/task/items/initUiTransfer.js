@@ -6,7 +6,7 @@ import {
 
 export default {
   name: 'initUiTransfer',
-  handle: async function (task) {
+  handle: async function (i18n, task) {
     const {networkId} = task.data;
     if (!await walletLib.isContractDeployed(networkId)) {
       await interactiveTaskRepository.createTask(interactiveTaskType.deployWalletContract, networkId);

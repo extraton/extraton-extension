@@ -11,7 +11,7 @@ export default {
   errorCodes: {
     invalidSeed: 10,
   },
-  handle: async function (task) {
+  handle: async function (i18n, task) {
     const {seed, contractId, isRestoring, pass} = task.data;
     const db = await database.getClient();
     const server = (await db.network.get(1)).server;
@@ -32,12 +32,13 @@ export default {
         throw err;
       }
     }
-    const encryptedKeys = await keystoreLib.encrypt(server, keys, pass);
+    const encryptedKeys = await keystoreLib.encrypt(i18n, server, keys, pass);
+    const encryptedSeed = await keystoreLib.encrypt(i18n, server, {public: keys.public, secret: seed}, pass);
 
     if (!isPasswordSet) {
       await paramRepository.createOrUpdate('pass', passHash);
     }
 
-    await wallet.restore(server, contractId, encryptedKeys, isRestoring);
+    await wallet.restore(i18n, server, contractId, encryptedKeys, encryptedSeed, isRestoring);
   }
 }

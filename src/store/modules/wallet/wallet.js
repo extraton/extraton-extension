@@ -87,11 +87,12 @@ export default {
       return router.push(to);
     },
     goToStart: () => router.push({name: routes.start}),
-    logout: async ({commit}) => {
+    logout: async (/*{commit}*/) => {
       await BackgroundApi.request(logoutTask);
-      commit('clear');
-      store.commit('action/clear');
-      await router.push({name: routes.start});
+      // commit('clear');
+      // store.commit('action/clear');
+      // await router.push({name: routes.start});
+      location.reload();
     },
     startBalanceUpdating({state, commit}) {
       commit('setAutoUpdateOn');
@@ -106,7 +107,7 @@ export default {
           commit('setNetwork', network);
         })
         .catch(() => {
-          store.commit('globalError/setText', 'Failure during network changing.');
+          store.commit('globalError/setText', store.state.app.i18n.t('globalError.networkChanging'));
         });
     },
     changeWallet: async ({commit, state}, walletKey) => {
@@ -119,7 +120,7 @@ export default {
         })
         .catch((err) => {
           console.error(err);
-          store.commit('globalError/setText', 'Failure during wallet changing.');
+          store.commit('globalError/setText', store.state.app.i18n.t('globalError.walletChanging'));
         });
     },
     wakeup: async ({commit}, page) => {
@@ -140,7 +141,7 @@ export default {
           store.commit('action/setTasks', tasks);
         })
         .catch(() => {
-          store.commit('globalError/setText', 'Failure during transaction initialization.');
+          store.commit('globalError/setText', store.state.app.i18n.t('globalError.transactionInitialization'));
         });
     },
     thatsMyAddress: async ({commit}) => {
@@ -155,7 +156,7 @@ export default {
       if (null === balanceRaw) {
         return null;
       }
-      return walletLib.convertFromNano(balanceRaw, 3);
+      return walletLib.convertToView(balanceRaw, 9, 3);
     },
     address: (state) => {
       return state.wallets[state.walletId].address;
@@ -175,6 +176,6 @@ export default {
       const isZeroBalance = wallet.networks[state.network].balance === 0;
       return state.isAddressDataGotOnce && wallet.isRestored && isOwnerUnknown && isCodeHashNull && isZeroBalance;
     },
-    isKeysEncrypted: (state) => state.wallets[state.walletId].isKeysEncrypted,
+    transactions: (state) => state.wallets[state.walletId].networks[state.network].transactions,
   }
 }

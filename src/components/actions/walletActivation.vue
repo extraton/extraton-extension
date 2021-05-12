@@ -4,9 +4,9 @@
       <div class="text-center walletActivationAction__icon">
         <v-icon>mdi-wallet-plus</v-icon>
       </div>
-      <div class="text-body-1">Before perform any transactions you need to deploy wallet contract to your address.</div>
+      <div class="text-body-1" v-text="$t('actionDialog.type.1.description', [activeTasksAmount])"/>
     </div>
-    <amount info="Estimated fee" value="0.073" approx/>
+    <amount v-if="null!==task.preparation" symbol="TON" :info="$t('actionDialog.estimatedFee')" :value="task.preparation.fee" :convert="[9,3]" approx/>
   </div>
 </template>
 
@@ -15,20 +15,17 @@ import amount from "@/components/amount";
 
 export default {
   components: {amount},
-  props: {disabled: Boolean},
+  props: {disabled: Boolean, task: Object},
+  mounted() {
+  }
 }
 </script>
 
 <style lang="scss">
 .walletActivationAction {
-  //display: flex;
-  //flex-direction: column;
-  //justify-content: space-between;
-  //height: 100%;
-  //padding-bottom: 52px;
-
   &__icon {
     margin: 20px 0;
+
     i {
       font-size: 55px !important;
     }

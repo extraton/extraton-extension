@@ -2,7 +2,7 @@ import tonSdkLib from "@/api/tonSdk";
 import keystoreException from "@/lib/keystore/keystoreException";
 
 const _ = {
-  async restoreV1(server, keystore, password) {
+  async restoreV1(i18n, server, keystore, password, matcher) {
     const isKeystoreStructValid = typeof keystore.Crypto === 'object'
       && typeof keystore.Crypto.ciphertext === 'string'
       && typeof keystore.Crypto.cipherparams === 'object'
@@ -21,8 +21,8 @@ const _ = {
       throw new keystoreException('Cannot decrypt keystore file. Probably it\'s corrupted.');
     }
 
-    if (null === secret.match(/^[a-f0-9]{64}$/g)) {
-      throw new keystoreException('Invalid password.');
+    if (null === secret.match(matcher)) {
+      throw new keystoreException(i18n.t('password.invalid'));
     }
 
     return {
@@ -33,7 +33,11 @@ const _ = {
 }
 
 export default {
-  async encrypt(server, keys, password) {
+  matchers: {
+    keySecret: /^[a-f0-9]{64}$/g,
+    seed: /^([^\s-.]+\s){11,23}[^\s-.]+$/g
+  },
+  async encrypt(i18n, server, keys, password) {
     const chacha20 = await tonSdkLib.chacha20Encrypt(server, keys.secret, password);
     return {
       version: 1,
@@ -45,10 +49,10 @@ export default {
       }
     };
   },
-  async decrypt(server, keystore, password) {
+  async decrypt(i18n, server, keystore, password, matcher) {
     switch (keystore.version) {
       case 1:
-        return await _.restoreV1(server, keystore, password);
+        return await _.restoreV1(i18n, server, keystore, password, matcher);
       default:
         throw new keystoreException('Unknown keystore version.');
     }

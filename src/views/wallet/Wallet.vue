@@ -12,6 +12,7 @@
       </template>
       <send-ton/>
     </div>
+    <transactions/>
   </div>
 </template>
 
@@ -23,9 +24,11 @@ import MainAddress from "@/components/MainAddress";
 import IsItYourAddress from "@/components/IsItYourAddress";
 import GetTokens from "@/components/GetTokens";
 import SendTon from "@/components/SendTon";
+import Transactions from "@/components/Transactions";
 
 export default {
   components: {
+    Transactions,
     MainAddress,
     IsItYourAddress,
     Balance,

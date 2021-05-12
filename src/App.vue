@@ -75,8 +75,8 @@ html {
 }
 
 .app {
-  width: 300px;
-  height: 500px;
+  width: 350px;
+  height: 550px;
   overflow: auto;
 
   &__preloader {

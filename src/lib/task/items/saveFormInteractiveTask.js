@@ -4,7 +4,7 @@ import {
 
 export default {
   name: 'saveFormInteractiveTask',
-  handle: async function (task) {
+  handle: async function (i18n, task) {
   const {interactiveTaskId, form} = task.data;
   let interactiveTask = await interactiveTaskRepository.getTask(interactiveTaskId);
     interactiveTask.form = form;

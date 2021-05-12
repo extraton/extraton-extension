@@ -7,7 +7,7 @@
             <v-icon large>mdi-plus-circle-outline</v-icon>
           </v-btn>
         </template>
-        <span>Add Wallet</span>
+        <span v-text="$t('menu.addWallet')"/>
       </v-tooltip>
     </template>
     <v-card class="addWalletDialog__card">

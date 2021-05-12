@@ -6,13 +6,13 @@ import {
 
 export default {
   name: 'cancelInteractiveTask',
-  async handle(task) {
+  async handle(i18n, task) {
     const {interactiveTaskId} = task.data;
     const interactiveTask = await interactiveTaskRepository.getTask(interactiveTaskId);
-    if (interactiveTask.statusId === interactiveTaskStatus.new) {
+    if ([interactiveTaskStatus.new, interactiveTaskStatus.prepared].includes(interactiveTask.statusId)) {
       let interactiveTasks = [];
       // if (interactiveTask.typeId === interactiveTaskType.deployWalletContract) {
-        interactiveTasks = await interactiveTaskRepository.getActiveTasks();
+      interactiveTasks = await interactiveTaskRepository.getActiveTasks();
       // } else {
       //   interactiveTasks = [interactiveTask];
       // }

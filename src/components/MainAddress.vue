@@ -20,7 +20,7 @@ export default {
       'isAddressAvailableInExplorer',
     ]),
     copyWarning() {
-      return `Use this address only for TON ${this.pluralTokenName}. Every TIP-3 token has his own address.`;
+      return this.$t('address.tip', [this.pluralTokenName]);
     },
   },
 }

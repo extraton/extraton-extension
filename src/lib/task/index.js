@@ -3,6 +3,8 @@ import {
   generateSeedTask,
   setWalletBySeedTask,
   removeWalletTask,
+  decryptPrivateKeyTask,
+  decryptSeedPhraseTask,
   changeWalletTask,
   editWalletTask,
   changeNetworkTask,
@@ -28,6 +30,8 @@ const taskList = {
     generateSeedTask,
     setWalletBySeedTask,
     removeWalletTask,
+    decryptPrivateKeyTask,
+    decryptSeedPhraseTask,
     changeWalletTask,
     editWalletTask,
     changeNetworkTask,
@@ -44,6 +48,7 @@ const taskList = {
   },
 };
 const _ = {
+  i18n: null,
   getTaskHandler: function (list, name) {
     for (let i in list) {
       if (list[i].name === name) {
@@ -64,7 +69,7 @@ const _ = {
   },
   handleTask: async function (list, task) {
     try {
-      return await _.getTaskHandler(list, task.method).handle(task);
+      return await _.getTaskHandler(list, task.method).handle(this.i18n, task);
     } catch (e) {
       if (e instanceof tonException) {
         switch (e.code) {
@@ -81,6 +86,9 @@ const _ = {
 };
 
 export default {
+  setI18n(i18n) {
+    _.i18n = i18n;
+  },
   compileInternalTaskByRequest: function (request) {
     const isTaskExists = _.isTaskInList(taskList.internal, request.method);
     if (!isTaskExists) {

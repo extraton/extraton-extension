@@ -1,7 +1,7 @@
 <template>
   <v-btn v-if="isShowingBackButton" :to="backRoute" class="backButton" text small exact>
     <v-icon left small>mdi-arrow-left</v-icon>
-    Back
+    {{$t('common.back')}}
   </v-btn>
 </template>
 

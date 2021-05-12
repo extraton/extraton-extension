@@ -1,7 +1,6 @@
 import BackgroundApi from "@/api/background";
 import {setWalletBySeedTask} from "@/lib/task/items";
 import store from "@/store";
-import walletContractLib from '@/lib/walletContract';
 import {routes} from "@/plugins/router";
 
 export default {
@@ -9,7 +8,6 @@ export default {
   state: {
     isRestoring: false,
     error: null,
-    contracts: walletContractLib.compileSelectData(),
   },
   mutations: {
     setError: (state, error) => state.error = error,

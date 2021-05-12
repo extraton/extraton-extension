@@ -1,42 +1,25 @@
 <template>
   <v-container class="walletRestore">
     <v-form v-model="valid" ref="form" lazy-validation>
-      <view-title>Restore your wallet</view-title>
+      <view-title v-text="$t('restore.title')"/>
       <v-textarea v-model="seed"
-                  :rules="[rules.required, wordsNum]"
+                  :rules="[$validation.required, $validation.wordsNum]"
                   :rows="3"
-                  label="Seed phrase"
+                  :label="$t('common.seedPhrase')"
                   class="walletRestore__seed"
                   filled auto-grow
                   counter
       >
 
         <template v-slot:counter="{props}">
-          <v-counter v-bind="props" :value="`${matchSeed.length}/12 or 24`"/>
+          <v-counter v-bind="props" :value="`${matchSeed.length}/12 ${$t('common.or')} 24`"/>
         </template>
       </v-textarea>
-      <v-select v-model="contractId"
-                :items="contracts"
-                label="Contract"
-                class="walletRestore__contract"
-                hide-details
-                filled
-                dense
-      >
-        <template v-slot:item="{item}">
-          <v-list-item :value="item.value" dense>
-            <v-list-item-content>
-              <v-list-item-title>{{ item.text }}</v-list-item-title>
-              <v-list-item-subtitle>{{ item.info }}</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-          <v-divider class="mt-2"></v-divider>
-        </template>
-      </v-select>
+      <contract-select v-model="contractId"/>
       <agreement/>
       <div class="walletRestore__error error--text">{{ error }}</div>
       <div class="text-center">
-        <v-btn @click="validateAndRestore" :loading="isRestoring" color="primary">restore</v-btn>
+        <v-btn @click="validateAndRestore" :loading="isRestoring" color="primary" v-text="$t('restore.restore')"/>
       </div>
     </v-form>
   </v-container>
@@ -46,23 +29,19 @@
 import ViewTitle from "@/components/ViewTitle";
 import Agreement from "@/components/Agreement";
 import {mapActions, mapMutations, mapState} from "vuex";
-import walletContractLib from '@/lib/walletContract';
+import ContractSelect from "@/components/ContractSelect";
 
 export default {
-  components: {ViewTitle, Agreement},
+  components: {ContractSelect, ViewTitle, Agreement},
   data: () => ({
     seed: '',
     valid: true,
-    contractId: walletContractLib.ids.safeMultisig,
-    rules: {
-      required: value => !!value || 'Required.',
-    },
+    contractId: null,
   }),
   computed: {
     ...mapState('walletRestore', [
       'error',
       'isRestoring',
-      'contracts'
     ]),
     matchSeed() {
       const r = this.seed.match(/[^\s-.]+/g);
@@ -82,11 +61,6 @@ export default {
     ...mapActions('password', {
       askPassword: 'ask',
     }),
-    wordsNum() {
-      return this.matchSeed.length !== 12 && this.matchSeed.length !== 24
-        ? 'Should be 12 or 24 words.'
-        : true;
-    },
     async validateAndRestore() {
       await this.$refs.form.validate();
       if (this.valid) {

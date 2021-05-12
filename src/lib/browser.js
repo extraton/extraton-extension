@@ -1,3 +1,4 @@
+import extensionizer from "extensionizer";
 export default {
   throwErrorIfOccurred: function() {
     const error = this._findError();
@@ -6,7 +7,7 @@ export default {
     }
   },
   _findError: function () {
-    const {lastError} = chrome.runtime;
+    const {lastError} = extensionizer.runtime;
     if (!lastError) {
       return null;
     }
