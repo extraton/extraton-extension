@@ -1,4 +1,5 @@
 import TonApi from '@/api/ton';
+import tonLib from '@/api/tonSdk';
 import walletContractLib from '@/lib/walletContract';
 import {walletRepository} from "@/db/repository/walletRepository";
 import utils from "@/lib/utils";
@@ -36,11 +37,11 @@ export default {
     const processingState = await TonApi.sendMessage(server, message);
     return await TonApi.waitForDeployTransaction(server, message, processingState);
   },
-  async deployContract(server, wallet, abi, imageBase64, initParams, constructorParams) {
-    const contract = {abi, imageBase64};
-    const message = await TonApi.createDeployMessage(server, wallet.keys, contract, initParams, constructorParams);
-    const processingState = await TonApi.sendMessage(server, message);
-    return {processingState, message};
+  async deployContract(server, wallet, abi, tvc, initial_data, input, initial_pubkey) {
+    abi = tonLib.compileContractAbi(abi);
+    const message = await tonLib.encodeDeployMessage(server, abi, tvc, initial_data, input, wallet.keys, initial_pubkey);
+    const shardBlockId = await tonLib.sendMessage(server, message.message, abi);
+    return {shardBlockId, message};
   },
   convertToNano(value) {
     const splitted = value.split('.');

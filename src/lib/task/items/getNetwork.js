@@ -3,6 +3,7 @@ import {networkRepository} from "@/db/repository/networkRepository";
 
 export default {
   name: 'getNetwork',
+  isLoginRequired: true,
   handle: async function () {
     const db = await database.getClient();
     const networkId = (await db.param.get('network')).value;

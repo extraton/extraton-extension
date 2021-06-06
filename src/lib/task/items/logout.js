@@ -1,9 +1,10 @@
 import database from '@/db';
+import {extensionEvent, extensionEventType} from "@/lib/extensionEvent";
 
 export default {
   name: 'logout',
   handle: async function () {
-    const db = await database.getClient();
-    await db.delete();
+    extensionEvent.emit(extensionEventType.logout).then();
+    await database.fresh();
   }
 }

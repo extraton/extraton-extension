@@ -5,6 +5,7 @@ import browserLib from "@/lib/browser";
 const extensionEventType = {
   changeNetwork: 1,
   changeWallet: 2,
+  logout: 3,
 };
 
 const _ = {

@@ -3,6 +3,7 @@ import TonApi from '@/api/ton';
 
 export default {
   name: 'runGet',
+  isLoginRequired: true,
   handle: async function (task) {
     const {address, abi, method, params} = task.data;
     const db = await database.getClient();

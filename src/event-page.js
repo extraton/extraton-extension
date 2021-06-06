@@ -3,7 +3,8 @@ import taskLib from '@/lib/task';
 import walletLib from '@/lib/wallet';
 import {handleException} from "@/lib/task/exception/handleException";
 import {interactiveTaskRepository} from "@/db/repository/interactiveTaskRepository";
-
+import extensionizer from "extensionizer";
+import database from "@/db";
 import {TonClient} from "@tonclient/core";
 import {libWeb, libWebSetup} from "@tonclient/lib-web";
 libWebSetup({
@@ -38,7 +39,7 @@ const handleMessage = async (request, sender) => {
       result.data = await taskLib.waitInteractiveTaskResolving(task, interactiveTask.id);
       result.code = 0;
     } else {
-      if (!isInternalRequest && !await walletLib.isLoggedIn()) {
+      if (!isInternalRequest && !await walletLib.isLoggedIn() && task.isLoginRequired) {
         await popupLib.callPopup();
         await walletLib.waitLoggedIn();
       }
@@ -57,6 +58,9 @@ const handleMessage = async (request, sender) => {
   // console.log({result});
   return result;
 }
+extensionizer.runtime.onInstalled.addListener(async function () {
+  await database.init();
+});
 chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
     //@TODO

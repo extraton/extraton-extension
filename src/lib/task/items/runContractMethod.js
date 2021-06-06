@@ -4,6 +4,7 @@ import {handleException, handleExceptionCodes} from "@/lib/task/exception/handle
 
 export default {
   name: 'runContractMethod',
+  isLoginRequired: true,
   handle: async function (task) {
     const {address, abi, method, input} = task.data;
     const db = await database.getClient();

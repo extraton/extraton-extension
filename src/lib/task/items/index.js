@@ -1,6 +1,7 @@
 import getNetworkTask from "@/lib/task/items/getNetwork";
 import getPublicKeyTask from "@/lib/task/items/getPublicKey";
 import getVersionTask from "@/lib/task/items/getVersion";
+import hasSignerTask from "@/lib/task/items/hasSigner";
 import subscribeToEventsTask from "@/lib/task/items/subscribeToEvents";
 import runGetTask from "@/lib/task/items/runGet";
 import runContractMethodTask from "@/lib/task/items/runContractMethod";
@@ -45,6 +46,7 @@ export {
   getNetworkTask,
   getPublicKeyTask,
   getVersionTask,
+  hasSignerTask,
   subscribeToEventsTask,
   runGetTask,
   runContractMethodTask,

@@ -3,6 +3,7 @@ import TonApi from '@/api/ton';
 
 export default {
   name: 'waitDeploy',
+  isLoginRequired: true,
   handle: async function (task) {
     const {message, processingState} = task.data;
     const db = await database.getClient();

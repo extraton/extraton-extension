@@ -2,9 +2,21 @@
   <div class="address">
     <v-tooltip bottom>
       <template v-slot:activator="{ on, attrs }">
-        <v-dialog v-if="null!==copyWarning" v-model="copyWarningDialog">
+        <v-dialog v-model="copyWarningDialog">
           <template v-slot:activator="{}">
-            <v-btn v-bind="attrs"
+            <v-btn v-if="null===copyWarning"
+                   v-bind="attrs"
+                   v-on="on"
+                   v-clipboard="address"
+                   @success="$snack.success({text: 'Copied'})"
+                   @error="$snack.danger({text: 'Copy Error'})"
+                   :disabled="!address"
+                   icon small
+            >
+              <v-icon color="primary" small>mdi-content-copy</v-icon>
+            </v-btn>
+            <v-btn v-else
+                   v-bind="attrs"
                    v-on="on"
                    @click="copyWarningDialog=true"
                    :disabled="!address"
@@ -15,12 +27,19 @@
           </template>
           <v-card>
             <v-card-title>Warning!</v-card-title>
-            <v-card-text class="font-weight-bold">{{ copyWarning }}</v-card-text>
+            <v-card-text>
+              <div class="font-weight-bold">{{ copyWarning }}</div>
+                <v-checkbox v-model="dontShowAnymore" hide-details dense>
+                  <template v-slot:label>
+                    <div>Don't show anymore</div>
+                  </template>
+                </v-checkbox>
+            </v-card-text>
             <v-card-actions>
               <v-spacer/>
               <v-btn
                 v-clipboard="address"
-                @success="onCopied"
+                @success="onCopiedInWarning"
                 @error="$snack.danger({text: 'Copy Error'})"
                 color="primary"
                 small
@@ -28,17 +47,6 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-btn v-else
-               v-bind="attrs"
-               v-on="on"
-               v-clipboard="address"
-               @success="onCopied"
-               @error="$snack.danger({text: 'Copy Error'})"
-               :disabled="!address"
-               icon small
-        >
-          <v-icon color="primary" small>mdi-content-copy</v-icon>
-        </v-btn>
       </template>
       <span>Copy address</span>
     </v-tooltip>
@@ -71,6 +79,7 @@ export default {
   data() {
     return {
       copyWarningDialog: false,
+      dontShowAnymore: false,
     };
   },
   computed: {
@@ -85,10 +94,11 @@ export default {
     ]),
   },
   methods: {
-    onCopied() {
+    onCopiedInWarning() {
       this.copyWarningDialog = false;
+      this.$emit('changeShowWarning', this.dontShowAnymore)
       this.$snack.success({text: 'Copied'});
-    }
+    },
   },
 }
 </script>

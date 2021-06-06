@@ -6,12 +6,15 @@ export default {
   namespaced: true,
   state: {
     tip3: false,
+    hideAddrCopyWarning: false,
   },
   mutations: {
     setSettings: (state, settings) => {
       state.tip3 = settings.tip3;
+      state.hideAddrCopyWarning = settings.hideAddrCopyWarning;
     },
     setTip3: (state, value) => state.tip3 = value,
+    setHideAddrCopyWarning: (state, value) => state.hideAddrCopyWarning = value,
   },
   actions: {
     changeTip3: async ({commit}, value) => {
@@ -23,6 +26,17 @@ export default {
         .catch((err) => {
           console.error(err);
           store.commit('globalError/setText', 'Failure during wallet changing.');
+        });
+    },
+    changeHideAddrCopyWarning: async ({commit}, value) => {
+      store.commit('globalError/clearText');
+      BackgroundApi.request(setSettingTask, {name: 'hideAddrCopyWarning', value})
+        .then(() => {
+          commit('setHideAddrCopyWarning', value);
+        })
+        .catch((err) => {
+          console.error(err);
+          store.commit('globalError/setText', 'Failure during change setting.');
         });
     },
   },

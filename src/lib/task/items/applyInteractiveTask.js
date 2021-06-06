@@ -80,10 +80,12 @@ export default {
           }
           case interactiveTaskType.preDeployTransfer: {
             //TODO FEES
+            const abi = tonLib.compileContractAbi(interactiveTask.params.abi);
             const amountWithFee = BigInt('11000000') + BigInt(interactiveTask.params.options.initAmount);
             _.checkSufficientFunds(wallet, interactiveTask.networkId, amountWithFee);
             const initParams = interactiveTask.params.options.initParams !== undefined ? interactiveTask.params.options.initParams : {};
-            const address = await TonApi.predictAddress(server, wallet.keys.public, interactiveTask.params.abi, interactiveTask.params.imageBase64, initParams);
+            const initPubkey = interactiveTask.params.options.initPubkey !== undefined ? interactiveTask.params.options.initPubkey : null;
+            const address = await tonLib.predictAddress(server, abi, interactiveTask.params.imageBase64, wallet.keys.public, 0, initParams, initPubkey);
             await walletLib.transfer(server, wallet, address, interactiveTask.params.options.initAmount);
             break;
           }
@@ -91,9 +93,10 @@ export default {
             const amountWithFee = BigInt('73000000');
             _.checkSufficientFunds(wallet, interactiveTask.networkId, amountWithFee);
             const initParams = interactiveTask.params.options.initParams !== undefined ? interactiveTask.params.options.initParams : {};
-            result = await walletLib.deployContract(server, wallet, interactiveTask.params.abi, interactiveTask.params.imageBase64, initParams, interactiveTask.params.constructorParams);
+            const initPubkey = interactiveTask.params.options.initPubkey !== undefined ? interactiveTask.params.options.initPubkey : null;
+            result = await walletLib.deployContract(server, wallet, interactiveTask.params.abi, interactiveTask.params.imageBase64, initParams, interactiveTask.params.constructorParams, initPubkey);
             if (interactiveTask.params.async === false) {
-              result = await TonApi.waitForDeployTransaction(server, result.message, result.processingState);
+              result = await tonLib.waitForTransaction(server, result.message.message, result.shardBlockId);
             }
             break;
           }

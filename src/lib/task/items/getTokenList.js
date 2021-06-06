@@ -7,6 +7,7 @@ import compileApiView from "@/lib/token/compileApiView";
 
 export default {
   name: 'getTokenList',
+  isLoginRequired: true,
   handle: async function (task) {
     const db = await database.getClient();
     const walletId = (await db.param.get('wallet')).value;

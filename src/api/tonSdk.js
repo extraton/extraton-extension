@@ -145,11 +145,14 @@ export default {
       throw _.getException(e);
     }
   },
-  async predictAddress(server, abi, tvc, public_key, workchain_id = 0, initial_data = {}) {
+  async predictAddress(server, abi, tvc, public_key, workchain_id = 0, initial_data = {}, initial_pubkey = null) {
     try {
       const client = await ton.getClient(server);
-      const deploy_set = {tvc, initial_data, workchain_id};
       const signer = {type: 'External', public_key};
+      const deploy_set = {tvc, initial_data, workchain_id};
+      if (null !== initial_pubkey) {
+        deploy_set.initial_pubkey = initial_pubkey;
+      }
 
       return (await client.abi.encode_message({abi, deploy_set, signer})).address;
     } catch (e) {
@@ -161,6 +164,20 @@ export default {
       const client = await ton.getClient(server);
 
       return await client.tvm.run_executor({message, account, abi});
+    } catch (e) {
+      throw _.getException(e);
+    }
+  },
+  async encodeDeployMessage(server, abi, tvc, initial_data, input, keys, initial_pubkey = null) {
+    try {
+      const client = await ton.getClient(server);
+      const signer = {type: 'Keys', keys};
+      const deploy_set = {tvc, initial_data};
+      if (null !== initial_pubkey) {
+        deploy_set.initial_pubkey = initial_pubkey;
+      }
+      const call_set = {function_name: 'constructor', input};
+      return client.abi.encode_message({abi, deploy_set, call_set, signer});
     } catch (e) {
       throw _.getException(e);
     }

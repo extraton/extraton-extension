@@ -2,6 +2,7 @@ import {
   getNetworkTask,
   getPublicKeyTask,
   getVersionTask,
+  hasSignerTask,
   subscribeToEventsTask,
   runGetTask,
   runContractMethodTask,
@@ -89,6 +90,7 @@ const taskList = {
       getNetworkTask,
       getPublicKeyTask,
       getVersionTask,
+      hasSignerTask,
       subscribeToEventsTask,
       runGetTask,
       runContractMethodTask,
@@ -112,13 +114,14 @@ const _ = {
   isTaskInList: function (list, name) {
     return this.getTaskHandler(list, name) !== null;
   },
-  compileTaskByRequest: function (request, isInteractive = false, tabId = null) {
+  compileTaskByRequest: function (request, isInteractive = false, tabId = null, isLoginRequired = true) {
     return {
       requestId: request.requestId,
       method: request.method,
       data: request.data,
       isInteractive,
       tabId,
+      isLoginRequired,
     };
   },
   handleTask: async function (list, task) {
@@ -148,7 +151,11 @@ export default {
     if (!isInteractiveTask && !isBackgroundTask) {
       throw new taskNotExists(request.method);
     }
-    return _.compileTaskByRequest(request, isInteractiveTask, tabId);
+    let isLoginRequired = true;
+    if (isBackgroundTask) {
+      isLoginRequired = _.getTaskHandler(taskList.external.background, request.method).isLoginRequired;
+    }
+    return _.compileTaskByRequest(request, isInteractiveTask, tabId, isLoginRequired);
   },
   compileInternalTaskByRequest: function (request) {
     const isTaskExists = _.isTaskInList(taskList.internal, request.method);

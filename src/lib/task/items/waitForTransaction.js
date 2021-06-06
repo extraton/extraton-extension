@@ -3,6 +3,7 @@ import tonLib from "@/api/tonSdk";
 
 export default {
   name: 'waitForTransaction',
+  isLoginRequired: true,
   handle: async function (task) {
     const {message, shardBlockId, abi} = task.data;
     const db = await database.getClient();

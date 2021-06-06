@@ -6,9 +6,11 @@ import {tokenRepository} from "@/db/repository/tokenRepository";
 const _ = {
   async getSettings(db) {
     let tip3 = await db.param.get('tip3');
+    let hideAddrCopyWarning = await db.param.get('hideAddrCopyWarning');
     tip3 = typeof tip3 !== 'undefined' ? tip3.value : false;
+    hideAddrCopyWarning = typeof hideAddrCopyWarning !== 'undefined' ? hideAddrCopyWarning.value : false;
 
-    return {tip3};
+    return {tip3, hideAddrCopyWarning};
   },
   async getPage(db) {
     // await db.param.delete('page');
