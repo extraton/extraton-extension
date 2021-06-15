@@ -182,6 +182,14 @@ export default {
       throw _.getException(e);
     }
   },
+  async sign(server, keys, unsigned) {
+    try {
+      const client = await ton.getClient(server);
+      return client.crypto.sign({unsigned: Base64.encode(unsigned), keys});
+    } catch (e) {
+      throw _.getException(e);
+    }
+  },
 }
 
 

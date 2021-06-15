@@ -78,6 +78,10 @@
                        :rootAddress="task.params.rootAddress"
                        :name="task.data.name"
                        :symbol="task.data.symbol"/>
+            <sign v-if="task.typeId === interactiveTaskType.sign"
+                       @formChange="formChange"
+                       :disabled="!isApplyButtonEnabled"
+                       :unsigned="task.params.unsigned"/>
           </v-card-text>
         </div>
         <div>
@@ -116,9 +120,11 @@ import UiAddToken from "@/components/actions/uiAddToken";
 import UiTransferToken from "@/components/actions/uiTransferToken";
 import TransferToken from "@/components/actions/transferToken";
 import CallContractMethod from "@/components/actions/callContractMethod";
+import Sign from "@/components/actions/sign";
 
 export default {
   components: {
+    Sign,
     CallContractMethod,
     UiTransferToken,
     AddToken,

@@ -13,6 +13,7 @@ import getTokenListTask from "@/lib/task/items/getTokenList";
 import deployTask from "@/lib/task/items/deploy";
 import runTask from "@/lib/task/items/run";
 import callContractMethodTask from "@/lib/task/items/callContractMethod";
+import signTask from "@/lib/task/items/sign";
 import transferTask from "@/lib/task/items/transfer";
 import transferTokenTask from "@/lib/task/items/transferToken";
 import addTokenTask from "@/lib/task/items/addToken";
@@ -58,6 +59,7 @@ export {
   deployTask,
   runTask,
   callContractMethodTask,
+  signTask,
   transferTask,
   transferTokenTask,
   addTokenTask,

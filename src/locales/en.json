@@ -72,6 +72,12 @@
         "button": {
           "apply": "Add"
         }
+      },
+      "13": {
+        "name": "Sign",
+        "button": {
+          "apply": "Sign"
+        }
       }
     }
   }

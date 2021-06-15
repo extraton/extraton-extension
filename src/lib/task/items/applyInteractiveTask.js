@@ -179,6 +179,10 @@ export default {
             result = {processingState, message};
             break;
           }
+          case interactiveTaskType.sign: {
+            result = await tonLib.sign(server, wallet.keys, interactiveTask.params.unsigned);
+            break;
+          }
           default: {
             throw 'Unknown interactive type.';
           }

@@ -39,6 +39,7 @@ const interactiveTaskType = {
   transferToken: 10,
   callContractMethod: 11,
   addToken: 12,
+  sign: 13,
 };
 
 const interactiveTaskRepository = {
