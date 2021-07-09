@@ -22,10 +22,18 @@ const ton = {
   seedPhraseDictionaryEnglish: 1,
   hdPath: "m/44'/396'/0'/0/0",
   async getClient(server) {
+    switch (server) {//@TODO
+      case 'main.ton.dev':
+        server = 'main2.ton.dev';
+        break;
+      case 'net.ton.dev':
+        server = 'net1.ton.dev';
+        break;
+    }
     if (null === this.client || server !== this.client.config.data.servers[0]) {
-      // console.log(`Getting TON client for '${server}'`);
+      console.log(`ton.js Getting TON client for '${server}'`);
       this.client = await TONClient.create({
-        servers: [server] //@TODO multiple servers??
+        servers: [server]
       });
     }
     return this.client;

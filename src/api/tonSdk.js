@@ -23,11 +23,21 @@ const ton = {
   seedPhraseDictionaryEnglish: 1,
   hdPath: "m/44'/396'/0'/0/0",
   async getClient(server) {
-    if (null === this.client || server !== this.client.config.network.server_address) {
+    let endpoints;
+    switch (server) {//@TODO
+      case 'main.ton.dev':
+        endpoints = ['main2.ton.dev', 'main3.ton.dev', 'main4.ton.dev'];
+        break;
+      case 'net.ton.dev':
+        endpoints = ['net1.ton.dev', 'net5.ton.dev'];
+        break;
+      default:
+        endpoints = [server];
+    }
+    if (null === this.client || endpoints[0] !== this.client.config.network.endpoints[0]) {
+      console.log(`tonSdk.js Getting TON client for '${endpoints[0]}'`);
       this.client = new TonClient({
-        network: {
-          server_address: server,
-        }
+        network: {endpoints}
       });
     }
     return this.client;
