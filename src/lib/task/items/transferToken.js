@@ -1,15 +1,14 @@
-import database from "@/db";
 import walletLib from "@/lib/wallet";
 import {interactiveTaskRepository, interactiveTaskType} from "@/db/repository/interactiveTaskRepository";
 import {handleException, handleExceptionCodes} from "@/lib/task/exception/handleException";
 import {tokenRepository} from "@/db/repository/tokenRepository";
 import {walletRepository} from "@/db/repository/walletRepository";
+import {paramRepository} from "@/db/repository/paramRepository";
 
 export default {
   name: 'transferToken',
   handle: async function (task) {
-    const db = await database.getClient();
-    const networkId = (await db.param.get('network')).value;
+    const networkId = await paramRepository.get('network');
 
     if (networkId !== task.data.network.id) {
       throw new handleException(handleExceptionCodes.networkChanged.code);

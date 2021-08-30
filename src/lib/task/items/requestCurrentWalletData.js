@@ -3,6 +3,7 @@ import TonApi from '@/api/ton';
 import {walletRepository} from "@/db/repository/walletRepository";
 import {tokenRepository} from "@/db/repository/tokenRepository";
 import tokenContractLib from "@/lib/token/contract";
+import {paramRepository} from "@/db/repository/paramRepository";
 
 const _ = {
   getTokenByAddress(tokens, address) {
@@ -29,7 +30,7 @@ export default {
   name: 'requestCurrentWalletData',
   handle: async function () {
     const db = await database.getClient();
-    const networkId = (await db.param.get('network')).value;
+    const networkId = await paramRepository.get('network');
     let network = await db.network.get(networkId);
     const wallet = await walletRepository.getCurrent();
     const walletTokens = await tokenRepository.getByWalletAndNetwork(wallet.id, network.id);

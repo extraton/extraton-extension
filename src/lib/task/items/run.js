@@ -1,15 +1,14 @@
-import database from "@/db";
 import walletLib from "@/lib/wallet";
 import {walletRepository} from "@/db/repository/walletRepository";
 import {interactiveTaskRepository, interactiveTaskType} from "@/db/repository/interactiveTaskRepository";
 // import TonApi from '@/api/ton';
 import {handleException, handleExceptionCodes} from "@/lib/task/exception/handleException";
+import {paramRepository} from "@/db/repository/paramRepository";
 
 export default {
   name: 'run',
   handle: async function (task) {
-    const db = await database.getClient();
-    const networkId = (await db.param.get('network')).value;
+    const networkId = await paramRepository.get('network');
     // const server = (await db.network.get(networkId)).server;
     const wallet = await walletRepository.getCurrent();
 

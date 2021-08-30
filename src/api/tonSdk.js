@@ -131,6 +131,7 @@ export default {
       // @TODO by doc if pass abi then run_tvm should decode message, but it doesn't occur.
       const resultOfRunTvm = await client.tvm.run_tvm({message, account: boc});
       const result = await client.abi.decode_message({abi, message: resultOfRunTvm.out_messages[0]});
+      console.log('tonSdk.js: 134');
       return result.value;
     } catch (e) {
       throw _.getException(e);

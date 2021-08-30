@@ -11,7 +11,7 @@ export default {
   handle: async function (task) {
     const {file, password, contractId, isRestoring} = task.data;
     const db = await database.getClient();
-    const networkId = (await db.param.get('network')).value;
+    const networkId = await paramRepository.get('network');
     const server = (await db.network.get(networkId)).server;
 
     let keystore;

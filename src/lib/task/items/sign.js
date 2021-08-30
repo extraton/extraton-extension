@@ -1,11 +1,10 @@
 import {interactiveTaskRepository, interactiveTaskType} from "@/db/repository/interactiveTaskRepository";
-import database from "@/db";
+import {paramRepository} from "@/db/repository/paramRepository";
 
 export default {
   name: 'sign',
   handle: async function (task) {
-    const db = await database.getClient();
-    const networkId = (await db.param.get('network')).value;
+    const networkId = await paramRepository.get('network');
     return await interactiveTaskRepository.createTask(interactiveTaskType.sign, networkId, task.requestId, task.data);
   }
 }

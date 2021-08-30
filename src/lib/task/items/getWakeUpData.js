@@ -2,6 +2,7 @@ import database from '@/db';
 import {interactiveTaskRepository} from "@/db/repository/interactiveTaskRepository";
 import {walletRepository} from "@/db/repository/walletRepository";
 import {tokenRepository} from "@/db/repository/tokenRepository";
+import {paramRepository} from "@/db/repository/paramRepository";
 
 const _ = {
   async getSettings(db) {
@@ -27,8 +28,8 @@ export default {
     let networks = {};
     await db.network.orderBy('id').each(network => networks[network.id] = network);
     const wallets = await walletRepository.getAllWithoutKeys();
-    const walletId = (await db.param.get('wallet')).value;
-    const network = (await db.param.get('network')).value;
+    const walletId = await paramRepository.get('wallet');
+    const network = await paramRepository.get('network');
     const page = await _.getPage(db);
     const tasks = await interactiveTaskRepository.getAll();
     const tokens = await tokenRepository.getAll();

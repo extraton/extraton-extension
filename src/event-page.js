@@ -25,6 +25,7 @@ const handleMessage = async (request, sender) => {
     //@TODO make sure can check it like this
     const isInternalRequest = sender.origin === `chrome-extension://${extensionId}`;
     let task;
+    console.log(`Call method: ${request.method}`);
     if (isInternalRequest) {
       task = taskLib.compileInternalTaskByRequest(request);
     } else {

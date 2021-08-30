@@ -6,13 +6,14 @@ import walletLib from "@/lib/wallet";
 import {interactiveTaskRepository, interactiveTaskType} from "@/db/repository/interactiveTaskRepository";
 import callRestrictionLib from "@/lib/callRestriction";
 import CheckCallRestrictionException from "@/lib/callRestriction/CheckCallRestrictionException";
+import {paramRepository} from "@/db/repository/paramRepository";
 
 export default {
   name: 'callContractMethod',
   handle: async function (task) {
     const {address, abi, method, input} = task.data;
     const db = await database.getClient();
-    const networkId = (await db.param.get('network')).value;
+    const networkId = await paramRepository.get('network');
     const server = (await db.network.get(networkId)).server;
     const wallet = await walletRepository.getCurrent();
 

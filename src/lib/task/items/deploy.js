@@ -1,14 +1,13 @@
-import database from "@/db";
 import walletLib from "@/lib/wallet";
 import {interactiveTaskRepository, interactiveTaskType} from "@/db/repository/interactiveTaskRepository";
+import {paramRepository} from "@/db/repository/paramRepository";
 // import TonApi from '@/api/ton';
 
 export default {
   name: 'deploy',
   handle: async function (task) {
     //@TODO validate task.data
-    const db = await database.getClient();
-    const networkId = (await db.param.get('network')).value;
+    const networkId = await paramRepository.get('network');
     // const server = (await db.network.get(networkId)).server;
 
     if (!await walletLib.isContractDeployed(networkId)) {

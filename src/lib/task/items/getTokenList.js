@@ -2,16 +2,15 @@ import {tokenRepository} from "@/db/repository/tokenRepository";
 import tokenContractLib from "@/lib/token/contract";
 import {handleException, handleExceptionCodes} from "@/lib/task/exception/handleException";
 import walletLib from "@/lib/wallet";
-import database from "@/db";
 import compileApiView from "@/lib/token/compileApiView";
+import {paramRepository} from "@/db/repository/paramRepository";
 
 export default {
   name: 'getTokenList',
   isLoginRequired: true,
   handle: async function (task) {
-    const db = await database.getClient();
-    const walletId = (await db.param.get('wallet')).value;
-    const networkId = (await db.param.get('network')).value;
+    const walletId = await paramRepository.get('wallet');
+    const networkId = await paramRepository.get('network');
 
     if (networkId !== task.data.network.id) {
       throw new handleException(handleExceptionCodes.networkChanged.code);

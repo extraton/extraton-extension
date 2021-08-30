@@ -1,6 +1,7 @@
 import database from '@/db';
 import {networkRepository} from '@/db/repository/networkRepository';
 import walletLib from '@/lib/wallet';
+import {paramRepository} from "@/db/repository/paramRepository";
 
 const _ = {
   indexEntitiesByField(entities, field) {
@@ -43,7 +44,7 @@ const walletRepository = {
   },
   async getCurrent() {
     const db = await database.getClient();
-    const walletId = (await db.param.get('wallet')).value;
+    const walletId = await paramRepository.get('wallet');
     if (null === walletId) {
       throw "Wallet isn't set.";
     }
