@@ -31,7 +31,7 @@ const ton = {
         break;
     }
     if (null === this.client || server !== this.client.config.data.servers[0]) {
-      console.log(`ton.js Getting TON client for '${server}'`);
+      // console.log(`ton.js Getting TON client for '${server}'`);
       this.client = await TONClient.create({
         servers: [server]
       });

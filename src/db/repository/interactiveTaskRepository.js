@@ -40,10 +40,11 @@ const interactiveTaskType = {
   callContractMethod: 11,
   addToken: 12,
   sign: 13,
+  permitSite: 14,
 };
 
 const interactiveTaskRepository = {
-  async createTask(typeId, networkId, requestId = null, params = {}, data = {}) {
+  async createTask(typeId, networkId, requestId = null, params = {}, data = {}, isAutoConfirm = false) {
     const db = await database.getClient();
     let task = {
       typeId,
@@ -53,7 +54,8 @@ const interactiveTaskRepository = {
       params,
       statusId: interactiveTaskStatus.new,
       error: null,
-      form: {}
+      form: {},
+      isAutoConfirm,
     };
     task.id = await db.interactiveTask.add(task);
     return task;
@@ -72,6 +74,11 @@ const interactiveTaskRepository = {
   async getTask(taskId) {
     const db = await database.getClient();
     return await db.interactiveTask.get(taskId);
+  },
+  async findCurrentTask() {
+    const db = await database.getClient();
+    const tasks = await db.interactiveTask.where('statusId').anyOf(interactiveTaskActiveStatusIds).sortBy('id');
+    return tasks.length > 0 ? tasks[0] : null;
   },
   async isOneOfTaskByRequestIdCanceled(requestId) {
     const db = await database.getClient();

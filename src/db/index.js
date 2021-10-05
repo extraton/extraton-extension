@@ -6,13 +6,14 @@ const DB_NAME = 'db41';
 const _ = {
   client: null,
   setSchema: function (db) {
-    db.version(11).stores({
+    db.version(21).stores({
       param: '&key, value',
       wallet: '++id, name, contractId, address, keys, networks, isRestored, isWalletMine',
       network: '&id, server, explorer, info, isDev',
-      interactiveTask: '++id, networkId, requestId, data, params, typeId, statusId, result, error, form',
+      interactiveTask: '++id, networkId, requestId, data, params, typeId, statusId, result, error, form, isAutoConfirm',
       token: '++id, contractId, networkId, walletId, rootAddress, name, symbol, isDeploying, walletAddress, balance, decimals, params',
-      subscriber: '++id, &tabId'
+      subscriber: '++id, &tabId',
+      site: '++id, &[host+networkId+walletId], isPermitted, isTrusted'
     });
   },
   fillInitial: async function (db) {

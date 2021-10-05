@@ -22,6 +22,7 @@ import confirmTransactionTask from "@/lib/task/items/confirmTransaction";
 import getWakeUpDataTask from "@/lib/task/items/getWakeUpData";
 import generateSeedTask from "@/lib/task/items/generateSeed";
 import setWalletBySeedTask from "@/lib/task/items/setWalletBySeed";
+import removeSiteTask from "@/lib/task/items/removeSite";
 import removeWalletTask from "@/lib/task/items/removeWallet";
 import changeWalletTask from "@/lib/task/items/changeWallet";
 import editWalletTask from "@/lib/task/items/editWallet";
@@ -68,6 +69,7 @@ export {
   getWakeUpDataTask,
   generateSeedTask,
   setWalletBySeedTask,
+  removeSiteTask,
   removeWalletTask,
   changeWalletTask,
   editWalletTask,

@@ -78,6 +78,12 @@
         "button": {
           "apply": "Sign"
         }
+      },
+      "14": {
+        "name": "Site Permissions",
+        "button": {
+          "apply": "Permit"
+        }
       }
     }
   }

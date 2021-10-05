@@ -20,9 +20,8 @@ export default {
     // const deployFees = await TonApi.calcDeployFees(server, keys, contract, initParams, task.data.constructorParams);
     // console.log({deployFees});
 
+    await interactiveTaskRepository.createTask(interactiveTaskType.preDeployTransfer, networkId, task.requestId, task.data, {}, task.isAutoConfirm);
 
-    await interactiveTaskRepository.createTask(interactiveTaskType.preDeployTransfer, networkId, task.requestId, task.data);
-
-    return await interactiveTaskRepository.createTask(interactiveTaskType.deployContract, networkId, task.requestId, task.data);
+    return await interactiveTaskRepository.createTask(interactiveTaskType.deployContract, networkId, task.requestId, task.data, {}, task.isAutoConfirm);
   }
 }

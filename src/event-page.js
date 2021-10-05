@@ -1,12 +1,13 @@
 import popupLib from '@/lib/popup';
 import taskLib from '@/lib/task';
 import walletLib from '@/lib/wallet';
-import {handleException} from "@/lib/task/exception/handleException";
+import {handleException, handleExceptionCodes} from "@/lib/task/exception/handleException";
 import {interactiveTaskRepository} from "@/db/repository/interactiveTaskRepository";
 import extensionizer from "extensionizer";
 import database from "@/db";
 import {TonClient} from "@tonclient/core";
 import {libWeb, libWebSetup} from "@tonclient/lib-web";
+import {resolveWebsitePermissions} from "@/lib/resolveWebsitePermissions";
 libWebSetup({
   binaryURL: "/tonclient_1.5.3.wasm",
 });
@@ -25,18 +26,27 @@ const handleMessage = async (request, sender) => {
     //@TODO make sure can check it like this
     const isInternalRequest = sender.origin === `chrome-extension://${extensionId}`;
     let task;
-    console.log(`Call method: ${request.method}`);
+    // console.log(`Call method: ${request.method}`);
     if (isInternalRequest) {
       task = taskLib.compileInternalTaskByRequest(request);
     } else {
-      //@TODO site connection:  console.log({eventPageSender: sender});
       result.requestId = request.requestId;
-      task = taskLib.compileExternalTaskByRequest(request, sender.tab.id);
+      if (!await walletLib.isLoggedIn()) {
+        await popupLib.callPopup();
+        await walletLib.waitLoggedIn();
+      }
+      const site = await resolveWebsitePermissions(sender);
+      if (!site.isPermitted) {
+        throw new handleException(handleExceptionCodes.websiteForbidden.code);
+      }
+      task = taskLib.compileExternalTaskByRequest(request, sender.tab.id, site.isTrusted);
     }
 
     if (task.isInteractive) {
       const interactiveTask = await taskLib.handleExternalInteractiveTask(task);
-      await popupLib.callPopup();
+      if (!task.isAutoConfirm) {
+        await popupLib.callPopup();
+      }
       result.data = await taskLib.waitInteractiveTaskResolving(task, interactiveTask.id);
       result.code = 0;
     } else {

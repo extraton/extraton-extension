@@ -133,6 +133,7 @@ export default {
           store.commit('action/setTasks', sleepState.tasks);
           store.commit('token/setTokens', sleepState.tokens);
           store.commit('settings/setSettings', sleepState.settings);
+          store.commit('sites/setSites', sleepState.sites);
           if (store.getters['wallet/isLoggedIn']) {
             store.dispatch('wallet/enterWallet', page || sleepState.page);
           }

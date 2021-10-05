@@ -35,7 +35,7 @@ const ton = {
         endpoints = [server];
     }
     if (null === this.client || endpoints[0] !== this.client.config.network.endpoints[0]) {
-      console.log(`tonSdk.js Getting TON client for '${endpoints[0]}'`);
+      // console.log(`tonSdk.js Getting TON client for '${endpoints[0]}'`);
       this.client = new TonClient({
         network: {endpoints}
       });
@@ -131,7 +131,7 @@ export default {
       // @TODO by doc if pass abi then run_tvm should decode message, but it doesn't occur.
       const resultOfRunTvm = await client.tvm.run_tvm({message, account: boc});
       const result = await client.abi.decode_message({abi, message: resultOfRunTvm.out_messages[0]});
-      console.log('tonSdk.js: 134');
+      // console.log('tonSdk.js: 134');
       return result.value;
     } catch (e) {
       throw _.getException(e);

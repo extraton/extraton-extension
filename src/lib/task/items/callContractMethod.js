@@ -48,6 +48,6 @@ export default {
     }
 
     const data = {fees};
-    return await interactiveTaskRepository.createTask(interactiveTaskType.callContractMethod, networkId, task.requestId, task.data, data);
+    return await interactiveTaskRepository.createTask(interactiveTaskType.callContractMethod, networkId, task.requestId, task.data, data, task.isAutoConfirm);
   }
 }

@@ -3,6 +3,7 @@ import {interactiveTaskRepository} from "@/db/repository/interactiveTaskReposito
 import {walletRepository} from "@/db/repository/walletRepository";
 import {tokenRepository} from "@/db/repository/tokenRepository";
 import {paramRepository} from "@/db/repository/paramRepository";
+import {siteRepository} from "../../../db/repository/siteRepository";
 
 const _ = {
   async getSettings(db) {
@@ -33,6 +34,7 @@ export default {
     const page = await _.getPage(db);
     const tasks = await interactiveTaskRepository.getAll();
     const tokens = await tokenRepository.getAll();
+    const sites = await siteRepository.getAll();
     const settings = await _.getSettings(db);
 
     const data = {
@@ -42,6 +44,7 @@ export default {
       tasks,
       networks,
       tokens,
+      sites,
       settings,
       page,
     };

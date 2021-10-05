@@ -4,6 +4,7 @@ import store from '@/store'
 import HighLevelPage from "@/views/HighLevelPage";
 import Start from "@/views/Start";
 import Settings from "@/views/Settings";
+import Sites from "@/views/site/Sites";
 import Wallet from "@/views/wallet/Wallet";
 import WalletCreate from "@/views/wallet/Create";
 import WalletRestore from "@/views/wallet/Restore";
@@ -16,6 +17,7 @@ Vue.use(VueRouter);
 const routes = {
   start: 'start',
   settings: 'settings',
+  sites: 'sites',
   wallet: 'wallet',
   walletCreate: 'walletCreate',
   walletAdd: 'walletAdd',
@@ -34,6 +36,12 @@ const list = [
     path: '/settings',
     component: Settings,
     name: routes.settings,
+    meta: {back: routes.wallet}
+  },
+  {
+    path: '/sites',
+    component: Sites,
+    name: routes.sites,
     meta: {back: routes.wallet}
   },
   {

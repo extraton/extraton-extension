@@ -23,6 +23,7 @@ import {
   getWakeUpDataTask,
   generateSeedTask,
   setWalletBySeedTask,
+  removeSiteTask,
   removeWalletTask,
   changeWalletTask,
   editWalletTask,
@@ -55,6 +56,7 @@ const taskList = {
     getWakeUpDataTask,
     generateSeedTask,
     setWalletBySeedTask,
+    removeSiteTask,
     removeWalletTask,
     changeWalletTask,
     editWalletTask,
@@ -116,7 +118,7 @@ const _ = {
   isTaskInList: function (list, name) {
     return this.getTaskHandler(list, name) !== null;
   },
-  compileTaskByRequest: function (request, isInteractive = false, tabId = null, isLoginRequired = true) {
+  compileTaskByRequest: function (request, isInteractive = false, tabId = null, isLoginRequired = true, isAutoConfirm = false) {
     return {
       requestId: request.requestId,
       method: request.method,
@@ -124,6 +126,7 @@ const _ = {
       isInteractive,
       tabId,
       isLoginRequired,
+      isAutoConfirm,
     };
   },
   handleTask: async function (list, task) {
@@ -147,7 +150,7 @@ const _ = {
 };
 
 export default {
-  compileExternalTaskByRequest: function (request, tabId) {
+  compileExternalTaskByRequest: function (request, tabId, isAutoConfirm) {
     const isInteractiveTask = _.isTaskInList(taskList.external.interactive, request.method);
     const isBackgroundTask = _.isTaskInList(taskList.external.background, request.method);
     if (!isInteractiveTask && !isBackgroundTask) {
@@ -157,7 +160,7 @@ export default {
     if (isBackgroundTask) {
       isLoginRequired = _.getTaskHandler(taskList.external.background, request.method).isLoginRequired;
     }
-    return _.compileTaskByRequest(request, isInteractiveTask, tabId, isLoginRequired);
+    return _.compileTaskByRequest(request, isInteractiveTask, tabId, isLoginRequired, isAutoConfirm);
   },
   compileInternalTaskByRequest: function (request) {
     const isTaskExists = _.isTaskInList(taskList.internal, request.method);
@@ -171,11 +174,23 @@ export default {
       throw new handleException(handleExceptionCodes.canceledByUser.code)
     }
     const interactiveTask = await interactiveTaskRepository.getTask(interactiveTaskId);
+    // check is it autoConfirm and on the his queue, try to perform.
+    if (interactiveTask.statusId === interactiveTaskStatus.new && true === interactiveTask.isAutoConfirm) {
+      const activeTask = await interactiveTaskRepository.findCurrentTask();
+      if (activeTask.requestId === interactiveTask.requestId && activeTask.statusId === interactiveTaskStatus.new && true === activeTask.isAutoConfirm) {
+        const autoApplyTask = this.compileInternalTaskByRequest({//@TODO refactoring
+          requestId: task.requestId,
+          method: applyInteractiveTaskTask.name,
+          data: {interactiveTaskId: activeTask.id, password: '', form: {}}
+        });
+        await this.handleInternalTask(autoApplyTask);
+      }
+    }
     if (interactiveTask.statusId === interactiveTaskStatus.performed) {
       return interactiveTask.result;
     }
     await _.timeout(500);
-    return await this.waitInteractiveTaskResolving(task, interactiveTaskId);
+    return await this.waitInteractiveTaskResolving(task, interactiveTaskId);//@TODO recursive -> while
   },
   handleInternalTask: async function (task) {
     return _.handleTask(taskList.internal, task);

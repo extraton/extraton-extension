@@ -1,9 +1,11 @@
 import addToken from "@/lib/task/interactive/frontPostApply/addToken";
 import createNewEmptyTokenWallet from "@/lib/task/interactive/frontPostApply/createNewEmptyTokenWallet";
+import permitSite from "./permitSite";
 
 const postApplies = {
   addToken,
   createNewEmptyTokenWallet,
+  permitSite
 };
 
 export default {

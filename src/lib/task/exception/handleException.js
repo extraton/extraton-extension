@@ -11,6 +11,7 @@ const handleExceptionCodes = {
   accountNotExists: {code: 1005, text: 'Account does not exists in blockchain'},
   tokenNotFoundOrNotSupporting: {code: 1006, text: 'Token by this address isn\'t found or not supporting.'},
   tokenAlreadyAdded: {code: 1007, text: 'Token already added.'},
+  websiteForbidden: {code: 1008, text: 'Website forbidden in extension.'},
   prohibitedToRunWalletContract: {code: 1100, text: 'Running methods of user wallet contract is prohibited.'},
   callingContractMethodRestricted: {code: 1101, text: null},
   tonClientError: {code: 1200, text: 'TON Client error'},

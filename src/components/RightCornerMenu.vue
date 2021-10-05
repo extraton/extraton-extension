@@ -38,6 +38,15 @@
         </v-list-item-content>
       </v-list-item>
 
+      <v-list-item :to="{name:routes.sites}">
+        <v-list-item-icon>
+          <v-icon>mdi-shield-key</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-list-item-title>Site permissions</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+
       <v-list-item href="http://extraton.io" target="_blank">
         <v-list-item-icon>
           <v-icon>mdi-information</v-icon>

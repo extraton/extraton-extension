@@ -96,8 +96,11 @@ export default {
     cancel({commit}, interactiveTaskId) {
       commit('setCurrentTaskCancellation');
       return BackgroundApi.request(cancelInteractiveTaskTask, {interactiveTaskId})
-        .then((tasks) => {
-          commit('setTasks', tasks);
+        .then(async ({interactiveTasks, interactiveTask}) => {
+          commit('setTasks', interactiveTasks);
+          if (interactiveTask.data.frontPostApply !== undefined) {
+            await frontPostApply.call(interactiveTask.data.frontPostApply);
+          }
         });
     },
     async apply({commit, state}, {interactiveTask, password}) {

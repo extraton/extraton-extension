@@ -4,6 +4,7 @@ import action from './modules/action'
 import password from './modules/wallet/password'
 import app from './modules/app'
 import settings from './modules/settings'
+import sites from './modules/sites'
 import wallet from './modules/wallet/wallet'
 import walletCreate from './modules/wallet/create'
 import walletRestore from './modules/wallet/restore'
@@ -18,6 +19,7 @@ export default new Vuex.Store({
         action,
         password,
         app,
+        sites,
         settings,
         wallet,
         walletCreate,

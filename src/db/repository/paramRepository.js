@@ -11,7 +11,7 @@ const paramRepository = {
     }
   },
   async get(key) {
-    console.log(`Get key ${key}`);
+    // console.log(`Get key ${key}`);
     const db = await database.getClient();
     const params = await db.param.where({key}).toArray();
     if (0 === params.length) {

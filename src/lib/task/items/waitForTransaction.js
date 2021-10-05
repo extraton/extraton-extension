@@ -10,6 +10,9 @@ export default {
     const db = await database.getClient();
     const networkId = await paramRepository.get('network');
     const server = (await db.network.get(networkId)).server;
-    return await tonLib.waitForTransaction(server, message, abi, shardBlockId);
+    // console.log('q1');
+    const result = await tonLib.waitForTransaction(server, message, abi, shardBlockId)
+    // console.log('q2');
+    return result;
   }
 }

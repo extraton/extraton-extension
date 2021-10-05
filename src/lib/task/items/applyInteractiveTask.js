@@ -19,6 +19,7 @@ import UndecimalIsNotIntegerException from "@/lib/token/UndecimalIsNotIntegerExc
 import tonLib from "@/api/tonSdk";
 import addTokenByAddress from "@/lib/token/addTokenByAddress";
 import compileTokenApiView from "@/lib/token/compileApiView";
+import {siteRepository} from "../../../db/repository/siteRepository";
 
 const _ = {
   checkSufficientFunds(wallet, networkId, amount) {
@@ -181,6 +182,11 @@ export default {
           }
           case interactiveTaskType.sign: {
             result = await tonLib.sign(server, wallet.keys, interactiveTask.params.unsigned);
+            break;
+          }
+          case interactiveTaskType.permitSite: {
+            const trust = true === form.trust;
+            await siteRepository.setPermissions(interactiveTask.data.siteId, true, trust);
             break;
           }
           default: {

@@ -82,6 +82,10 @@
                        @formChange="formChange"
                        :disabled="!isApplyButtonEnabled"
                        :unsigned="task.params.unsigned"/>
+            <site-permissions v-if="task.typeId === interactiveTaskType.permitSite"
+                       @formChange="formChange"
+                       :disabled="!isApplyButtonEnabled"
+                       :host="task.data.host"/>
           </v-card-text>
         </div>
         <div>
@@ -121,9 +125,11 @@ import UiTransferToken from "@/components/actions/uiTransferToken";
 import TransferToken from "@/components/actions/transferToken";
 import CallContractMethod from "@/components/actions/callContractMethod";
 import Sign from "@/components/actions/sign";
+import SitePermissions from "./actions/sitePermissions";
 
 export default {
   components: {
+    SitePermissions,
     Sign,
     CallContractMethod,
     UiTransferToken,
