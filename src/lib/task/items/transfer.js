@@ -25,6 +25,6 @@ export default {
       await interactiveTaskRepository.createTask(interactiveTaskType.deployWalletContract, networkId, task.requestId);
     }
 
-    return await interactiveTaskRepository.createTask(interactiveTaskType.transfer, networkId, task.requestId, task.data, {isItLoggedWalletAddress});
+    return await interactiveTaskRepository.createTask(interactiveTaskType.transfer, networkId, task.requestId, task.data, {isItLoggedWalletAddress}, task.isAutoConfirm);
   }
 }
