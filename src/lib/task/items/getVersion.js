@@ -2,6 +2,6 @@ export default {
   name: 'getVersion',
   isLoginRequired: false,
   handle: function () {
-    return {name: 'extraton', version: '0.18.1'};
+    return {name: 'extraton', version: '0.18.2'};
   }
 }
