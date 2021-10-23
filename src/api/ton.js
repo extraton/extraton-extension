@@ -24,10 +24,10 @@ const ton = {
   async getClient(server) {
     switch (server) {//@TODO
       case 'main.ton.dev':
-        server = 'main3.ton.dev';
+        server = 'main2.ton.dev';
         break;
       case 'net.ton.dev':
-        server = 'net1.ton.dev';
+        server = 'net5.ton.dev';
         break;
     }
     if (null === this.client || server !== this.client.config.data.servers[0]) {
