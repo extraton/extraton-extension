@@ -55,6 +55,16 @@ const ton = {
 };
 
 export default {
+  async generateSeed(server) {
+    try {
+      const client = await ton.getClient(server);
+      return (await client.crypto.mnemonic_from_random(
+        {dictionary: ton.seedPhraseDictionaryEnglish, word_count: ton.seedPhraseWorldCount}
+      )).phrase;
+    } catch (e) {
+      throw _.getException(e);
+    }
+  },
   async convertSeedToKeys(server, seed) {
     try {
       const client = await ton.getClient(server);
@@ -109,6 +119,18 @@ export default {
       throw _.getException(e);
     }
   },
+  async requestAccountsData(server, addresses) {
+    try {
+      const client = await ton.getClient(server);
+      return (await client.net.query_collection({
+        collection: 'accounts',
+        filter: {id: {in: addresses}},
+        result: 'id, balance(format: DEC), code_hash, boc',
+      })).result;
+    } catch (e) {
+      throw _.getException(e);
+    }
+  },
   async encodeMessage(server, address, abi, function_name, input = {}, keys = null) {
     try {
       const client = await ton.getClient(server);
@@ -150,7 +172,12 @@ export default {
     try {
       const contractAbi = this.compileContractAbi(abi);
       const client = await ton.getClient(server);
-      const result = await client.processing.wait_for_transaction({message, abi: contractAbi, shard_block_id, send_events: false});
+      const result = await client.processing.wait_for_transaction({
+        message,
+        abi: contractAbi,
+        shard_block_id,
+        send_events: false
+      });
       return {id: result.transaction.id};
     } catch (e) {
       throw _.getException(e);

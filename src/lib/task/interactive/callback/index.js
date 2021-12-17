@@ -1,12 +1,6 @@
-import addToken from "@/lib/task/interactive/callback/addToken";
-import createNewEmptyTokenWallet from "@/lib/task/interactive/callback/createNewEmptyTokenWallet";
-import radianceDeployDexClient from "@/lib/task/interactive/callback/radianceDeployDexClient";
 import permitSite from "./permitSite";
 
 const callbacks = {
-  addToken,
-  createNewEmptyTokenWallet,
-  radianceDeployDexClient,
   permitSite
 };
 

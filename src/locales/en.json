@@ -43,34 +43,10 @@
           "apply": "Confirm"
         }
       },
-      "8": {
-        "name": "Add Token",
-        "button": {
-          "apply": "Add"
-        }
-      },
-      "9": {
-        "name": "Transfer Token",
-        "button": {
-          "apply": "Transfer"
-        }
-      },
-      "10": {
-        "name": "Transfer Token",
-        "button": {
-          "apply": "Transfer"
-        }
-      },
       "11": {
         "name": "Call Method",
         "button": {
           "apply": "Call"
-        }
-      },
-      "12": {
-        "name": "Add Token",
-        "button": {
-          "apply": "Add"
         }
       },
       "13": {
@@ -83,6 +59,18 @@
         "name": "Site Permissions",
         "button": {
           "apply": "Permit"
+        }
+      },
+      "15": {
+        "name": "Transfer",
+        "button": {
+          "apply": "Transfer"
+        }
+      },
+      "16": {
+        "name": "Confirm Transaction",
+        "button": {
+          "apply": "Confirm"
         }
       }
     }

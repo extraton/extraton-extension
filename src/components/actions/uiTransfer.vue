@@ -1,10 +1,6 @@
 <template>
   <div class="uiTransferAction">
     <div>
-      <!--      <div class="text-body-1">Transfer tokens to other address.</div>-->
-      <!--      <div class="text-center walletActivationAction__icon">-->
-      <!--        <v-icon>mdi-send</v-icon>-->
-      <!--      </div>-->
       <v-text-field v-model="address" @input="sync" :rules="[rules.required]" :disabled="disabled" label="Address"/>
       <v-text-field v-model="amount" @input="sync" :rules="[rules.required, rules.greaterOrEqualZero]"
                     :disabled="disabled" type="number" label="Amount"/>

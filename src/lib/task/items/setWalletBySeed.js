@@ -1,4 +1,4 @@
-import TonApi from '@/api/ton';
+import tonSdkLib from "@/api/tonSdk";
 import database from '@/db';
 import {handleException, handleExceptionCodes} from '@/lib/task/exception/handleException';
 import wallet from "@/lib/wallet";
@@ -14,7 +14,7 @@ export default {
     const server = (await db.network.get(1)).server;
     let keys = null;
     try {
-      keys = await TonApi.convertSeedToKeys(server, seed);
+      keys = await tonSdkLib.convertSeedToKeys(server, seed);
     } catch (err) {
       if (err.code === 2017) {
         throw new handleException(handleExceptionCodes.invalidSeed.code);

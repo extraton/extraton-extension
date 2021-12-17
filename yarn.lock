@@ -1103,15 +1103,15 @@
   dependencies:
     defer-to-connect "^2.0.0"
 
-"@tonclient/core@^1.5.3":
-  version "1.5.3"
-  resolved "https://registry.yarnpkg.com/@tonclient/core/-/core-1.5.3.tgz#0ab5fe22f494f8a391456166eb12ef94e2e82539"
-  integrity sha512-uBEsJuw/bg9vpKrJ8a0gVIqY3gEOZsWWOCqMA1q3A3gx1G2du2jjsQDM6lmzkAjALha9suWJZJI2wrmPWTFxKw==
+"@tonclient/core@^1.27.1":
+  version "1.27.1"
+  resolved "https://registry.yarnpkg.com/@tonclient/core/-/core-1.27.1.tgz#c554de7054db571e5ae298c98e91b2be72217ac5"
+  integrity sha512-KLxSxpxIDXZOfY3LZFDtBiLxeEWXpzWCtRFQur/mq4ZdDuXW5cmCT5BVNUVrZZb3xOeBbCSzkb897Aw6ihkn2g==
 
-"@tonclient/lib-web@^1.5.3":
-  version "1.5.3"
-  resolved "https://registry.yarnpkg.com/@tonclient/lib-web/-/lib-web-1.5.3.tgz#af978451a1354374e852363c820f036cdbcd3c4a"
-  integrity sha512-/YiMILJjJd6kCo1IStdAutUFWLp1l/ZH9PGMNchLlcaRyynddBu4Ad2TOp2SyAHk8QLdgmqnlZTtzT7MZvZZXQ==
+"@tonclient/lib-web@^1.27.1":
+  version "1.27.1"
+  resolved "https://registry.yarnpkg.com/@tonclient/lib-web/-/lib-web-1.27.1.tgz#528eabcae64594fd5bde455cc48e0a105223b78d"
+  integrity sha512-DeGPCPU7aB2TvSU7BzR6a5HgwlYJzQPn/7pMo0y9D5CLtiVxLriGf/+B+OJpdnfNna6NVmEiz1QkSoMEiia1Lg==
 
 "@types/anymatch@*":
   version "1.3.1"

@@ -1,19 +1,10 @@
 import database from '@/db';
 import {interactiveTaskRepository} from "@/db/repository/interactiveTaskRepository";
 import {walletRepository} from "@/db/repository/walletRepository";
-import {tokenRepository} from "@/db/repository/tokenRepository";
 import {paramRepository} from "@/db/repository/paramRepository";
 import {siteRepository} from "../../../db/repository/siteRepository";
 
 const _ = {
-  async getSettings(db) {
-    let tip3 = await db.param.get('tip3');
-    let hideAddrCopyWarning = await db.param.get('hideAddrCopyWarning');
-    tip3 = typeof tip3 !== 'undefined' ? tip3.value : false;
-    hideAddrCopyWarning = typeof hideAddrCopyWarning !== 'undefined' ? hideAddrCopyWarning.value : false;
-
-    return {tip3, hideAddrCopyWarning};
-  },
   async getPage(db) {
     // await db.param.delete('page');
     let page = await db.param.get('page');
@@ -33,22 +24,16 @@ export default {
     const network = await paramRepository.get('network');
     const page = await _.getPage(db);
     const tasks = await interactiveTaskRepository.getAll();
-    const tokens = await tokenRepository.getAll();
     const sites = await siteRepository.getAll();
-    const settings = await _.getSettings(db);
 
-    const data = {
+    return {
       wallets,
       walletId,
       network,
       tasks,
       networks,
-      tokens,
       sites,
-      settings,
       page,
     };
-
-    return data;
   }
 }

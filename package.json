@@ -1,6 +1,6 @@
 {
   "name": "extraton",
-  "version": "0.18.4",
+  "version": "0.19.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service build --mode development --watch",
@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "@mdi/font": "^5.9.55",
-    "@tonclient/core": "^1.5.3",
-    "@tonclient/lib-web": "^1.5.3",
+    "@tonclient/core": "^1.27.1",
+    "@tonclient/lib-web": "^1.27.1",
     "bignumber.js": "^9.0.1",
     "core-js": "^3.6.5",
     "dexie": "^3.0.2",

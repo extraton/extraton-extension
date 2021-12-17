@@ -1,7 +1,6 @@
 import walletLib from "@/lib/wallet";
 import {interactiveTaskRepository, interactiveTaskType} from "@/db/repository/interactiveTaskRepository";
 import {paramRepository} from "@/db/repository/paramRepository";
-// import TonApi from '@/api/ton';
 
 export default {
   name: 'deploy',

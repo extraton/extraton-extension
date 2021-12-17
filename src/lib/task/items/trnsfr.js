@@ -4,7 +4,7 @@ import {handleException, handleExceptionCodes} from "@/lib/task/exception/handle
 import {paramRepository} from "@/db/repository/paramRepository";
 
 export default {
-  name: 'transfer',
+  name: 'trnsfr',
   handle: async function (task) {
     const networkId = await paramRepository.get('network');
 
@@ -24,6 +24,6 @@ export default {
       await interactiveTaskRepository.createTask(interactiveTaskType.deployWalletContract, networkId, task.requestId);
     }
 
-    return await interactiveTaskRepository.createTask(interactiveTaskType.transfer, networkId, task.requestId, task.data, {isItLoggedWalletAddress}, task.isAutoConfirm);
+    return await interactiveTaskRepository.createTask(interactiveTaskType.trnsfr, networkId, task.requestId, task.data, {isItLoggedWalletAddress}, task.isAutoConfirm);
   }
 }

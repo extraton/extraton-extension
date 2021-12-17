@@ -11,7 +11,6 @@ const _ = {
       wallet: '++id, name, contractId, address, keys, networks, isRestored, isWalletMine',
       network: '&id, server, explorer, info, isDev',
       interactiveTask: '++id, networkId, requestId, data, params, typeId, statusId, result, error, form, isAutoConfirm',
-      token: '++id, contractId, networkId, walletId, rootAddress, name, symbol, isDeploying, walletAddress, balance, decimals, params',
       subscriber: '++id, &tabId',
       site: '++id, &[host+networkId+walletId], isPermitted, isTrusted'
     });
@@ -38,8 +37,6 @@ const _ = {
     const params = [
       {key: 'wallet', value: null},
       {key: 'network', value: 1},
-      {key: 'tip3', value: false},
-      {key: 'hideAddrCopyWarning', value: false},
       {key: 'page', value: {name: routes.start, params: {}}},
     ];
     for (const network of networks) {

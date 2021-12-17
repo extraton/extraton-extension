@@ -34,13 +34,11 @@ const interactiveTaskType = {
   runTransaction: 5,
   transfer: 6,
   confirmTransaction: 7,
-  uiAddToken: 8,
-  uiTransferToken: 9,
-  transferToken: 10,
   callContractMethod: 11,
-  addToken: 12,
   sign: 13,
   permitSite: 14,
+  trnsfr: 15,
+  cnfrmTransaction: 16,
 };
 
 const interactiveTaskRepository = {

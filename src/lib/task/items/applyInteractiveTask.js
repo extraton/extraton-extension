@@ -10,16 +10,10 @@ import database from '@/db';
 import insufficientFundsException from "@/lib/task/exception/insufficientFundsException";
 import keystoreLib from "@/lib/keystore";
 import keystoreException from "@/lib/keystore/keystoreException";
-import tokenContractLib from "@/lib/token/contract";
-import {tokenContractException} from "@/lib/token/TokenContractException";
-import {tokenRepository} from "@/db/repository/tokenRepository";
 import interactiveTaskCallback from "@/lib/task/interactive/callback";
-import addTokenCallback from "@/lib/task/interactive/callback/addToken";
-import UndecimalIsNotIntegerException from "@/lib/token/UndecimalIsNotIntegerException";
 import tonLib from "@/api/tonSdk";
-import addTokenByAddress from "@/lib/token/addTokenByAddress";
-import compileTokenApiView from "@/lib/token/compileApiView";
 import {siteRepository} from "../../../db/repository/siteRepository";
+import walletContractLib from '@/lib/walletContract';
 
 const _ = {
   checkSufficientFunds(wallet, networkId, amount) {
@@ -59,6 +53,8 @@ export default {
             break;
           }
           case interactiveTaskType.uiTransfer: {
+            const walletContract = walletContractLib.getContractById(wallet.contractId);
+            const abi = tonLib.compileContractAbi(walletContract.abi);
             const nanoAmount = walletLib.convertToNano(form.amount);
             //TODO FEES
             const amountWithFee = BigInt('11000000') + nanoAmount;
@@ -75,8 +71,8 @@ export default {
               false,
               payload
             );
-            const processingState = await TonApi.sendMessage(server, message);
-            await TonApi.waitForRunTransaction(server, message, processingState);
+            const shardBlockId = await tonLib.sendMessage(server, message, abi);
+            await tonLib.waitForTransaction(server, message, abi, shardBlockId);
             break;
           }
           case interactiveTaskType.preDeployTransfer: {
@@ -87,7 +83,15 @@ export default {
             const initParams = interactiveTask.params.options.initParams !== undefined ? interactiveTask.params.options.initParams : {};
             const initPubkey = interactiveTask.params.options.initPubkey !== undefined ? interactiveTask.params.options.initPubkey : null;
             const address = await tonLib.predictAddress(server, abi, interactiveTask.params.imageBase64, wallet.keys.public, 0, initParams, initPubkey);
-            await walletLib.transfer(server, wallet, address, interactiveTask.params.options.initAmount);
+            const message = await walletLib.createTransferMessage(
+              server,
+              wallet,
+              wallet.address,
+              address,
+              interactiveTask.params.options.initAmount,
+            );
+            const shardBlockId = await tonLib.sendMessage(server, message, abi);
+            await tonLib.waitForTransaction(server, message, abi, shardBlockId);
             break;
           }
           case interactiveTaskType.deployContract: {
@@ -95,19 +99,11 @@ export default {
             _.checkSufficientFunds(wallet, interactiveTask.networkId, amountWithFee);
             const initParams = interactiveTask.params.options.initParams !== undefined ? interactiveTask.params.options.initParams : {};
             const initPubkey = interactiveTask.params.options.initPubkey !== undefined ? interactiveTask.params.options.initPubkey : null;
-            result = await walletLib.deployContract(server, wallet, interactiveTask.params.abi, interactiveTask.params.imageBase64, initParams, interactiveTask.params.constructorParams, initPubkey);
+            const abi = tonLib.compileContractAbi(interactiveTask.params.abi);
+            result = await walletLib.deployContract(server, wallet, abi, interactiveTask.params.imageBase64, initParams, interactiveTask.params.constructorParams, initPubkey);
             if (interactiveTask.params.async === false) {
-              result = await tonLib.waitForTransaction(server, result.message.message, result.shardBlockId);
+              result = await tonLib.waitForTransaction(server, result.message.message, abi, result.shardBlockId);
             }
-            break;
-          }
-          case interactiveTaskType.runTransaction: {
-            const message = await TonApi.createRunMessage(server, interactiveTask.params.address, interactiveTask.params.abi, interactiveTask.params.method, interactiveTask.params.params, wallet.keys);
-            const processingState = await TonApi.sendMessage(server, message);
-            const txid = await TonApi.waitForRunTransaction(server, message, processingState);
-            // if (interactiveTask.params.async === false) {
-            // }
-            result = {txid};
             break;
           }
           case interactiveTaskType.callContractMethod: {
@@ -123,7 +119,7 @@ export default {
               const amountWithFee = BigInt('11000000') + BigInt(interactiveTask.params.amount);
               _.checkSufficientFunds(wallet, interactiveTask.networkId, amountWithFee);
             }
-            const message = await walletLib.createTransferMessage(
+            const message = await walletLib.createLegacyTransferMessage(
               server,
               wallet,
               interactiveTask.params.walletAddress,
@@ -139,38 +135,31 @@ export default {
             }
             break;
           }
-          case interactiveTaskType.addToken: {
-            const token = await addTokenByAddress(network, wallet, interactiveTask.params.rootAddress);
-            interactiveTask.data.callback = {name: addTokenCallback.name, params: [token.id]};
-            const contract = tokenContractLib.getContractById(token.contractId);
-            result = compileTokenApiView(contract, token);
-            break;
-          }
-          case interactiveTaskType.uiAddToken: {
-            //@TODO validate address
-            const token = await addTokenByAddress(network, wallet, form.address);
-            interactiveTask.data.callback = {name: addTokenCallback.name, params: [token.id]};
-            break;
-          }
-          case interactiveTaskType.uiTransferToken: {
-            const token = await tokenRepository.getToken(interactiveTask.params.tokenId);
-            const contract = tokenContractLib.getContractById(token.contractId);
-            const undecimalAmount = tokenContractLib.undecimal(token, form.amount);
-            tokenContractLib.checkSufficientFunds(token, undecimalAmount);
-            const {message, shardBlockId, abi} = await contract.transfer(server, wallet.keys, token, form.address, undecimalAmount);
-            await tonLib.waitForTransaction(server, message, abi, shardBlockId);
-
-            break;
-          }
-          case interactiveTaskType.transferToken: {
-            const token = await tokenRepository.getToken(interactiveTask.data.tokenId);
-            const contract = tokenContractLib.getContractById(token.contractId);
-            tokenContractLib.checkSufficientFunds(token, interactiveTask.params.amount);
-            result = await contract.transfer(server, wallet.keys, token, interactiveTask.params.address, interactiveTask.params.amount);
+          case interactiveTaskType.trnsfr: {
+            const walletContract = walletContractLib.getContractById(wallet.contractId);
+            const abi = tonLib.compileContractAbi(walletContract.abi);
+            if (walletLib.isAddressesMatch(wallet.address, interactiveTask.params.walletAddress)) {
+              const amountWithFee = BigInt('11000000') + BigInt(interactiveTask.params.amount);
+              _.checkSufficientFunds(wallet, interactiveTask.networkId, amountWithFee);
+            }
+            const message = await walletLib.createTransferMessage(
+              server,
+              wallet,
+              interactiveTask.params.walletAddress,
+              interactiveTask.params.address,
+              interactiveTask.params.amount,
+              interactiveTask.params.bounce,
+              interactiveTask.params.payload || ''
+            );
+            const shardBlockId = await tonLib.sendMessage(server, message, abi);
+            result = {message, shardBlockId, abi};
+            if (interactiveTask.params.async === false) {
+              result = await tonLib.waitForTransaction(server, message, abi, shardBlockId)
+            }
             break;
           }
           case interactiveTaskType.confirmTransaction: {
-            const message = await walletLib.createConfirmTransactionMessage(
+            const message = await walletLib.createLegacyConfirmTransactionMessage(
               server,
               wallet,
               interactiveTask.params.walletAddress,
@@ -178,6 +167,19 @@ export default {
             );
             const processingState = await TonApi.sendMessage(server, message);
             result = {processingState, message};
+            break;
+          }
+          case interactiveTaskType.cnfrmTransaction: {
+            const walletContract = walletContractLib.getContractById(wallet.contractId);
+            const abi = tonLib.compileContractAbi(walletContract.abi);
+            const message = await walletLib.createConfirmTransactionMessage(
+              server,
+              wallet,
+              interactiveTask.params.walletAddress,
+              interactiveTask.params.txid,
+            );
+            const shardBlockId = await tonLib.sendMessage(server, message, abi);
+            result = {message: message, shardBlockId, abi};
             break;
           }
           case interactiveTaskType.sign: {
@@ -206,12 +208,8 @@ export default {
         interactiveTask.statusId = interactiveTaskStatus.new;
         if (e instanceof insufficientFundsException) {
           interactiveTask.error = e.error;
-        } else if (e instanceof UndecimalIsNotIntegerException) {
-          interactiveTask.error = e.error;
         } else if (e instanceof keystoreException) {
           interactiveTask.error = e.message;
-        } else if (e instanceof tokenContractException) {
-          interactiveTask.error = e.toString();
         } else {
           interactiveTask.error = 'Error';
         }

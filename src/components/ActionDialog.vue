@@ -19,20 +19,6 @@
                                 @formChange="formChange"
                                 :form="task.form"
                                 :disabled="!isApplyButtonEnabled"/>
-            <ui-transfer-token v-if="task.typeId === interactiveTaskType.uiTransferToken"
-                               @formChange="formChange"
-                               :form="task.form"
-                               :disabled="!isApplyButtonEnabled"
-                               :fees="task.data.fees"/>
-            <transfer-token v-if="task.typeId === interactiveTaskType.transferToken"
-                               @formChange="formChange"
-                               :form="task.form"
-                               :disabled="!isApplyButtonEnabled"
-                               :token-name="task.data.tokenName"
-                               :token-symbol="task.data.tokenSymbol"
-                               :address="task.params.address"
-                               :amount-view="task.data.amountView"
-                               :balance-view="task.data.balanceView"/>
             <deploy-contract v-if="task.typeId === interactiveTaskType.deployContract"
                              @formChange="formChange"
                              :form="task.form"
@@ -54,7 +40,7 @@
                  :fees="task.data.fees"
                  :address="task.params.address"
                  :method="task.params.method"/>
-            <transfer v-if="task.typeId === interactiveTaskType.transfer"
+            <transfer v-if="[interactiveTaskType.transfer, interactiveTaskType.trnsfr].includes(task.typeId)"
                       @formChange="formChange"
                       :form="task.form"
                       :disabled="!isApplyButtonEnabled"
@@ -62,22 +48,12 @@
                       :address="task.params.address"
                       :wallet-address="task.params.walletAddress"
                       :is-current-address="task.data.isItLoggedWalletAddress"/>
-            <confirm-transaction v-if="task.typeId === interactiveTaskType.confirmTransaction"
+            <confirm-transaction v-if="[interactiveTaskType.confirmTransaction, interactiveTaskType.cnfrmTransaction].includes(task.typeId)"
                                  @formChange="formChange"
                                  :form="task.form"
                                  :disabled="!isApplyButtonEnabled"
                                  :txid="task.params.txid"
                                  :wallet-address="task.params.walletAddress"/>
-            <ui-add-token v-if="task.typeId === interactiveTaskType.uiAddToken"
-                       @formChange="formChange"
-                       :form="task.form"
-                       :disabled="!isApplyButtonEnabled"/>
-            <add-token v-if="task.typeId === interactiveTaskType.addToken"
-                       @formChange="formChange"
-                       :disabled="!isApplyButtonEnabled"
-                       :rootAddress="task.params.rootAddress"
-                       :name="task.data.name"
-                       :symbol="task.data.symbol"/>
             <sign v-if="task.typeId === interactiveTaskType.sign"
                        @formChange="formChange"
                        :disabled="!isApplyButtonEnabled"
@@ -119,10 +95,6 @@ import PreDeployTransfer from "@/components/actions/preDeployTransfer";
 import run from "@/components/actions/run";
 import Transfer from "@/components/actions/transfer";
 import ConfirmTransaction from "@/components/actions/confirmTransaction";
-import AddToken from "@/components/actions/addToken";
-import UiAddToken from "@/components/actions/uiAddToken";
-import UiTransferToken from "@/components/actions/uiTransferToken";
-import TransferToken from "@/components/actions/transferToken";
 import CallContractMethod from "@/components/actions/callContractMethod";
 import Sign from "@/components/actions/sign";
 import SitePermissions from "./actions/sitePermissions";
@@ -132,9 +104,6 @@ export default {
     SitePermissions,
     Sign,
     CallContractMethod,
-    UiTransferToken,
-    AddToken,
-    UiAddToken,
     Transfer,
     ConfirmTransaction,
     PreDeployTransfer,
@@ -142,7 +111,6 @@ export default {
     uiTransferAction,
     deployContract,
     run,
-    TransferToken
   },
   data: () => ({
     interactiveTaskType,
